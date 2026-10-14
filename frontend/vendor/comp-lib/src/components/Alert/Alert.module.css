@@ -1,0 +1,50 @@
+/* Alert. Figma: Alerts / Alert (36:97). Styleguide: Components → Alert, Overview rules 6 and 12, Colors → Contrast, Icons, Accessibility (4.1.3). */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  /* Full width of its container. Figma's fixed 480 is only the frame width of the sample. */
+}
+
+/* 8px between stacked alerts (styleguide). */
+.alert + .alert { margin-top: var(--space-xs); }
+
+/* Status bg, 1px status border, text in status fg (styleguide). No left colour stripe. */
+.critical { background: var(--color-critical-bg); border-color: var(--color-critical-border); color: var(--color-critical-fg); }
+.warning { background: var(--color-warning-bg); border-color: var(--color-warning-border); color: var(--color-warning-fg); }
+.info { background: var(--color-info-bg); border-color: var(--color-info-border); color: var(--color-info-fg); }
+/* Done is a success confirmation, not an alert level (styleguide), so it uses the success tokens. */
+.done { background: var(--color-success-bg); border-color: var(--color-success-border); color: var(--color-success-fg); }
+
+/* 16px icon, centred on the first text line (brief: no fixed 2px nudge; 20 compact, 24 comfortable). */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* Styleguide over Figma: keyword and sentence are one inline paragraph (Figma puts them in two columns),
+   so the sentence wraps under the keyword. Long words break instead of overflowing. */
+.text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* Dismissible: the first row is as high as the dismiss button (Icon button sm: 28, 44 in comfortable density).
+   Icon and text centre on that row, so all three line up. The offsets are centring, calculated from tokens, not spacing:
+   text (control-sm − line height) / 2 = 4 compact, 10 comfortable; icon (control-sm − 16) / 2 = 6 compact, 14 comfortable.
+   They are off the 4px scale on purpose: a scale value would put the text or icon off-centre against the button.
+   Code over Figma: Figma's dismiss is a 24x24 box, so a one-line dismissible alert is 42 high there; here it is 46,
+   because Icon button has no 24 size (sm = 28 is the smallest control). An alert without dismiss is 38 in both. */
+.dismissible .icon { margin-top: calc((var(--control-sm) - 16px) / 2); }
+.dismissible .text { margin-top: calc((var(--control-sm) - var(--lh-body)) / 2); }
+
+/* The dismiss icon takes the status fg (Figma). Hover stays surface-hover: status fg on it is a measured pair (Contrast table). */
+.alert .dismiss { color: inherit; }

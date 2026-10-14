@@ -1,0 +1,9 @@
+/* Divider. Figma: Data display / Divider (49:133). Styleguide: Shapes → Shape inventory (Hairline), Colors (line). */
+/* Drawn as a border, not a fill, so it stays visible in forced-colours mode. */
+.divider { flex: none; align-self: stretch; margin: 0; border: 0; }
+
+/* Figma: 320 wide sample. Code: fills its container. */
+.horizontal { height: 0; border-top: 1px solid var(--color-line); }
+
+/* Figma: 40 high sample. Code: stretches to its row; at least one body line high when nothing stretches it. */
+.vertical { width: 0; min-height: var(--lh-body); border-left: 1px solid var(--color-line); }

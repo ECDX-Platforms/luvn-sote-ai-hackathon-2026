@@ -1,0 +1,164 @@
+/* Time period. Figma: Data display / Time period (172:388); Paused: 224:2143 (Full), 224:2171 (Compact). NEW: not in the styleguide; composed from its rules.
+   Styleguide: Typography → Roles (body, body-strong, caption), Shapes → Shape inventory (hairline), Icons, Charts (data colour),
+   Timeline (client view) → Paused, Content (dates), Overview rule 6 (status is icon + word), Accessibility (1.4.1, 1.4.10). */
+
+.timePeriod {
+  min-width: 0; /* inside a flex or grid parent, long text must not widen the parent */
+  color: var(--color-text);
+  overflow-wrap: break-word; /* text wraps, words stay whole. Styleguide over Figma: Figma's text is one line. */
+}
+
+/* Each date stays on one line ("30 Nov 2026"); the period wraps only at the dash. Numbers never break. */
+.date { white-space: nowrap; }
+.dates { min-width: 0; }
+
+/* ===== Full ===== */
+/* Column, 8px apart: top line, track, bottom line. Figma's frame is 320 wide; in code it fills its container. */
+.full {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Dates (body) on the left, status word (body-strong) on the right, 8px apart. A long line wraps. */
+.top,
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 var(--space-xs);
+}
+
+/* Progress and the today label in caption, text-muted (colour from .t-caption). */
+.text { min-width: 0; }
+.word { min-width: 0; }
+
+/* Track: 12 high, decorative (aria-hidden). A 4px period line in `line`, the elapsed part in `data`
+   (styleguide v2.3 Charts: data is drawn in `data`, never in `primary`; Figma's description still says primary), and a 2 × 12 today marker in `text`.
+   Figma over styleguide: the styleguide's chart line is 2px; this is a track, not a chart line, so it keeps Figma's 4px. */
+.track {
+  position: relative;
+  height: var(--space-sm);
+}
+
+.period,
+.elapsed,
+.visits {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: var(--space-2xs);
+  transform: translateY(-50%);
+}
+.period { right: 0; background: var(--color-line); }
+.elapsed { width: calc(var(--elapsed) * 100%); background: var(--color-data); }
+
+/* Today marker: Ongoing only. It starts where the elapsed part ends and never sticks out at the end. */
+.today {
+  position: absolute;
+  top: 0;
+  left: min(calc(var(--elapsed) * 100%), calc(100% - 2px));
+  width: 2px;
+  height: var(--space-sm);
+  background: var(--color-text);
+}
+
+/* No end date (Open-ended, or Upcoming without an end): the period line runs out in dashes over the last 64px: 8px dashes, 8px gaps.
+   Code over Figma: Figma paints the gaps with a surface-colour cover; code leaves them transparent, so the dashes
+   also work on a tinted block. */
+.noEnd .period { right: var(--space-3xl); }
+.noEnd::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: var(--space-3xl);
+  height: var(--space-2xs);
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(to right, var(--color-line) 0 var(--space-xs), transparent var(--space-xs) var(--space-md));
+}
+
+/* ===== Paused (Full) ===== */
+/* Top row: the status is icon + word, so the row aligns to the top (both texts are one body line high), not to the baseline. */
+.topPaused { align-items: flex-start; }
+.status {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2xs); /* Figma: 4 between icon and word */
+  min-width: 0;
+}
+/* 16px icon in text colour, centred on the body line (20 compact, 24 comfortable). Figma: Icon/pause (221:131). */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* Hatched track for the whole period up to today: the pause start is not in the source, so no part is marked as paused.
+   8 high in the 12px track, 1px text-muted frame, 45° lines in text-muted. Tokens only, so it follows light and dark.
+   Code over Figma: Figma draws 1.5px lines 6px apart horizontally; code draws 1px lines 4px apart across the lines
+   (about 5.7px horizontally), because strokes are 1px or 2px in this library. */
+.hatch {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--space-xs);
+  transform: translateY(-50%);
+  border: 1px solid var(--color-text-muted);
+  background: repeating-linear-gradient(135deg, var(--color-text-muted) 0 1px, transparent 1px var(--space-2xs));
+}
+/* Today sits at the end: both paused tracks run from the start to today. */
+.todayEnd { right: 0; left: auto; }
+
+/* Visits recorded: a 4px bar in `data` from the first to the last visit, on the period line. */
+.visits {
+  left: calc(var(--from) * 100%);
+  width: calc((var(--to) - var(--from)) * 100%);
+  background: var(--color-data);
+}
+
+.caption { min-width: 0; margin: 0; }
+
+/* Two source lines, 8 apart and 8 below the visits caption (16 in all, Figma): heading in body-strong, text in caption text-muted. */
+.sourceLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+}
+.line { display: flex; flex-direction: column; min-width: 0; }
+.lineTitle,
+.lineText { min-width: 0; margin: 0; }
+.lineTitle { color: var(--color-text); }
+
+/* Forced colours replace background colours and drop gradients: keep the track visible with system colours. */
+@media (forced-colors: active) {
+  .track,
+  .track * { forced-color-adjust: none; }
+  .period { background: GrayText; }
+  .elapsed,
+  .visits,
+  .today { background: CanvasText; }
+  .noEnd::after { background: repeating-linear-gradient(to right, GrayText 0 var(--space-xs), transparent var(--space-xs) var(--space-md)); }
+  .hatch {
+    border-color: GrayText;
+    background: repeating-linear-gradient(135deg, GrayText 0 1px, transparent 1px var(--space-2xs));
+  }
+}
+
+/* ===== Compact ===== */
+/* One line for tables and lists: dates · status, 8px apart, body. The separator is text-muted. Wraps when narrow. */
+.compact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-xs);
+}
+.separator { color: var(--color-text-muted); }
+
+/* Not interactive: hover, focus, pressed, selected, disabled and error do not apply. */

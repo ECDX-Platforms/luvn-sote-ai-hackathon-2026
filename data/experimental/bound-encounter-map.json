@@ -1,0 +1,165 @@
+{
+  "version": "bound-fixtures-v1",
+  "provenance": "Source-keyed copies of historical persona-002/003/004 preserve original record facts and answer keys. Historical copies do not receive invented identity display fields; because neither nimi nor näyttötunniste is sourced, presentation must use the neutral unavailable header. No source key is derived from names or containing personas. Owner-approved: bound-source-002, bound-source-003, and bound-source-004 are manually ASSIGNED SYNTHETIC keys for derived demo copies ONLY, never source-derived provenance or proof about real data. bound-persona-005 is NEW synthetic material authored for the hackathon challenge, not a historical copy; its source key is assigned the same way and is not a source-derived identity. bound-note-019 is NEW synthetic social-care/high-sensitivity material authored only to expose the role-policy difference for persona-003; it is not a historical source record. bound-persona-012 is NEW synthetic material authored for the Phase 3 neuvola/guardian lens; its consent_holder values are illustrative demo vocabulary, not a legal consent model, and bound-self-012 exists only to show that a lens which does not cover the holder sees nothing. Phase 4 owner-authorized synthetic alignment rows are mapped below; they are not source-derived facts. bound-persona-013 is NEW synthetic material authored for the fourth named example form and its service domain (vammaispalvelut); it is not a historical copy and its source key is assigned the same way as the others. bound-note-023 is NEW synthetic provenance material authored to exercise the ADR-0012/0013/0015 envelope on the curated-fixture path (heading, käyntiaika, vastaanottajat, case_id, encounter_id, state/responsible_approver); its case_id is a modelling handle, not a source-system identifier, and it carries no legal_basis. The therapist role reuses persona-003 so the only axis that varies against the nurse's toimintakyky lens is the professional.",
+  "persona_mappings": {
+    "persona-002-krooninen-ikääntynyt": {
+      "persona_id": "bound-persona-002-krooninen-ikääntynyt",
+      "source_person_id": "bound-source-002",
+      "records": {
+        "demo-002": "bound-demo-002",
+        "dx-002": "bound-dx-002",
+        "dx-003": "bound-dx-003",
+        "med-002": "bound-med-002",
+        "med-003": "bound-med-003",
+        "note-002": "bound-note-002",
+        "asiointi-002": "bound-asiointi-002",
+        "asiointi-003": "bound-asiointi-003",
+        "alignment-002": "bound-note-002-alignment",
+        "alignment-002-draft": "bound-note-002-draft"
+      }
+    },
+    "persona-003-mielenterveys-sosiaali": {
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "source_person_id": "bound-source-003",
+      "records": {
+        "demo-003": "bound-demo-003",
+        "note-003": "bound-note-003",
+        "note-010": "bound-note-010",
+        "dx-004": "bound-dx-004",
+        "med-004": "bound-med-004",
+        "note-004": "bound-note-004",
+        "asiointi-004": "bound-asiointi-004",
+        "arviointi-003": "bound-arviointi-003",
+        "asiointi-005": "bound-asiointi-005",
+        "note-019": "bound-note-019",
+        "alignment-003": "bound-note-003-alignment",
+        "alignment-003-draft": "bound-note-003-draft"
+      }
+    },
+    "persona-004-sosiaalipalvelut": {
+      "persona_id": "bound-persona-004-sosiaalipalvelut",
+      "source_person_id": "bound-source-004",
+      "records": {
+        "demo-004": "bound-demo-004",
+        "note-005": "bound-note-005",
+        "arviointi-006": "bound-arviointi-006",
+        "note-009": "bound-note-009",
+        "paatos-005": "bound-paatos-005",
+        "paatos-007": "bound-paatos-007",
+        "arviointi-007": "bound-arviointi-007",
+        "asiointi-006": "bound-asiointi-006",
+        "asiointi-007": "bound-asiointi-007",
+        "alignment-004": "bound-note-004-alignment",
+        "alignment-004-draft": "bound-note-004-draft"
+      }
+    },
+    "persona-005-omahoidon-tuki": {
+      "persona_id": "bound-persona-005-omahoidon-tuki",
+      "source_person_id": "bound-source-005",
+      "records": {
+        "demo-005": "bound-demo-005",
+        "dx-005": "bound-dx-005",
+        "med-005": "bound-med-005",
+        "note-011": "bound-note-011",
+        "note-012": "bound-note-012",
+        "note-013": "bound-note-013",
+        "lab-alignment": "bound-lab-005-alignment"
+      }
+    },
+    "persona-012-neuvola-lapsi": {
+      "persona_id": "bound-persona-012-neuvola-lapsi",
+      "source_person_id": "bound-source-012",
+      "records": {
+        "demo-012": "bound-demo-012",
+        "mittaus-012": "bound-mittaus-012",
+        "mittaus-013": "bound-mittaus-013",
+        "note-020": "bound-note-020",
+        "self-012": "bound-self-012"
+      }
+    },
+    "persona-013-vammaispalvelut": {
+      "persona_id": "bound-persona-013-vammaispalvelut",
+      "source_person_id": "bound-source-013",
+      "records": {
+        "bound-demo-013": "bound-demo-013",
+        "bound-esitieto-013": "bound-esitieto-013",
+        "bound-note-022": "bound-note-022",
+        "note-023": "bound-note-023"
+      }
+    }
+  },
+  "encounter_mappings": [
+    {
+      "source_encounter_id": "encounter-medication-follow-up",
+      "encounter_id": "bound-encounter-002-laakitys-sairaanhoitaja",
+      "role": "sairaanhoitaja",
+      "purpose": "medication_follow_up",
+      "persona_id": "bound-persona-002-krooninen-ikääntynyt",
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "source_encounter_id": "encounter-mental-health-assessment",
+      "encounter_id": "bound-encounter-003-mielenterveys-sairaanhoitaja",
+      "role": "sairaanhoitaja",
+      "purpose": "mental_health_assessment",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "source_encounter_id": null,
+      "encounter_id": "bound-encounter-003-mielenterveys-laakari",
+      "role": "laakari",
+      "purpose": "mental_health_assessment",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "source_encounter_id": "encounter-functioning-service-needs-nurse",
+      "encounter_id": "bound-encounter-003-toimintakyky-sairaanhoitaja",
+      "role": "sairaanhoitaja",
+      "purpose": "functioning_service_needs",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "source_encounter_id": "encounter-functioning-service-needs",
+      "encounter_id": "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija",
+      "role": "sosiaalityontekija",
+      "purpose": "functioning_service_needs",
+      "persona_id": "bound-persona-004-sosiaalipalvelut",
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "source_encounter_id": "encounter-medication-adherence-nurse",
+      "encounter_id": "bound-encounter-005-laakitys-sairaanhoitaja",
+      "role": "sairaanhoitaja",
+      "purpose": "medication_follow_up",
+      "persona_id": "bound-persona-005-omahoidon-tuki",
+      "source_person_id": "bound-source-005"
+    },
+    {
+      "source_encounter_id": null,
+      "encounter_id": "bound-encounter-012-neuvola-terveydenhoitaja",
+      "role": "terveydenhoitaja",
+      "purpose": "child_health_checkup",
+      "persona_id": "bound-persona-012-neuvola-lapsi",
+      "source_person_id": "bound-source-012"
+    },
+    {
+      "source_encounter_id": null,
+      "encounter_id": "bound-encounter-003-toimintakyky-fysioterapeutti",
+      "role": "fysioterapeutti",
+      "purpose": "functioning_service_needs",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "source_encounter_id": null,
+      "encounter_id": "bound-encounter-013-vammaispalvelut-sosiaalityontekija",
+      "role": "sosiaalityontekija",
+      "purpose": "functioning_service_needs",
+      "persona_id": "bound-persona-013-vammaispalvelut",
+      "source_person_id": "bound-source-013"
+    }
+  ]
+}

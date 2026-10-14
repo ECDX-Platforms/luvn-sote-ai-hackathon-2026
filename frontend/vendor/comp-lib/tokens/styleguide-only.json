@@ -1,0 +1,7 @@
+{
+  "$description": "Tokens that exist only in the Swiss 1 baseline styleguide (Implementation > System block), not as Figma variables. Hand-maintained: change here and in the styleguide together.",
+  "duration-fast": { "$type": "duration", "$value": { "value": 100, "unit": "ms" }, "$description": "Colour and background on hover." },
+  "duration-base": { "$type": "duration", "$value": { "value": 150, "unit": "ms" }, "$description": "Tab or selection change, chevron rotation." },
+  "duration-slow": { "$type": "duration", "$value": { "value": 200, "unit": "ms" }, "$description": "Dialog and menu enter, expand and collapse." },
+  "ease": { "$type": "cubicBezier", "$value": [0.2, 0, 0, 1], "$description": "All motion." }
+}

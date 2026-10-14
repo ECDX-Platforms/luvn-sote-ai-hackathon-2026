@@ -1,0 +1,113 @@
+/* Timeline mark. Figma: Data display / Timeline mark (239:2969). NEW: composed from the styleguide's rules.
+   Styleguide: Components → Timeline (client view) (shapes per kind), Charts (data colour), Colors → data, text,
+   text-muted, Shapes → Shape inventory, Accessibility (1.4.1: the legend names each shape, 1.4.11).
+   Sizes are Figma's mark sizes (10px dots, 2×20 tick, 8px bars, 3px contacts bar): glyph sizes like icon sizes, not
+   spacing, so some are not on the spacing scale. */
+
+.mark {
+  display: block;
+  flex: none;
+  box-sizing: border-box;
+  --_month: var(--tl-month, var(--space-3xl)); /* 64px per month (styleguide: about 64px per month; fixed in code) */
+}
+
+/* ===== Placed in a row track ===== */
+/* Bars start at --at and end at --until; points are centred on --at. All are centred on the track's middle line,
+   except the contacts bar, which stands 8px above the row rule. */
+.placed {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--_month) * var(--at));
+  transform: translate(-50%, -50%);
+}
+.placed.running,
+.placed.as-needed,
+.placed.paused {
+  width: calc(var(--_month) * (var(--until) - var(--at)));
+  transform: translateY(-50%);
+}
+
+/* ===== Bars: data colour (styleguide v2.3 Charts) ===== */
+/* Free-standing bars fill their container (Figma's component is 120 wide; in a track the dates set the width). */
+.running,
+.as-needed,
+.paused {
+  width: 100%;
+  height: var(--space-xs); /* 8 */
+}
+.running { background: var(--color-data); }
+.as-needed {
+  border: 1px solid var(--color-data);
+  background: var(--color-surface);
+}
+
+/* Paused: the whole interrupted period is hatched (no pause dates are guessed). Same hatch as Time period
+   (src/components/TimePeriod): 1px text-muted frame and 1px 45° lines in text-muted, 4px apart across the lines.
+   Code over Figma: Figma draws 2px lines 6px apart; strokes are 1px or 2px in this library and the hatch matches
+   Time period, so the two paused patterns look the same. */
+.paused {
+  border: 1px solid var(--color-text-muted);
+  background: repeating-linear-gradient(135deg, var(--color-text-muted) 0 1px, transparent 1px var(--space-2xs));
+}
+
+/* ===== Points: text colour =====
+   Figma over styleguide (parked for Theo): the styleguide's Charts rule says marks are drawn in `data`; Figma (and the
+   approved reference) draws ticks, dots, rings and squares in `text` and only bars in `data`. Both pass 3:1. */
+.single-record {
+  width: 2px;
+  height: calc(var(--space-md) + var(--space-2xs)); /* 20 */
+  background: var(--color-text);
+}
+.visit,
+.remote-visit,
+.urgent-visit {
+  width: 10px;
+  height: 10px;
+}
+.visit { border-radius: var(--radius-full); background: var(--color-text); }
+.remote-visit {
+  border: 2px solid var(--color-text);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+}
+.urgent-visit { background: var(--color-text); } /* square: radius 0 */
+
+/* Contacts per week: 3px bar in data. Height = the week's minutes relative to the busiest week, at most 24px.
+   It stands 8px above the row rule (Figma), not on the middle line. */
+.contacts-per-week {
+  width: 3px;
+  height: calc(var(--space-lg) * var(--share, 1));
+  min-height: 1px;
+  background: var(--color-data);
+}
+.placed.contacts-per-week {
+  top: auto;
+  bottom: var(--space-xs);
+  transform: none;
+}
+
+/* ===== Legend keys (Figma legend sizes) ===== */
+.legend.running,
+.legend.as-needed,
+.legend.paused { width: var(--space-lg); } /* 24 */
+.legend.single-record { height: 14px; }
+.legend.contacts-per-week { height: var(--space-sm); } /* 12 */
+
+/* Forced colours replace backgrounds and drop gradients: draw the shapes with system colours so they stay visible. */
+@media (forced-colors: active) {
+  .mark { forced-color-adjust: none; }
+  .running,
+  .single-record,
+  .visit,
+  .urgent-visit,
+  .contacts-per-week { background: CanvasText; }
+  .as-needed { border-color: CanvasText; background: Canvas; }
+  .remote-visit { border-color: CanvasText; background: Canvas; }
+  .paused {
+    border-color: CanvasText;
+    background: repeating-linear-gradient(135deg, CanvasText 0 1px, transparent 1px var(--space-2xs));
+  }
+}
+
+/* Not interactive: hover, focus, pressed, selected, disabled and error do not apply. Figma's "Selected mark" focus
+   outline is not built: marks are aria-hidden and never take focus (the row button does). */

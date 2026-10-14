@@ -1,0 +1,44 @@
+/* Sidebar. Figma: App shell / Sidebar (52:131). Styleguide: App shell, Side navigation, Layout tokens, Accessibility (landmarks, 1.4.12). */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: none; /* Never squeezed by a flex parent. */
+  width: var(--sidebar-w); /* 216 */
+  background: var(--color-surface); /* One surface with the header: hairlines only, no coloured shell. */
+  /* The 1px line rule on the right is drawn inside the 216 (as Figma's stroke), so the nav column stays 192 wide
+     like the Figma nav items. Same technique the runbook gives for table row hairlines. */
+  box-shadow: inset -1px 0 0 var(--color-line);
+  color: var(--color-text);
+}
+
+/* Forced colours drop box shadows: keep the rule as a real border there. */
+@media (forced-colors: active) {
+  .sidebar { box-shadow: none; border-right: 1px solid CanvasText; }
+}
+
+/* Logo row: 56 high, padding 0 24, hairline below, product name in title-sm (class on the element).
+   min-height, not height, so a long product name can wrap (WCAG 1.4.12). The 8px top and bottom padding
+   changes nothing at one line (24 + 16 < 56); it only keeps wrapped lines off the hairline. */
+.logo {
+  display: flex;
+  align-items: center;
+  min-height: var(--logo-row);
+  padding: var(--space-xs) var(--space-lg);
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* min-width 0 lets one long word break inside the column instead of pushing out. */
+.name { min-width: 0; overflow-wrap: break-word; }
+
+/* Nav: padding 12, items 4 apart. The items are NavItem (sidebar layout): 192 wide = 216 - 2 x 12. */
+.nav { padding: var(--space-sm); }
+
+.list {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item { display: flex; min-width: 0; }

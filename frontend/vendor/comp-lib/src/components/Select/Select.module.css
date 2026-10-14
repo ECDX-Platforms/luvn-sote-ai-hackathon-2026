@@ -1,0 +1,62 @@
+/* Select. Figma: Form controls / Select (34:47). Styleguide: Components → Text input, textarea, select; Shared state model; Accessibility (1.4.12, 3.3.1). */
+.wrap {
+  position: relative;
+  display: block;
+  width: 100%; /* fills its Field or column, like Input. Figma shows a 320px example. */
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.select {
+  display: block;
+  width: 100%;
+  min-height: var(--control-h); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  margin: 0;
+  /* Padding 0 12, plus room for the chevron: 8px gap + 16px icon (Figma). */
+  padding: 0 calc(var(--space-sm) + 16px + var(--space-xs)) 0 var(--space-sm);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  appearance: none;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+/* The chevron does not take clicks: a click on it opens the select underneath. */
+.chevron {
+  position: absolute;
+  inset-block: 0;
+  right: var(--space-sm);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: inherit;
+}
+.chevron > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* Hover: not used, as on Input. The styleguide and Figma define no hover. */
+
+/* Focus ring: 2px focus colour, 2px offset. The outline follows the 6px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.select:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Error: 2px critical border. Styleguide over Figma: the second pixel is an inset shadow, so the
+   text does not move by 1px (Figma uses a real 2px border). */
+.select[aria-invalid='true'] {
+  border-color: var(--color-critical-fg);
+  box-shadow: inset 0 0 0 1px var(--color-critical-fg);
+}
+
+/* Disabled: line border, muted value and chevron. Never lower opacity (browsers dim disabled selects). */
+.disabled { color: var(--color-text-muted); }
+.select:disabled {
+  border-color: var(--color-line);
+  box-shadow: none;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  opacity: 1;
+  cursor: not-allowed;
+}

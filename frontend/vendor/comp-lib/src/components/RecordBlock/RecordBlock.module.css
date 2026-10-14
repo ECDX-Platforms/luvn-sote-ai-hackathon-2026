@@ -1,0 +1,36 @@
+/* Record block. Figma: Patterns / Record block (249:347): Length = Short (249:272), Cut at 4 (249:281), Show all (249:313).
+   Styleguide v2.3: Thin record page, Block (section), Typography (title-sm, body-strong, caption), Shapes (Hairline). NEW. */
+
+/* Figma: 1px line rule on top, padding 12 0, title then the rows. No fill, no radius, no shadow. */
+.block {
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text);
+}
+
+/* Title in title-sm (17/24, 600). Wraps (Figma's auto-width text is a known Figma gap); words stay whole. */
+.title { min-width: 0; margin: 0; overflow-wrap: break-word; }
+
+.rows { margin: 0; padding: 0; list-style: none; }
+
+/* A row: name left (body-strong), meta right (caption, text-muted), gap 16, min height 36 (44 in comfortable density).
+   Code over Figma: Figma's rows are one line (auto-width text, clipped). Code lets the row wrap: when name and meta do not
+   fit side by side the meta drops under the name, still at the right edge. The 4px block padding keeps the two lines apart
+   when that happens; on one line the row is exactly min-height, so it measures the same as Figma. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--space-md);
+  min-height: var(--row-h);
+  padding: var(--space-2xs) 0;
+}
+
+.name { min-width: 0; overflow-wrap: break-word; }
+
+/* The meta stays at the right edge, also when it has wrapped onto its own line. Never broken inside a word. */
+.meta { min-width: 0; margin-inline-start: auto; overflow-wrap: break-word; text-align: end; }
+
+/* The hidden-row slot (proposal): no styling of its own. The row that is passed in brings its own height and rule. */
+.hidden { display: block; }

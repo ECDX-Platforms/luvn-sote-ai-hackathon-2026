@@ -1,0 +1,33 @@
+/**
+ * Base layer from the Swiss 1 baseline styleguide (design/swiss-1-baseline-DESIGN.md,
+ * Implementation → System block → Base). Tokens come from tokens.css.
+ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--identity-h) + var(--space-xs)); }
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: var(--font-features);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+a { color: var(--color-link); font-weight: 500; text-decoration: underline; text-underline-offset: 4px; }
+.prose { max-width: 75ch; }
+.icon {
+  width: 16px; height: 16px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
+}

@@ -1,0 +1,48 @@
+{
+  "_meta": "ILLUSTRATIVE -- synthetic demo policy, pending clinical/legal sign-off. Not law, not LUVN guidance. Rules decide; free-text triage is the deterministic keyword map only (no model output feeds a table; Decision-1 relevance does not feed decision tables).",
+  "table": "situation",
+  "rules": [
+    {
+      "rule_id": "sit-ei-arvioitavissa",
+      "priority": 200,
+      "when": [{ "field": "current_record_count", "op": "<=", "value": 0 }],
+      "output": { "situation_type": "ei_arvioitavissa", "confidence": "low" }
+    },
+    {
+      "rule_id": "sit-akuutti",
+      "priority": 100,
+      "when": [{ "field": "flags.acute", "op": "is_true" }],
+      "output": { "situation_type": "akuutti", "confidence": "high" }
+    },
+    {
+      "rule_id": "sit-mielenterveys",
+      "priority": 90,
+      "when": [{ "field": "flags.mental_health", "op": "is_true" }],
+      "output": { "situation_type": "mielenterveys", "confidence": "high" }
+    },
+    {
+      "rule_id": "sit-sosiaali",
+      "priority": 80,
+      "when": [{ "field": "flags.social", "op": "is_true" }],
+      "output": { "situation_type": "sosiaalipalvelut", "confidence": "high" }
+    },
+    {
+      "rule_id": "sit-krooninen",
+      "priority": 75,
+      "when": [{ "field": "flags.chronic", "op": "is_true" }],
+      "output": { "situation_type": "krooninen", "confidence": "medium" }
+    },
+    {
+      "rule_id": "sit-ikaantyminen",
+      "priority": 70,
+      "when": [{ "field": "flags.elder_care", "op": "is_true" }],
+      "output": { "situation_type": "ikääntyminen", "confidence": "medium" }
+    },
+    {
+      "rule_id": "sit-yleinen-fallback",
+      "priority": 0,
+      "when": [],
+      "output": { "situation_type": "yleinen", "confidence": "low" }
+    }
+  ]
+}

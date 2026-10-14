@@ -1,0 +1,353 @@
+{
+  "type-page-title": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 2.1875,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.1428571428571428,
+      "letterSpacing": {
+        "value": -0.04,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Title/page-title",
+        "lineHeightPx": 40,
+        "uppercase": false
+      }
+    }
+  },
+  "type-title-lg": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 1.5,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.3333333333333333,
+      "letterSpacing": {
+        "value": -0.02,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Title/title-lg",
+        "lineHeightPx": 32,
+        "uppercase": false
+      }
+    }
+  },
+  "type-title-md": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 1.25,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.4,
+      "letterSpacing": {
+        "value": -0.015,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Title/title-md",
+        "lineHeightPx": 28,
+        "uppercase": false
+      }
+    }
+  },
+  "type-title-sm": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 1.0625,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.411764705882353,
+      "letterSpacing": {
+        "value": -0.01,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Title/title-sm",
+        "lineHeightPx": 24,
+        "uppercase": false
+      }
+    }
+  },
+  "type-metric": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 2.1875,
+        "unit": "rem"
+      },
+      "fontWeight": 500,
+      "lineHeight": 1.1428571428571428,
+      "letterSpacing": {
+        "value": -0.045,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Metric/metric",
+        "lineHeightPx": 40,
+        "uppercase": false
+      }
+    }
+  },
+  "type-metric-sm": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 1.8125,
+        "unit": "rem"
+      },
+      "fontWeight": 500,
+      "lineHeight": 1.2413793103448276,
+      "letterSpacing": {
+        "value": -0.04,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Metric/metric-sm",
+        "lineHeightPx": 36,
+        "uppercase": false
+      }
+    }
+  },
+  "type-body": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.875,
+        "unit": "rem"
+      },
+      "fontWeight": 400,
+      "lineHeight": 1.4285714285714286,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Body/body",
+        "lineHeightPx": 20,
+        "uppercase": false
+      }
+    }
+  },
+  "type-body-strong": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.875,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.4285714285714286,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Body/body-strong",
+        "lineHeightPx": 20,
+        "uppercase": false
+      }
+    }
+  },
+  "type-control": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.875,
+        "unit": "rem"
+      },
+      "fontWeight": 500,
+      "lineHeight": 1.4285714285714286,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Body/control",
+        "lineHeightPx": 20,
+        "uppercase": false
+      }
+    }
+  },
+  "type-caption": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "fontWeight": 400,
+      "lineHeight": 1.3333333333333333,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Small/caption",
+        "lineHeightPx": 16,
+        "uppercase": false
+      }
+    }
+  },
+  "type-tag": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "fontWeight": 500,
+      "lineHeight": 1.3333333333333333,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Small/tag",
+        "lineHeightPx": 16,
+        "uppercase": false
+      }
+    }
+  },
+  "type-overline": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.3333333333333333,
+      "letterSpacing": {
+        "value": 0.06,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Small/overline",
+        "lineHeightPx": 16,
+        "uppercase": true
+      }
+    }
+  },
+  "type-initials": {
+    "$type": "typography",
+    "$value": {
+      "fontFamily": [
+        "Host Grotesk",
+        "system-ui",
+        "sans-serif"
+      ],
+      "fontSize": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "fontWeight": 600,
+      "lineHeight": 1.3333333333333333,
+      "letterSpacing": {
+        "value": 0,
+        "unit": "em"
+      }
+    },
+    "$extensions": {
+      "com.comp-lib": {
+        "figmaStyle": "Small/initials",
+        "lineHeightPx": 16,
+        "uppercase": false
+      }
+    }
+  }
+}

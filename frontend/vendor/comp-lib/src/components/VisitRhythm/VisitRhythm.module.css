@@ -1,0 +1,145 @@
+/* Visit rhythm. Figma: Data display / Visit rhythm (248:4877): Plan=Yes (248:4818), Plan=No (248:4854). NEW (13 Oct 2026).
+   Styleguide v2.3: Visit rhythm, Charts, Colors (data, line, line-strong), Typography (body-strong, caption), Content
+   (numbers, dates), Accessibility.
+   No over or under verdict, no colour for a deviation: bars are always `data`, the plan line always `line-strong`. */
+.rhythm {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs); /* Figma: 8 between head, chart, key line and note */
+  min-width: 0;
+  color: var(--color-text);
+}
+
+/* Head: title (body-strong) + totals (caption, text-muted), 4 apart on a shared baseline (Figma). Figma clips the row
+   on one line; code wraps (brief: text wraps). Numbers and dates are held together by non-breaking spaces. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-2xs);
+  min-width: 0;
+}
+.title { min-width: 0; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+.totals { min-width: 0; margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
+
+/* Chart (Figma: 132 high, full width). Two columns: scale labels, then the plot. Two rows: bars, then month labels.
+   Figma's scale column is 40 wide; code lets it grow when the top label is wider. */
+.chart {
+  display: grid;
+  grid-template-columns: minmax(calc(var(--space-xl) + var(--space-xs)), max-content) minmax(0, 1fr); /* 40 */
+  row-gap: calc(var(--space-2xs) + 1px); /* 4 below the 1px baseline (Figma: labels at 114, baseline 108–109) */
+  padding-top: var(--space-2xs); /* Figma: the today line starts 4 from the top */
+  min-width: 0;
+}
+
+/* Scale labels "0" and the top of the scale (caption, text-muted). Styleguide over Figma: Figma left-aligns them; the
+   styleguide says right-align numbers with tabular figures, so they sit against the plot. Each label is centred on its
+   line (top label on the top of the scale, "0" on the baseline). */
+.scale {
+  position: relative;
+  padding-right: var(--space-xs);
+  font-variant-numeric: tabular-nums;
+}
+/* Sets the column width from the top label; not shown. */
+.sizer { display: block; height: 0; overflow: hidden; visibility: hidden; white-space: nowrap; }
+.scaleTop,
+.scaleZero { position: absolute; right: var(--space-xs); white-space: nowrap; }
+.scaleTop { top: var(--lh-small); transform: translateY(-50%); }
+.scaleZero { bottom: 0; transform: translateY(50%); }
+
+/* Bars row: 104 high (Figma: today line 4–108). One-line chrome (a picture), not a text block, so a fixed height is allowed. */
+.bars {
+  position: relative;
+  min-width: 0;
+  height: calc(var(--space-2xl) * 2 + var(--space-xs)); /* 104 */
+}
+
+/* Baseline: 1px line under the bars, across the whole plot column (Figma: x 40–900). */
+.bars::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+/* Plot: days run from the Monday of the first week (left) to the end of the last day (16 in from the right, Figma:
+   today line centred at 884 of 900). The top of the scale sits one caption line below the top, so "ended <date>" fits
+   above the tallest bar (Figma: highest bar top at 21, 17 below the today line's top). */
+.plot {
+  position: absolute;
+  top: var(--lh-small);
+  bottom: 0;
+  left: 0;
+  right: var(--space-md);
+}
+
+/* One bar per week, `data` (styleguide v2.3: never purple, never a status colour). It starts at the week's first day of
+   service and is as wide as its days of service, so a part week is narrower (Figma). A 2px gap on the right separates
+   the weeks (Figma: 41.8 of a 43.75 slot); at least 1px stays visible on very narrow screens. */
+.bar {
+  position: absolute;
+  bottom: 0;
+  background-color: var(--color-data);
+}
+
+/* Plan line: dashed 1px `line-strong`, dash 4 4 (Figma). Planned minutes a day × days of service in each week, so it
+   steps down in a part week. Lines are drawn in pixels (no viewBox), so the stroke and dashes never stretch. */
+.plan {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.plan line {
+  stroke: var(--color-line-strong);
+  stroke-width: 1px;
+  stroke-dasharray: 4 4;
+}
+
+/* Today line: 2px `text`, the full bars row, centred on the end of today (Figma: x 883–885, y 4–108).
+   Drawn as a border so it stays visible in forced colours. */
+.today {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--space-md) - 1px); /* centres the 2px line on the plot's right edge */
+  width: 0;
+  border-left: 2px solid var(--color-text);
+}
+
+/* "ended <date>" instead of the today line when the service ended (Figma description). Not drawn in Figma: placed at the
+   end of the plot, above the bars, right-aligned (ASSUMPTION). Caption, text-muted. */
+.ended {
+  position: absolute;
+  top: 0;
+  right: var(--space-md);
+  white-space: nowrap;
+}
+
+/* Month labels (caption, text-muted): "Jul"; January shows the year only. Each starts at the first of its month (Figma). */
+.months {
+  grid-column: 2;
+  position: relative;
+  min-width: 0;
+}
+.monthsPlot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: var(--space-md);
+}
+.month { position: absolute; top: 0; white-space: nowrap; }
+
+/* Key line and part-week note (caption, text-muted, full width, wraps). */
+.text { min-width: 0; margin: 0; overflow-wrap: break-word; }
+
+/* Forced colours: backgrounds are removed, so bars and the plan line take the text colour of the high-contrast theme. */
+@media (forced-colors: active) {
+  .bar { forced-color-adjust: none; background-color: CanvasText; }
+  .plan line { stroke: CanvasText; }
+}

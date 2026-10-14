@@ -1,0 +1,23 @@
+/* User switcher. Figma: Overlays / User switcher (203:228). Styleguide: Elevation & Depth (overlays), Shapes (radius none),
+   Typography (overline, caption), Shared state model, Accessibility.
+   NEW: not in the styleguide. Composed from Menu (surface, 1px line, overlay shadow, radius 0, padding 4 0), User menu item
+   and Divider. Only the width and the overline and caption rows are its own. */
+
+/* Width 282 (Figma) instead of Menu's 240. In rem, so it grows with the user's font size; never wider than the screen
+   minus the gaps (Menu's rule). Two classes beat Menu's own single class without depending on CSS order. */
+.switcher.switcher { width: min(17.625rem, calc(100vw - 2 * var(--menu-gap))); }
+
+/* Overline "SWITCH USER": padding 8 12 4, overline role (12/16, 600, capitals, text-muted). */
+.heading {
+  padding: var(--space-xs) var(--space-sm) var(--space-2xs);
+  overflow-wrap: break-word;
+}
+
+/* Caption under the hairline: padding 4 12 8, caption role in text-muted. It wraps inside the 282 width (Figma agrees). */
+.note {
+  padding: var(--space-2xs) var(--space-sm) var(--space-xs);
+  overflow-wrap: break-word;
+}
+
+/* States: the overline and caption are not interactive. Item states come from User menu item; Esc, outside click,
+   arrow keys and focus return from Menu. Disabled, error and loading do not apply. */

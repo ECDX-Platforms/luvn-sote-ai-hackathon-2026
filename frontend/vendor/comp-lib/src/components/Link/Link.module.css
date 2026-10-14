@@ -1,0 +1,18 @@
+/* Link. Figma: Navigation / Link (46:205) and Link small (46:211). Styleguide: Colors → link, Implementation → Base (a), Content, Accessibility (1.4.1), Shared state model. */
+.link {
+  color: var(--color-link);
+  font-weight: 500;
+  text-decoration-line: underline; /* Always underlined: the underline, not the colour, marks a link (WCAG 1.4.1). */
+  text-decoration-thickness: from-font; /* Figma: decoration from font. */
+  /* 4px for both sizes (styleguide base `a`). Styleguide wins over Figma: Link small's description asks for 3px, which is off the 4px scale. */
+  text-underline-offset: var(--space-2xs);
+  overflow-wrap: anywhere; /* Wraps at spaces. A long unbroken string (a web address) breaks where it cannot fit, also inside grid and flex items (break-word would let it push the column wider). Figma's no-wrap text is a known Figma gap. */
+}
+
+/* Size: type comes from the role classes (.t-control for md, .t-tag for sm), so comfortable density scales it. */
+
+/* Hover and pressed: not used. The underline already marks the link; the styleguide sets no link hover. */
+
+/* Focus ring: 2px focus colour, 2px offset (styleguide). Square: a link has no radius.
+   Styleguide wins over Figma: Figma draws this ring with a 4px radius. */
+.link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }

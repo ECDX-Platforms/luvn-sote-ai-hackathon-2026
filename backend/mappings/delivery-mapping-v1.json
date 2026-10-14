@@ -1,0 +1,189 @@
+{
+  "version": "delivery-mapping-v1",
+  "provisional": true,
+  "note": "PROVISIONAL SEED. Every source_path and every value-set spelling below is a plausible Finnish vendor spelling, NOT a confirmed one. Nothing here is authoritative until the 2026-10-13 delivery is landed and its shape report names the real columns. Copy this file to a new version, edit, and point --mapping at it; never edit this one in place to make a run green. Rules marked \"optional\": true are plausible measurement columns the delivery may not carry at all: an optional rule that matches no row is REPORTED by name in the run's sanity report instead of refusing the import, and its sibling spelling is the same fact under another name.",
+  "ignore_source_paths": [
+    "TietueVersio",
+    "Lähdejärjestelmä",
+    "Rivinumero"
+  ],
+  "valuesets": {
+    "record_type": {
+      "Laakemaarays": "lääkitys",
+      "Lääkemääräys": "lääkitys",
+      "Vapaateksti": "vapaateksti",
+      "Perustiedot": "perustieto",
+      "Diagnoosi": "diagnoosi",
+      "Käynti": "asiointitapahtuma",
+      "Asiointitapahtuma": "asiointitapahtuma",
+      "Mittaus": "mittaus",
+      "Laboratoriotulos": "tutkimustulos",
+      "Tutkimustulos": "tutkimustulos",
+      "Arviointi": "arviointi",
+      "Päätös": "päätös"
+    },
+    "sensitivity_tag": {
+      "julkinen": "none",
+      "ei_salainen": "none",
+      "salainen": "sensitive",
+      "salassapidettava": "sensitive",
+      "erittain_salainen": "highly_sensitive",
+      "erittäin_salainen": "highly_sensitive"
+    },
+    "consent_scope": {
+      "hoito": "treatment",
+      "sosiaalihuolto": "social_care",
+      "tutkimus": "research",
+      "itse": "self",
+      "tuntematon": "unknown"
+    },
+    "topic": {
+      "Laakitys": "lääkitys",
+      "Verenpaine": "verenpaine",
+      "Mielenterveys": "mielenterveys",
+      "Toimintakyky": "toimintakyky",
+      "Neuvola": "neuvola",
+      "Perustiedot": "demografia"
+    }
+  },
+  "rules": [
+    {
+      "id": "source-const",
+      "target_field": "source",
+      "transform": "const",
+      "value": "delivery"
+    },
+    {
+      "id": "source-person",
+      "source_path": "Lähdehenkilötunniste",
+      "target_field": "source_person_id",
+      "transform": "identity"
+    },
+    {
+      "id": "person-alt",
+      "source_path": "Henkilötunniste",
+      "target_field": "source_person_id",
+      "transform": "identity"
+    },
+    {
+      "id": "record-id",
+      "source_path": "Kirjaustunniste",
+      "target_field": "record_id",
+      "transform": "identity"
+    },
+    {
+      "id": "record-id-alt",
+      "source_path": "KirjausID",
+      "target_field": "record_id",
+      "transform": "identity"
+    },
+    {
+      "id": "record-type",
+      "source_path": "Kirjaustyyppi",
+      "target_field": "record_type",
+      "transform": "lookup_valueset",
+      "valueset": "record_type"
+    },
+    {
+      "id": "record-type-alt",
+      "source_path": "Tietoryhmä",
+      "target_field": "record_type",
+      "transform": "lookup_valueset",
+      "valueset": "record_type"
+    },
+    {
+      "id": "authored-by",
+      "source_path": "Kirjaaja",
+      "target_field": "authored_by_role",
+      "transform": "identity"
+    },
+    {
+      "id": "recorded-at",
+      "source_path": "Kirjausaika",
+      "target_field": "recorded_at",
+      "transform": "date"
+    },
+    {
+      "id": "recorded-at-alt",
+      "source_path": "Tallennusaika",
+      "target_field": "recorded_at",
+      "transform": "date"
+    },
+    {
+      "id": "topic",
+      "source_path": "Aihe",
+      "target_field": "topic",
+      "transform": "lookup_valueset",
+      "valueset": "topic"
+    },
+    {
+      "id": "topic-alt",
+      "source_path": "Asia",
+      "target_field": "topic",
+      "transform": "lookup_valueset",
+      "valueset": "topic"
+    },
+    {
+      "id": "sensitivity",
+      "source_path": "Salassapitoluokka",
+      "target_field": "sensitivity_tag",
+      "transform": "lookup_valueset",
+      "valueset": "sensitivity_tag"
+    },
+    {
+      "id": "consent-scope",
+      "source_path": "SuostumuksenLaajuus",
+      "target_field": "consent_scope",
+      "transform": "lookup_valueset",
+      "valueset": "consent_scope"
+    },
+    {
+      "id": "payload",
+      "source_path": "Sisältö",
+      "target_field": "payload",
+      "transform": "identity"
+    },
+    {
+      "id": "weight",
+      "source_path": "Paino",
+      "target_field": "payload.paino_kg",
+      "transform": "decimal_fi",
+      "optional": true
+    },
+    {
+      "id": "weight-alt",
+      "source_path": "PainoKg",
+      "target_field": "payload.paino_kg",
+      "transform": "decimal_fi",
+      "optional": true
+    },
+    {
+      "id": "height",
+      "source_path": "Pituus",
+      "target_field": "payload.pituus_cm",
+      "transform": "decimal_fi",
+      "optional": true
+    },
+    {
+      "id": "height-alt",
+      "source_path": "PituusCm",
+      "target_field": "payload.pituus_cm",
+      "transform": "decimal_fi",
+      "optional": true
+    },
+    {
+      "id": "pulse",
+      "source_path": "Syke",
+      "target_field": "payload.syke",
+      "transform": "int_fi",
+      "optional": true
+    },
+    {
+      "id": "pulse-alt",
+      "source_path": "Pulssi",
+      "target_field": "payload.syke",
+      "transform": "int_fi",
+      "optional": true
+    }
+  ]
+}

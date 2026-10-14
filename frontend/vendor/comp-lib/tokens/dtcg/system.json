@@ -1,0 +1,49 @@
+{
+  "fs-body": {
+    "$type": "dimension",
+    "$value": {
+      "value": 0.875,
+      "unit": "rem"
+    },
+    "$description": "Body size, moves with density."
+  },
+  "lh-body": {
+    "$type": "dimension",
+    "$value": {
+      "value": 1.25,
+      "unit": "rem"
+    }
+  },
+  "fs-small": {
+    "$type": "dimension",
+    "$value": {
+      "value": 0.75,
+      "unit": "rem"
+    },
+    "$description": "Small size (caption, tag, overline), moves with density."
+  },
+  "lh-small": {
+    "$type": "dimension",
+    "$value": {
+      "value": 1,
+      "unit": "rem"
+    }
+  },
+  "btn-pad": {
+    "$type": "dimension",
+    "$value": "{space-md}"
+  },
+  "btn-pad-sm": {
+    "$type": "dimension",
+    "$value": "{space-sm}"
+  },
+  "color-primary-fill": {
+    "$type": "color",
+    "$value": "{color-primary}",
+    "$description": "Primary fill, re-pointed inside emphasis blocks."
+  },
+  "color-on-primary-fill": {
+    "$type": "color",
+    "$value": "{color-on-primary}"
+  }
+}

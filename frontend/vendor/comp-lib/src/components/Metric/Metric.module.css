@@ -1,0 +1,23 @@
+/* Metric. Figma: Data display / Metric (49:202). Styleguide: Components → Metric (vitals), Shapes → Trend arrow, Icons, Typography → Density. */
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  border-radius: var(--radius-none);
+  color: var(--color-text);
+  /* No hairlines here: Metric row draws every line (styleguide .metrics). Figma's Metric draws its own right rule; a Metric used alone has none. */
+}
+
+/* The value never changes colour (styleguide). Comfortable density and phones switch .t-metric to metric-sm (29/36). */
+.value { color: var(--color-text); } /* Wraps only at ordinary spaces, never inside the digits. */
+
+.unit { display: flex; align-items: center; gap: var(--space-2xs); }
+
+/* Text wraps (styleguide Content; Figma's auto-width text is a known Figma gap). */
+.label { overflow-wrap: anywhere; }
+
+/* Trend arrow: 14px, critical-fg, with a visually hidden text alternative. */
+.trend { display: inline-flex; flex: none; color: var(--color-critical-fg); }
+.trend > svg { width: 14px; height: 14px; stroke-width: calc(24 / 14); } /* lucide 24/14 on its 24px grid = 1px at 14px, like Figma (library rule: every icon draws 1px). */

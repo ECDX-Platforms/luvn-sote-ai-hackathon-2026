@@ -1,0 +1,45 @@
+/* User menu item. Figma: Overlays / User menu item (203:227). Styleguide: Shared state model, Overview rule 9 (selection bar),
+   Shapes (Avatar), Typography (Roles, Density), Accessibility (1.4.12, 2.4.7).
+   NEW: not in the styleguide. Composed from Menu item (padding 4 12, hover, selection bar), Avatar and Tag.
+   Two classes (.item.item) beat Menu's own single-class item rules without depending on CSS order. */
+
+/* Height 44 (two lines: 20 name + 16 role + 4 above and below). min-height, not height: long names wrap (WCAG 1.4.12).
+   In comfortable density the two lines are 24 + 20, so the item grows to 52. Padding 4 12 comes from Menu item. */
+.item.item { min-height: var(--control-lg); }
+
+/* Menu item puts its content in one label span; here it fills the row, so the Tag sits at the end (Figma: space between). */
+.item.item > * { flex: 1 1 auto; }
+
+/* Focus ring: the styleguide wins over Figma's inside ring. Like every Menu item: 2px, 2px offset outside (inside only in a scrolling menu, from Menu). */
+
+/* Avatar, then name and role. Tag "Current" at the end, at least 8 from the text (NEW: Figma has no gap, only space between). */
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Avatar 28 and the text, 8 apart, centred (Figma). */
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Name over role, no gap. Styleguide over Figma: Figma's text is auto-width and never wraps; code wraps, words stay whole. */
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.name,
+.role { min-width: 0; overflow-wrap: break-word; }
+/* Name colour: text (from the item). Role colour: text-muted (from .t-caption). Current: name in body-strong (600). */
+
+.current { flex: none; }
+
+/* States: Default; Hover = interaction-tint (pressed the same; v2.3, from Menu item); Current = 2px selection bar in text colour on
+   the left (not in the layout) plus the Tag; Focus = ring above. Disabled, error and loading do not apply. */

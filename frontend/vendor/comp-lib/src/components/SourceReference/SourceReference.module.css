@@ -1,0 +1,177 @@
+/* Source reference. Figma: Data display / Source reference (165:253). NEW: composed from the styleguide's rules.
+   Styleguide: Components → Source reference and dialog (v2.3), Colors → link, interaction-tint, Implementation → Base (a),
+   Components → Status flag and tag (Tag), Key-value list (caption meta), Shared state model, Icons, Content (dates),
+   Accessibility (1.4.1, 2.5.8). */
+
+/* ===== Shared ===== */
+/* A button (it opens the Source dialog), so the browser's button look is removed: no border, fill, padding or margin. */
+.reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-none);
+  background: none;
+  font: inherit; /* the sentence's or row's type, as a link would have */
+  text-align: start;
+  cursor: pointer;
+}
+
+/* The record type is styled like the Link component (link colour, 500, underline from the font, 4px offset).
+   It cannot nest Link: the whole reference is one button, and a link inside a button is invalid HTML. */
+.label {
+  min-width: 0; /* a flex child that holds text: lets a long word break instead of pushing out of its box */
+  color: var(--color-link);
+  text-decoration-line: underline; /* the underline, not the colour, marks the link (WCAG 1.4.1) */
+  text-decoration-thickness: from-font;
+  text-underline-offset: var(--space-2xs);
+  /* Styleguide over Figma: Figma's text is auto-width (one line). Code wraps; words stay whole. */
+  overflow-wrap: break-word;
+}
+
+/* Dates never break inside ("12 Oct 2026" stays on one line). */
+.date { white-space: nowrap; }
+
+/* ===== Inline ===== */
+/* Icon 12 + label (tag style) + date (caption) + optional "· Draft", 4px apart, centred on one 16px line (20 comfortable). */
+.inline {
+  position: relative; /* anchors the hit area below and the hidden origin text */
+  display: inline-flex;
+  flex-wrap: wrap; /* a long label wraps; the date and Draft follow on the next line */
+  align-items: baseline; /* the label's baseline lines up with the sentence it follows */
+  column-gap: var(--space-2xs);
+  max-width: 100%;
+  min-width: 0; /* inside a flex or grid parent, a long word must not widen the parent */
+  color: var(--color-link); /* icon colour follows the link text */
+  isolation: isolate; /* keeps the hover tint (::after, z-index -1) behind the text but above the parent's background */
+}
+
+/* Hit area, with no visual change: an invisible layer reaches above and below the text line to --target (24: 4px around
+   the 16px line, 2px around the 20px comfortable line). Figma asks for padding; padding would make the sentence's line
+   taller and move the focus ring further out than Figma draws it, so the layer is used instead.
+   Inside a sentence it stays 24 in comfortable density too, not the styleguide's 44: a link in a sentence falls under the
+   WCAG 2.5.8 inline exception. A standalone reference (in a list item or a column) reaches 44 in comfortable density. */
+.inline { --target: var(--space-lg); }
+.inline::before {
+  content: '';
+  position: absolute;
+  inset: calc((var(--target) - var(--lh-small)) / -2) 0;
+}
+[data-density='comfortable'] .standalone { --target: var(--control-lg); }
+@media (max-width: 639px) {
+  .standalone { --target: var(--control-lg); } /* phones are comfortable automatically (tokens.css) */
+}
+
+/* Icon and label stay together: a long label wraps next to its icon, never onto a line of its own. */
+.inlineMain {
+  display: flex;
+  align-items: baseline; /* gives the reference the label's baseline */
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* 12px icon, centred on the first text line (16 compact, 20 comfortable). */
+.inlineIcon {
+  display: inline-flex;
+  flex: none;
+  align-self: flex-start;
+  width: 12px;
+  height: 12px;
+  margin-top: calc((var(--lh-small) - 12px) / 2);
+}
+.inlineIcon > svg { width: 12px; height: 12px; stroke-width: 2; } /* lucide 2 on its 24px grid = Figma's 1px at 12px */
+
+/* "· Draft" in tag style and text colour, as in Figma. */
+.draft { color: var(--color-text); white-space: nowrap; }
+
+/* Hover and pressed look the same (shared state model): interaction-tint behind the reference, reaching 2px past it on
+   the left and right (Figma), and a 2px underline on the record type. The tint is a layer, not padding: padding would
+   move the text and the focus ring. Styleguide over Figma: square, not Figma's 2px radius (not on the radius scale;
+   a text link has no radius). */
+.inline::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 -2px;
+  background-color: transparent;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+.inline:hover::after,
+.inline:active::after { background-color: var(--color-interaction-tint); }
+.inline:hover .label,
+.inline:active .label { text-decoration-thickness: 2px; }
+
+/* Focus ring: 2px focus colour, 2px offset (styleguide). Square: a text link has no radius.
+   Styleguide wins over Figma: Figma draws this ring with a 4px radius. */
+.inline:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* ===== Row ===== */
+/* Row in a source list: min height 36 (44 comfortable) with 4px top and bottom padding, so the 24px Draft tag fits and
+   rows never grow. The whole row is one button. Figma's row is 480 wide; in code it fills its container. */
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs); /* Code over Figma: Figma has no gap; 8px keeps the Draft tag off a long label */
+  box-sizing: border-box;
+  width: 100%; /* a button shrinks to its content; the row fills its container */
+  min-width: 0; /* inside a flex or grid parent, a long word must not widen the parent */
+  min-height: var(--row-h); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  padding: var(--space-2xs) 0;
+  color: var(--color-link); /* icon colour follows the link text */
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+/* Bottom rule: 1px line drawn inside the row (as in Figma), so the row stays exactly 36. */
+.rule { box-shadow: inset 0 -1px 0 var(--color-line); }
+
+/* Forced colours drop box shadows: keep the hairline as a real border there. */
+@media (forced-colors: active) {
+  .rule { box-shadow: none; border-bottom: 1px solid CanvasText; }
+}
+
+/* Icon 16 + text, 8px apart. The icon sits on the first line when the text wraps. */
+.source {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.rowIcon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2); /* centred on the 20px label line (24 comfortable) */
+}
+.rowIcon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* Label, then the meta line, 8px apart. A long label pushes the meta onto the next line. */
+.rowText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Origin · date in caption, text-muted (colour from .t-caption), 4px apart. */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-2xs);
+  min-width: 0;
+}
+.part { min-width: 0; overflow-wrap: break-word; }
+
+.draftTag { flex: none; }
+
+/* Hover and pressed look the same: interaction-tint behind the row (shared state model v2.3: anything clickable).
+   Figma's description still says surface-hover "until interaction-tint exists"; it exists now (tokens v2.3). */
+.row:hover,
+.row:active { background-color: var(--color-interaction-tint); }
+
+/* Focus ring: 2px focus colour, 2px offset (styleguide). Square, as in Figma: the row is structure (radius 0 from .reset).
+   z-index keeps the ring above the next row. */
+.row:focus-visible { z-index: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }

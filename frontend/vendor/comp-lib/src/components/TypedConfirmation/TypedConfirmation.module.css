@@ -1,0 +1,10 @@
+/* Typed confirmation. Figma: Overlays / Typed confirmation (51:254). Styleguide: Dialog and typed confirmation, Overview rule 11,
+   Button (Danger), Text input, Shared state model (Disabled). Layout and overlay come from Dialog (sm 480). */
+
+/* Body, then the field, 16 apart (Figma). The field's own label, hint (4) and input (8) spacing comes from Field. */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}

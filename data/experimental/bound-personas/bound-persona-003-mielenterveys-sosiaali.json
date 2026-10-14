@@ -1,0 +1,218 @@
+{
+  "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+  "label": "Elias Korhonen — Mielenterveys ja sosiaalipalvelut, nuori aikuinen",
+  "records": [
+    {
+      "record_id": "bound-demo-003",
+      "source": "potilastietojärjestelmä",
+      "record_type": "perustieto",
+      "authored_by_role": "rekisterisihteeri",
+      "recorded_at": "2022-08-02T08:00:00+03:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "syntymävuosi": 2001,
+        "sukupuoli": "nainen",
+        "kotikunta": "Vantaa",
+        "äidinkieli": "suomi"
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-note-003",
+      "source": "mielenterveyspalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "psykiatrinen sairaanhoitaja",
+      "recorded_at": "2026-09-15T13:40:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Vastaanotto, masennusoireiden seuranta",
+        "teksti": "Potilas kertoo unen ja mielialan heikentyneen viimeisen kuukauden aikana. Tuntuvaa uupumusta, sosiaalisten kontaktien välttelyä. Itsensä vahingoittamisen ajatuksia ei esiinny, ei itsetuhoisuutta. Elämäntilanteessa taloudellista kuormitusta ja opiskelujen viivästymistä. Arvioi voinnin kohtalaiseksi. Jatketaan seurantaa, harkitaan lääkärin arviota.",
+        "käyntityyppi": "vastaanotto"
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-note-010",
+      "source": "mielenterveyspalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-18T09:15:00+03:00",
+      "topic": "toimintakyky",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Arjen toimintakyvyn arvio",
+        "teksti": "Asiakas kuvaa vaikeuksia asioiden hoitamisessa ja arjen tehtävien käynnistämisessä. Tuen tarvetta selvitetään toimintakyvyn arvioinnissa.",
+        "käyntityyppi": "arviointi"
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-dx-004",
+      "source": "mielenterveyspalvelut",
+      "record_type": "diagnoosi",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2025-06-12T10:00:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "treatment",
+      "payload": {
+        "icd10": "F32.1",
+        "nimi": "Keskivaikea masennusjakso",
+        "tila": "aktiivinen"
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-med-004",
+      "source": "lääkelista",
+      "record_type": "lääkitys",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2025-06-12T10:10:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "treatment",
+      "payload": {
+        "lääke": "sertraliini",
+        "atc": "N06AB06",
+        "annos": "50 mg x 1",
+        "tila": "aktiivinen",
+        "puuttuneet_annokset_30d": 5
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-note-004",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-08-28T11:20:00+03:00",
+      "topic": "toimeentulo",
+      "sensitivity_tag": "highly_sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Palvelutarpeen arviointi, taloudellinen tuki",
+        "teksti": "Asiakas haki täydentävää toimeentulotukea opiskelujen keskeytymisen aiheuttaman tulovajeen vuoksi. Vuokrarästiä kertynyt yksi kuukausi. Asiakas sitoutunut maksusuunnitelmaan. Suositellaan täydentävää tukea ja ohjausta velkaneuvontaan. Tiedot käsitelty luottamuksellisesti.",
+        "käyntityyppi": "neuvottelu"
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-asiointi-004",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "potilas",
+      "recorded_at": "2026-09-01T18:55:00+03:00",
+      "topic": "yhteydenotto",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "kanava": "verkkopalvelu",
+        "suunta": "saapuva",
+        "aihe": "toimeentulotukihakemus",
+        "yhteenveto": "Jätti täydentävän toimeentulotuen hakemuksen."
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-arviointi-003",
+      "source": "mielenterveyspalvelut",
+      "record_type": "arviointi",
+      "authored_by_role": "psykiatrinen sairaanhoitaja",
+      "recorded_at": "2026-09-15T13:55:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "treatment",
+      "payload": {
+        "instrumentti": "PHQ-9",
+        "vastaukset": {
+          "q1": 2,
+          "q2": 3,
+          "q3": 1,
+          "q4": 2,
+          "q5": 1,
+          "q6": 2,
+          "q7": 2,
+          "q8": 2,
+          "q9": 1
+        }
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-asiointi-005",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-19T09:30:00+03:00",
+      "topic": "yhteydenotto",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "kanava": "puhelu",
+        "suunta": "lähtevä",
+        "aihe": "hakemuksen täydennys",
+        "yhteenveto": "Pyydetty tiliote hakemuksen liitteeksi."
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-note-019",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-20T10:00:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "highly_sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Luottamuksellinen mielialan tukisuunnitelma",
+        "teksti": "Mielialan seurannan rinnalle on järjestetty viikoittainen sosiaalihuollon tukikäynti. Seuraavalla tapaamisella sovitaan arjen tuen ja hoidon seurannan yhteensovittamisesta."
+      },
+      "source_person_id": "bound-source-003"
+    },
+    {
+      "record_id": "bound-note-003-alignment",
+      "source": "mielenterveyspalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "psykiatrinen sairaanhoitaja",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Synteettinen lisärivi",
+        "teksti": "Synteettinen testimerkintä, ei potilastietoa.",
+        "kirjaaja": "psykiatrinen sairaanhoitaja"
+      },
+      "source_person_id": "bound-source-003",
+      "erikoisala": "Mielenterveyspalvelut",
+      "suorituspaikka": "Synteettinen toimintayksikkö 003"
+    },
+    {
+      "record_id": "bound-note-003-draft",
+      "source": "mielenterveyspalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Synteettinen luonnos",
+        "teksti": "Synteettinen luonnos odottaa ammattilaisen tarkistusta.",
+        "kirjaaja": "sairaanhoitaja"
+      },
+      "source_person_id": "bound-source-003",
+      "erikoisala": "Mielenterveyspalvelut",
+      "suorituspaikka": "Synteettinen toimintayksikkö 003",
+      "state": "draft",
+      "responsible_approver": "laakari"
+    }
+  ],
+  "source_person_id": "bound-source-003"
+}

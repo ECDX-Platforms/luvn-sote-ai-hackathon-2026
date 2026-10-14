@@ -1,0 +1,44 @@
+/* Search. Figma: Form controls / Search (34:61). Styleguide: Components → Header (search), Text input, Shared state model. */
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 240px; /* styleguide Header: search min width 240 */
+  min-height: var(--control-h); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-muted); /* icon colour */
+  cursor: text;
+  transition: border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.icon { display: inline-flex; flex: none; width: 16px; height: 16px; }
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+.input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  outline: none; /* the ring is drawn on the whole field below */
+}
+.input::placeholder { color: var(--color-text-muted); opacity: 1; }
+/* Figma shows no clear button. Esc clears the field (Search.tsx, every browser). */
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration { appearance: none; }
+
+/* Hover: not used, as on Input. The styleguide and Figma define no hover. */
+
+/* Focus ring on the whole field: 2px focus colour, 2px offset, follows the 6px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.search:focus-within { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: line border, muted text. Never lower opacity. No key hint: the shortcut is off (Search.tsx). */
+.disabled { border-color: var(--color-line); cursor: not-allowed; }
+.disabled .input { color: var(--color-text-muted); cursor: not-allowed; }
+.search .hint { margin-left: auto; }

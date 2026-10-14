@@ -1,0 +1,37 @@
+/* Main and side. Figma: Layouts / Layout / Main and side (128:444): Desktop 128:441, Laptop 128:442, Phone 128:443.
+   Styleguide: Layout (Layout tokens: main grid 2fr / 1fr with a 1px line rule, Breakpoints), Shape inventory (Grid cross). */
+
+/* Below 1280px: one column, the side column stacks below the main column (Laptop, and Phone under 640px).
+   Tablet (640-1023px) is not yet in Figma; it keeps this laptop structure. DOM order equals visual order. */
+.mainSide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  flex: 1 0 auto; /* In the AppShell it fills main, so the column rule reaches the bottom of the page (Figma). */
+  min-width: 0;
+}
+.main, .side { min-width: 0; }
+
+/* From 1280px: main 2fr, side 1fr, a 1px line rule between them, full height. */
+@media (min-width: 1280px) {
+  .mainSide { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-content: stretch; }
+  .side { position: relative; border-left: 1px solid var(--color-line); }
+
+  /* Grid cross: a 14px "+" in text-muted, centred on the top and bottom ends of the rule. Decoration only:
+     the empty alternative text keeps it out of screen readers. Its surface background breaks the hairline it sits on. */
+  .cross .side::before,
+  .cross .side::after {
+    content: '+' / '';
+    position: absolute;
+    left: 0;
+    font-size: 0.875rem; /* 14, type scale */
+    line-height: 1;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    pointer-events: none;
+  }
+  .cross .side::before { top: 0; transform: translate(-50%, -50%); }
+  .cross .side::after { bottom: 0; transform: translate(-50%, 50%); }
+}
+
+/* States: a layout is not interactive. */

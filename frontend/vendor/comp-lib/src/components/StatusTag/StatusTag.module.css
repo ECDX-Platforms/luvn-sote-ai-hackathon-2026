@@ -1,0 +1,35 @@
+/* Status tag. Figma: Tags and flags / Status tag (36:58). Styleguide: Components → Status flag and tag, Icons, Overview rule 6, Colors → Contrast. */
+.statusTag {
+  display: inline-flex;
+  align-items: flex-start; /* the icon sits on the first line when a long label wraps */
+  gap: var(--space-2xs);
+  max-width: 100%;
+  /* Height 24 (styleguide). min-height, not height: text spacing can grow (WCAG 1.4.12). 24 = --space-lg; there is no tag-height token. */
+  min-height: var(--space-lg);
+  /* Code over Figma and styleguide (same as Tag): padding 0 8 plus a block padding of (24 − line height − 2px border) / 2,
+     3px compact, 1px comfortable. Invisible on one line (exactly 24 high); wrapped lines keep the same inset. */
+  padding: calc((var(--space-lg) - var(--lh-small) - 2px) / 2) var(--space-xs);
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  /* Styleguide over Figma: Figma's label is auto-width (one line). Code wraps long labels, words stay whole (WCAG 1.4.10). */
+  overflow-wrap: break-word;
+}
+
+/* min-width 0 lets the label shrink below its longest word, so break-word can break a word longer than the tag. */
+.label { min-width: 0; }
+
+.critical { background: var(--color-critical-bg); border-color: var(--color-critical-border); color: var(--color-critical-fg); }
+.warning { background: var(--color-warning-bg); border-color: var(--color-warning-border); color: var(--color-warning-fg); }
+/* Success is missing from the styleguide's starter CSS; built from the same token pattern (Figma has it). */
+.success { background: var(--color-success-bg); border-color: var(--color-success-border); color: var(--color-success-fg); }
+.info { background: var(--color-info-bg); border-color: var(--color-info-border); color: var(--color-info-fg); }
+
+/* 12px icon in the status fg, centred on the first text line (16 compact, 20 comfortable). */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: calc((var(--lh-small) - 12px) / 2);
+}
+.icon > svg { width: 12px; height: 12px; stroke-width: 2; } /* lucide 2 on its 24px grid = 1px at 12px, like Figma */

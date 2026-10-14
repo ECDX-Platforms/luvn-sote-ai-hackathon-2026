@@ -1,0 +1,10 @@
+/* The design system, imported once.
+ *
+ * The library's own entry point pulls tokens.css then base.css, in that order, and the order is
+ * load-bearing: the app stylesheet must come after base.css so its rules can win where they are meant to.
+ * That is why this file is imported before anything that reaches `styles.css` — see main.jsx.
+ *
+ * The vendored copy is pinned by SHA-256 in vendor/comp-lib/PROVENANCE.md and asserted by
+ * design-system.test.mjs. Do not edit it here; regenerate it in the vendored directory.
+ */
+@import "../vendor/comp-lib/src/styles/index.css";

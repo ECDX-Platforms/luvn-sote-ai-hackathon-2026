@@ -1,0 +1,49 @@
+/* Input. Figma: Form controls / Input (34:17). Styleguide: Components → Text input, textarea, select; Shared state model; Accessibility (1.4.12, 3.3.1). */
+.input {
+  display: block;
+  width: 100%; /* fills its Field or column, as in the styleguide starter CSS. Figma shows a 320px example. */
+  min-width: 0;
+  min-height: var(--control-h); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  margin: 0;
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+.input::placeholder { color: var(--color-text-muted); opacity: 1; } /* Firefox lowers placeholder opacity by default */
+
+/* Hover: not used. The border already marks the field; the styleguide and Figma define no hover. */
+
+/* Focus ring: 2px focus colour, 2px offset. The outline follows the 6px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Error: 2px critical border. Styleguide over Figma: the second pixel is an inset shadow, so the
+   text does not move by 1px (Figma uses a real 2px border). */
+.input[aria-invalid='true'] {
+  border-color: var(--color-critical-fg);
+  box-shadow: inset 0 0 0 1px var(--color-critical-fg);
+}
+
+/* Disabled: line border, muted value, surface background. Never lower opacity. */
+.input[aria-disabled='true'] {
+  border-color: var(--color-line);
+  box-shadow: none;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Read-only: no border, value in body. No padding, so the value lines up with text around it (as in Figma). */
+.input.readOnly,
+.input.readOnly[aria-invalid='true'] {
+  padding: 0;
+  border: 0;
+  box-shadow: none; /* a read-only value shows no error border */
+  background: transparent;
+}

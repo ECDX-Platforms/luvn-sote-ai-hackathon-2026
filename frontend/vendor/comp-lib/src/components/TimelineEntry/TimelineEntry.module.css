@@ -1,0 +1,65 @@
+/* Timeline entry. Figma: Patterns / Timeline entry (55:231). Styleguide: Components → Timeline entry; Typography (Roles, 75ch); Content (dates and times); Implementation → Timeline, lists. */
+.timeline { margin: 0; padding: 0; list-style: none; }
+
+/* Padding 16 0, top hairline between entries. Figma "Show top rule": the first entry never has the rule (automatic);
+   `showTopRule={false}` turns it off on any other entry (the first entry after a Timeline today line).
+   Styleguide over Figma: the rule is a real 1px border (styleguide markup; stays visible in forced colours),
+   so it adds 1px where Figma draws it inside the entry. The first entry also has no top padding (styleguide
+   markup `.entry:first-child`), so a timeline sits 16px under a Block title like any other content; Figma keeps 16 there. */
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs); /* Figma: 4 between head and body */
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--color-line);
+}
+.entry:first-child { padding-top: 0; border-top: 0; }
+/* Show top rule off: only the rule goes; the padding stays 16 0 (Figma). After .entry, so it wins at equal specificity. */
+.noRule { border-top: 0; }
+
+/* Head: title left, author and time right, 16px apart. Wraps when there is no room: the meta moves under the title. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  column-gap: var(--space-md);
+}
+.title { min-width: 0; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+.meta { min-width: 0; margin: 0; overflow-wrap: break-word; } /* Colour text-muted from .t-caption. */
+/* Numbers never break inside: date and time stay on one line. */
+.meta time,
+.meta .time { white-space: nowrap; }
+
+/* Kind (Figma: Show kind). The heading becomes a row: kind slot, 8 gap, title text. Top-aligned, so a wrapped title
+   keeps the tag on its first line. */
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+/* Kind slot: a fixed width so the titles line up down the timeline. Figma: 88 at the 12px tag text. Code scales it with
+   the tag text, like Caution item's tag slot (88 / 12 × the small font size): 88 compact, about 103 comfortable.
+   A longer kind wraps inside the tag (Tag wraps); the slot never grows. */
+.kind {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  width: calc(var(--fs-small) * 88 / 12);
+}
+.titleText { min-width: 0; }
+/* Figma centres the title and the meta on the 24 tag. Code keeps the rows top-aligned (for wrapping) and pushes the
+   first line down by half the difference instead: title 2 compact / 0 comfortable, meta 4 / 2. Same result on one line.
+   When the meta moves under the title (narrow column), it keeps that small top offset. */
+.hasKind > .head .titleText { padding-top: max(0px, calc((var(--space-lg) - var(--lh-body)) / 2)); }
+.hasKind > .head > .meta { padding-top: max(0px, calc((var(--space-lg) - var(--lh-small)) / 2)); }
+
+/* Body: running text, at most 75 characters wide. */
+.body { max-width: 75ch; min-width: 0; color: var(--color-text); overflow-wrap: break-word; }
+.body > * + * { margin-top: var(--space-2xs); } /* Paragraphs and lists 4 apart (styleguide markup: list margin 4). */
+.body ul,
+.body ol { margin: var(--space-2xs) 0; padding-left: var(--space-md); } /* Lists indent 16px (styleguide). */
+.body > :first-child { margin-top: 0; }
+.body > :last-child { margin-bottom: 0; }
+.body strong,
+.body b { font-weight: 600; } /* Key words in body-strong (600, not the browser's 700). */

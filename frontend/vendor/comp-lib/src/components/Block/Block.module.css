@@ -1,0 +1,38 @@
+/* Block. Figma: Data display / Block (49:244). Styleguide v2.2: Components → Block (section), Typography → Roles (title-sm), Colors → Emphasis states, Layout tokens (block padding). */
+/* No shadow, no radius, no fill except the emphasis states. Blocks touch with only the bottom hairline between them. */
+.block {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-line);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.white { background: var(--color-surface); }
+.tint { background: var(--color-primary-tint); } /* Text, secondary text, link and focus stay as on white (styleguide). */
+
+/* Title row: title-sm title left (17/24, 600, text colour; v2.2, was overline), link or small buttons right, 16px to the content.
+   Wraps when there is no room (e.g. two 44px buttons on a 320px phone): the actions move below the title. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+/* The title wraps (Figma's auto-width text is a known Figma gap). */
+.title { min-width: 0; overflow-wrap: anywhere; }
+/* The action group wraps too, so several (or translated) actions never run past the block. */
+.actions { display: flex; flex-wrap: wrap; flex: 0 1 auto; min-width: 0; max-width: 100%; align-items: center; gap: var(--space-xs); }
+
+/* Flush: content runs edge to edge; only the title row keeps the padding. */
+.flush { padding: 0; }
+.flush > .head { padding: var(--space-lg) var(--space-lg) 0; }
+
+/* Phones: 24px vertical, 16px horizontal padding (styleguide Layout tokens). */
+@media (max-width: 639px) {
+  .block { padding: var(--space-lg) var(--space-md); }
+  .flush { padding: 0; }
+  .flush > .head { padding: var(--space-lg) var(--space-md) 0; }
+}

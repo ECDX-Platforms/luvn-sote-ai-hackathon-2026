@@ -1,0 +1,184 @@
+{
+  "color-bg": {
+    "$type": "color",
+    "$value": "#f5f5f5"
+  },
+  "color-surface": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "color-surface-hover": {
+    "$type": "color",
+    "$value": "#f6f6f6"
+  },
+  "color-surface-brand": {
+    "$type": "color",
+    "$value": "{color-brand-100}"
+  },
+  "color-primary-tint": {
+    "$type": "color",
+    "$value": "#ebebeb"
+  },
+  "color-line": {
+    "$type": "color",
+    "$value": "#dadada"
+  },
+  "color-line-strong": {
+    "$type": "color",
+    "$value": "#858585"
+  },
+  "color-text": {
+    "$type": "color",
+    "$value": "#1c1c1c"
+  },
+  "color-text-muted": {
+    "$type": "color",
+    "$value": "#595959"
+  },
+  "color-primary": {
+    "$type": "color",
+    "$value": "{color-brand-600}"
+  },
+  "color-primary-hover": {
+    "$type": "color",
+    "$value": "{color-brand-700}"
+  },
+  "color-on-primary": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "color-on-primary-muted": {
+    "$type": "color",
+    "$value": "#faf8fd",
+    "$extensions": {
+      "com.comp-lib": {
+        "derivedFrom": "color-mix(in srgb, var(--color-on-primary) 96%, var(--color-primary))"
+      }
+    }
+  },
+  "color-link": {
+    "$type": "color",
+    "$value": "{color-brand-700}"
+  },
+  "color-focus": {
+    "$type": "color",
+    "$value": "{color-brand-600}"
+  },
+  "color-inverse": {
+    "$type": "color",
+    "$value": "#2e2e2e"
+  },
+  "color-on-inverse": {
+    "$type": "color",
+    "$value": "{color-surface}"
+  },
+  "color-on-inverse-muted": {
+    "$type": "color",
+    "$value": "#c4c4c4",
+    "$extensions": {
+      "com.comp-lib": {
+        "derivedFrom": "color-mix(in srgb, var(--color-on-inverse) 72%, var(--color-inverse))"
+      }
+    }
+  },
+  "color-on-inverse-link": {
+    "$type": "color",
+    "$value": "#dacbef",
+    "$extensions": {
+      "com.comp-lib": {
+        "derivedFrom": "color-mix(in srgb, var(--color-primary) 30%, var(--color-on-inverse))"
+      }
+    }
+  },
+  "color-critical-fg": {
+    "$type": "color",
+    "$value": "#9b0036"
+  },
+  "color-critical-bg": {
+    "$type": "color",
+    "$value": "#ffeff0"
+  },
+  "color-critical-border": {
+    "$type": "color",
+    "$value": "#fca0aa"
+  },
+  "color-warning-fg": {
+    "$type": "color",
+    "$value": "#856c00"
+  },
+  "color-warning-bg": {
+    "$type": "color",
+    "$value": "#fff3ce"
+  },
+  "color-warning-border": {
+    "$type": "color",
+    "$value": "#d5bc6a"
+  },
+  "color-success-fg": {
+    "$type": "color",
+    "$value": "#008058"
+  },
+  "color-success-bg": {
+    "$type": "color",
+    "$value": "#d6ffea"
+  },
+  "color-success-border": {
+    "$type": "color",
+    "$value": "#76d4a9"
+  },
+  "color-info-fg": {
+    "$type": "color",
+    "$value": "#006fa9"
+  },
+  "color-info-bg": {
+    "$type": "color",
+    "$value": "#e9f5ff"
+  },
+  "color-info-border": {
+    "$type": "color",
+    "$value": "#7bc6ff"
+  },
+  "shadow-overlay": {
+    "$type": "shadow",
+    "$value": {
+      "color": "#00000029",
+      "offsetX": {
+        "value": 0,
+        "unit": "px"
+      },
+      "offsetY": {
+        "value": 8,
+        "unit": "px"
+      },
+      "blur": {
+        "value": 24,
+        "unit": "px"
+      },
+      "spread": {
+        "value": 0,
+        "unit": "px"
+      }
+    },
+    "$description": "Overlays only (dialog, menu, popover, tooltip)."
+  },
+  "scrim": {
+    "$type": "color",
+    "$value": "#00000066"
+  },
+  "color-interaction-tint": {
+    "$type": "color",
+    "$value": "#f7f3fb"
+  },
+  "color-data": {
+    "$type": "color",
+    "$value": "#4a4a4a"
+  },
+  "color-avatar": {
+    "$type": "color",
+    "$value": "#2e2e2e"
+  },
+  "color-on-avatar": {
+    "$type": "color",
+    "$value": "#ffffff"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "record_id": "draft-note-1",
+  "source": "synthetic-test",
+  "record_type": "vapaateksti",
+  "authored_by_role": "sairaanhoitaja",
+  "responsible_approver": "laakari",
+  "state": "draft",
+  "recorded_at": "2026-10-08T09:00:00+03:00",
+  "topic": "mielenterveys",
+  "sensitivity_tag": "sensitive",
+  "consent_scope": "treatment",
+  "payload": {"otsikko": "Nykytila", "teksti": "Synteettinen keskeneräinen testimerkintä."}
+}

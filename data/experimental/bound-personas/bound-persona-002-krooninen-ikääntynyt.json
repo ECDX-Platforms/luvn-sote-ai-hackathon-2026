@@ -1,0 +1,181 @@
+{
+  "persona_id": "bound-persona-002-krooninen-ikääntynyt",
+  "label": "Aino Virtanen — Krooninen monisairas iäkäs, kotihoidon asiakas",
+  "records": [
+    {
+      "record_id": "bound-demo-002",
+      "source": "potilastietojärjestelmä",
+      "record_type": "perustieto",
+      "authored_by_role": "rekisterisihteeri",
+      "recorded_at": "2016-01-20T08:00:00+02:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "syntymävuosi": 1938,
+        "sukupuoli": "nainen",
+        "kotikunta": "Helsinki",
+        "äidinkieli": "suomi",
+        "asumismuoto": "koti, kotihoidon tukena"
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-dx-002",
+      "source": "potilastietojärjestelmä",
+      "record_type": "diagnoosi",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2021-11-03T09:20:00+02:00",
+      "topic": "verenpaine",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "icd10": "I10",
+        "nimi": "Essentiaalinen hypertensio",
+        "tila": "aktiivinen"
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-dx-003",
+      "source": "potilastietojärjestelmä",
+      "record_type": "diagnoosi",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2019-04-14T09:20:00+03:00",
+      "topic": "diabetes",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "icd10": "E11",
+        "nimi": "Tyypin 2 diabetes",
+        "tila": "aktiivinen"
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-med-002",
+      "source": "lääkelista",
+      "record_type": "lääkitys",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2026-09-05T09:00:00+03:00",
+      "topic": "verenpaine",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "lääke": "amlodipiini",
+        "atc": "C08CA01",
+        "annos": "5 mg x 1",
+        "tila": "aktiivinen",
+        "puuttuneet_annokset_30d": 9
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-med-003",
+      "source": "lääkelista",
+      "record_type": "lääkitys",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2025-02-10T09:00:00+02:00",
+      "topic": "kolesteroli",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "lääke": "simvastatiini",
+        "atc": "C10AA01",
+        "annos": "20 mg x 1",
+        "tila": "aktiivinen",
+        "puuttuneet_annokset_30d": 2
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-note-002",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-18T14:30:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Kotikäynti, lääkehoidon tarkistus",
+        "teksti": "Keskusteltu asiakkaan kanssa. Asiakas kertoo lopettaneensa amlodipiinitabletit itse noin kuukausi sitten, koska jalkojen turvotus ja huimaus haittasivat kävelyä. Ei ole ollut yhteydessä lääkäriin asiasta. Verenpaine kotimittauksissa 165/92. Sovittu, että asia viedään lääkärille arvioitavaksi. Tämä kirjaus on tarkoitettu lääkityksen uudelleenarviointia varten.",
+        "käyntityyppi": "kotikäynti"
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-asiointi-002",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-12T11:05:00+03:00",
+      "topic": "kotihoidon palvelu",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "kanava": "puhelu",
+        "suunta": "lähtevä",
+        "aihe": "käyntiaikataulu",
+        "yhteenveto": "Siirretty aamukäynti klo 9.00."
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-asiointi-003",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "potilas",
+      "recorded_at": "2026-09-20T16:12:00+03:00",
+      "topic": "yhteydenotto",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "kanava": "chatti",
+        "suunta": "saapuva",
+        "aihe": "huimaus",
+        "yhteenveto": "Kysyi, voiko huimaus johtua lääkkeestä."
+      },
+      "source_person_id": "bound-source-002"
+    },
+    {
+      "record_id": "bound-note-002-alignment",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Synteettinen lisärivi",
+        "teksti": "Synteettinen testimerkintä, ei potilastietoa.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-002",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 002"
+    },
+    {
+      "record_id": "bound-note-002-draft",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Synteettinen luonnos",
+        "teksti": "Synteettinen luonnos odottaa ammattilaisen tarkistusta.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-002",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 002",
+      "state": "draft",
+      "responsible_approver": "sairaanhoitaja"
+    }
+  ],
+  "source_person_id": "bound-source-002"
+}

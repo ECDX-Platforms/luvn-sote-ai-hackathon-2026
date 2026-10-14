@@ -1,0 +1,169 @@
+/* Care overview. Figma: Data display / Care overview (207:2113). NEW: not defined in the styleguide.
+   Styleguide: Charts (only bar charts here; axes and labels caption text-muted; rules line; lanes labelled directly, no legend),
+   Typography (caption, overline, body, body-strong), Layout (breakpoints), Content (dates), Accessibility (1.4.1, 1.4.10, 1.4.12).
+   Every position comes from overview.ts (fractions of the track), so the chart is always drawn to scale. */
+
+/* Why now (optional) and the chart, 16 apart (Figma: Why now padding-bottom 16). */
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  color: var(--color-text);
+}
+
+/* Why now: "Why now:" in body-strong, the quote in body, then the inline Source reference, 8 apart. Wraps when long
+   (Figma: one line, auto width; styleguide: text wraps). */
+.whyNow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-xs);
+  min-width: 0;
+  margin: 0;
+}
+.quote { min-width: 0; overflow-wrap: break-word; }
+
+.chart {
+  /* NEW: Figma's mark sizes (8px diagnosis and request dots, 6px bars); the styleguide has no chart mark sizes. */
+  --dot: 8px;
+  --bar: 6px;
+  /* Lane label column: 120 (Figma) = 48 + 48 + 24. */
+  --lane-label: calc(2 * var(--space-2xl) + var(--space-lg));
+  min-width: 0;
+}
+
+/* ===== Axis: month labels in caption, text-muted; a 1px line-strong tick at each label's left edge (Figma 208:2194). ===== */
+.axis { display: flex; min-width: 0; }
+.spacer { flex: none; width: var(--lane-label); }
+.axisTrack { display: flex; flex: 1 1 0; min-width: 0; overflow: clip; } /* Figma: the axis clips (a label wider than a very narrow column never runs past today) */
+/* The lead and each label cell take their width from the data (flex-basis, set inline): from one tick to the next. */
+.axisLead { flex: 0 0 auto; }
+.tick {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: 0 var(--space-2xs) var(--space-2xs); /* label 4 right of its tick; 20 high in compact (Figma) */
+  /* A label wider than its cell wraps between month and year only: words are never broken, so a year never splits. */
+}
+.tick::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--space-2xs) / 2); /* Figma: tick from 2 to the bottom of the axis */
+  bottom: 0;
+  left: 0;
+  border-left: 1px solid var(--color-line-strong);
+}
+/* The last cell runs to the end: the last month label, then "Today" at the right end. When both do not fit, "Today"
+   moves under it and stays right-aligned. overview.ts keeps every tick out of the last fifth, so there is room. */
+.lastTick {
+  display: flex;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  column-gap: var(--space-xs);
+  min-width: 0;
+  padding-right: 0;
+  padding-bottom: var(--space-2xs);
+}
+/* Styleguide over Figma: Figma draws "Today" in text colour; the styleguide's Charts rule puts axis labels in
+   caption, text-muted. The 1px line-strong today line still marks the end. */
+.today { margin-left: auto; white-space: nowrap; }
+
+/* ===== Lanes: overline label in a 120 column, then the track. 1px line rule above each lane (Figma: Lane rules). ===== */
+.lanes { position: relative; }
+.lane {
+  display: flex;
+  min-width: 0;
+  border-top: 1px solid var(--color-line); /* Styleguide over Figma: a real 1px border (adds 1px per lane; Figma draws it inside) */
+}
+.laneLabel {
+  flex: none;
+  align-self: center; /* Figma: centred in the lane */
+  width: var(--lane-label);
+  min-width: 0;
+  padding-right: var(--space-xs);
+  overflow-wrap: break-word; /* Styleguide over Figma: Figma's lane name is auto-width; code wraps it */
+}
+/* Track: 8 above, 12 below (Figma Health lane: 48 = 8 + 16 label + 4 + 8 dot + 12). Rows 4 apart. */
+.track {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-xs) 0 var(--space-sm);
+}
+
+/* ===== Rows: a label line, then the marks 4 below. ===== */
+.row { display: flex; flex-direction: column; gap: var(--space-2xs); min-width: 0; }
+
+/* Label line: a lead from the track start to the first mark, then one cell per label, each running to the next mark
+   on the row (the last to the end). Labels wrap inside their cell; words stay whole (overflow-wrap: break-word).
+   The last cell is at least 10em wide (or the whole track): near the right end, the space before it gives way and the
+   label moves left so it never runs past today. The part just before the last cell gives way first (so earlier labels
+   stay over their marks); only when it is used up do the earlier parts shrink too. */
+.labels { display: flex; min-width: 0; }
+.lead { flex: 0 1 auto; min-width: 0; }
+.cell { flex: 0 1 auto; min-width: 0; padding-right: var(--space-xs); }
+.labels > :nth-last-child(2) { flex-shrink: 1000; }
+.lastCell { flex: 1 1 0; min-width: min(100%, 10em); padding-right: var(--space-2xs); /* clear of the today line */ }
+/* Item labels in caption size, text colour (Figma). Higher specificity than .t-caption, which sets text-muted.
+   Our reading of the styleguide Charts rule "Axes and labels: caption, text-muted": it covers the axis labels (months,
+   "Today"), not the data labels on the marks (diagnosis, substance, service), which are the content of the chart.
+   Open question for Theo: if "labels" means every chart label, remove this line (all labels become text-muted). */
+.chart .label { color: var(--color-text); overflow-wrap: break-word; }
+
+/* Marks: an 8 high line. Dots and bars are placed by date (left, width inline) and kept inside the track. */
+.marks { position: relative; height: var(--dot); } /* one-line chart chrome, not a text block */
+/* Diagnosis: 8px filled dot in text colour. Drawn as a border, so it stays visible in forced colours. */
+.dot {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border: calc(var(--dot) / 2) solid var(--color-text);
+  border-radius: var(--radius-full);
+}
+/* Request: 8px hollow dot, 1.5px text-colour ring (Figma stroke 1.5, like the icons' line), surface inside. */
+.hollow {
+  position: absolute;
+  top: 0;
+  width: var(--dot);
+  height: var(--dot);
+  border: 1.5px solid var(--color-text);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+}
+/* Medicine and service: 6px bar in data colour (v2.3: data is never the accent), square ends, centred on the 8 mark line. At least 6 wide (Figma: a 1-week
+   course is a 6x6 square). Drawn as a border, so it stays visible in forced colours. */
+.bar {
+  position: absolute;
+  top: calc((var(--dot) - var(--bar)) / 2);
+  height: 0;
+  border-top: var(--bar) solid var(--color-data);
+}
+
+/* Short bar (Figma: Paracetamol): mark and label on one line, the label 4 after the bar (padding-left inline). As the
+   lane's first row, it moves down so its bar lines up with the bars and dots of rows that have a label above. */
+.inlineRow:first-child { padding-top: calc(var(--lh-small) / 2 + var(--space-xs)); }
+.inlineLine { position: relative; }
+.inlineMarks { position: absolute; top: calc((var(--lh-small) - var(--dot)) / 2); right: 0; left: 0; }
+.inlineLabel { display: block; min-width: 0; }
+
+/* Today: 1px line-strong at the right end, over all lanes. A real border, so it stays visible in forced colours. */
+.todayLine {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px solid var(--color-line-strong);
+}
+
+/* Phones (styleguide Breakpoints: one column under 640px): the lane name moves above its track, so the track gets the
+   full width. Not in Figma (only the 720 desktop size is drawn). */
+@media (max-width: 639px) {
+  .spacer { display: none; }
+  .lane { flex-direction: column; }
+  .laneLabel { align-self: stretch; width: auto; padding: var(--space-xs) 0 0; }
+}

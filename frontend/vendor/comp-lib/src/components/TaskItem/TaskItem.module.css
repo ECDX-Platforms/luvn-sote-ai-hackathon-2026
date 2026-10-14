@@ -1,0 +1,28 @@
+/* Task item. Figma: Patterns / Task item (55:230). Styleguide: Components → Checkbox and task item; Typography (Density); Accessibility 2.5.8. */
+.list { margin: 0; padding: 0; list-style: none; }
+
+/* Padding 8 0, hairline between items. Figma "Show bottom rule" is automatic here: every item but the last. */
+.item {
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.item:last-child { border-bottom: 0; }
+
+/* The whole row is the checkbox's label: it fills the width, so a click anywhere on the row toggles the task.
+   Two classes beat the Checkbox's own single class without depending on CSS order. */
+.item .row { display: flex; }
+
+/* With meta: Figma stacks a 24px checkbox row (title centred, 2px above and below) and the meta line under it.
+   --title-pad is that 2px in compact. In comfortable density the title line is already 24, so it is 0,
+   and the title plus meta (24 + 20) still make the 44px target. */
+.item .withMeta {
+  --title-pad: max(0px, calc((var(--space-lg) - var(--lh-body)) / 2));
+  padding-block: var(--title-pad) 0;
+}
+
+/* Text wraps: Figma's auto-width text cannot, code must. break-word keeps words whole. */
+.title,
+.meta { display: block; min-width: 0; overflow-wrap: break-word; }
+.meta { margin-top: var(--title-pad); } /* The meta's own colour (text-muted) comes from .t-caption. */
+
+/* Hover: not used (Figma and the styleguide define none, the same as Checkbox). Focus ring: on the box, from Checkbox. */

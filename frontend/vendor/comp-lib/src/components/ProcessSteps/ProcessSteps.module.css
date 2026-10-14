@@ -1,0 +1,58 @@
+/* Process steps. Figma: Data display / Process steps (174:563) and Process step (174:562), redesign 13 Oct. NEW: not in the styleguide.
+   Styleguide: Overview rule 6 (status is icon + word), Shapes (2px bar, hairline), Icons, Typography (body-strong, caption), Content (dates), Breakpoints, Accessibility. */
+.steps {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs); /* Figma: 8 between steps */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One step: a 2px rule along the top, the text 8 under it. Steps share the row equally (Figma: fill).
+   Done and Current: solid, text colour. The rule is decorative: the hidden state word, aria-current and Detail carry the state. */
+.step {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0; /* a long word must not push the step out of its share */
+  padding-top: var(--space-xs);
+  border-top: 2px solid var(--color-text);
+  overflow-wrap: break-word; /* words stay whole; only a word longer than the step breaks */
+}
+/* Upcoming: solid, line colour. */
+.upcoming { border-top-color: var(--color-line); }
+/* Paused: dashed, text-muted. Never the rule alone: the pause icon and the Detail word "Paused" carry the state. */
+.paused { border-top-style: dashed; border-top-color: var(--color-text-muted); }
+
+/* Label row: the pause icon (Paused only), 4 apart from the label. */
+.label {
+  display: flex;
+  align-items: flex-start; /* the icon stays on the first line when the label wraps */
+  gap: var(--space-2xs);
+  min-width: 0;
+  margin: 0;
+  color: var(--color-text);
+}
+.labelText { min-width: 0; }
+
+/* 16px icon in text colour, centred on the first label line (20 compact, 24 comfortable). Figma: Icon/pause (221:131). */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+.detail { min-width: 0; margin: 0; color: var(--color-text); }
+/* Colour text-muted from .t-caption. Dates are short (Content rules) and never break inside, also not after the en dash of a range ("8–15 Sep 2026"). */
+.date { min-width: 0; margin: 0; white-space: nowrap; }
+
+/* Below 640px (styleguide breakpoint, comfortable density): the steps stack vertically, 16 apart, each keeping its top rule.
+   Not drawn in Figma (its description asks for it in code). */
+@media (max-width: 639px) {
+  .steps { flex-direction: column; align-items: stretch; gap: var(--space-md); }
+  .step { flex: none; }
+}

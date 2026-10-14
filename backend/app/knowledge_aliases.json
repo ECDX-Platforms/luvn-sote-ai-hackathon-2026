@@ -1,0 +1,12 @@
+{
+  "note": "Written against the product fixtures (app.fixtures.load_personas) where fixture payloads carry names instead of national codes.",
+  "aliases": {
+    "instrument": {
+      "IADL": "1252",
+      "RAI": "1262"
+    },
+    "measure": {
+      "LDL": "2099"
+    }
+  }
+}

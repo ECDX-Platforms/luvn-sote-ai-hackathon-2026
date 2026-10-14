@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUVN — päätösohjattu tilannekuva</title>
+    <script>
+      // Set the theme before first paint, so a dark visit does not flash light. The design system selects
+      // dark with `:root[data-theme="dark"]`, so the attribute must be on <html>. App.jsx keeps it in step
+      // once React mounts; `mode=dark` stays a shorthand for `theme=dark`, as it always was.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var theme = [params.get("theme"), params.get("mode")].filter(function (value) {
+          return value === "light" || value === "dark";
+        })[0];
+        // No theme in the address: the choice remembered on this device, else the system preference.
+        if (!theme) {
+          var remembered = null;
+          try { remembered = window.localStorage && window.localStorage.getItem("luvn-theme"); } catch (error) { remembered = null; }
+          theme = remembered === "dark" || remembered === "light" ? remembered
+            : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

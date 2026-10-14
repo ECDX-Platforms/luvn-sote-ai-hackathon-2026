@@ -1,0 +1,138 @@
+{
+  "persona_id": "bound-persona-005-omahoidon-tuki",
+  "label": "Taisto Mäkinen — omahoidon tuki ja tablettien säännöllisyys",
+  "source_person_id": "bound-source-005",
+  "records": [
+    {
+      "record_id": "bound-demo-005",
+      "source": "potilastietojärjestelmä",
+      "record_type": "perustieto",
+      "authored_by_role": "rekisterisihteeri",
+      "recorded_at": "2019-03-11T08:15:00+02:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "syntymävuosi": 1946,
+        "sukupuoli": "mies",
+        "kotikunta": "Raasepori",
+        "äidinkieli": "suomi",
+        "asumismuoto": "koti, omaishoitajan tukemana"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-dx-005",
+      "source": "potilastietojärjestelmä",
+      "record_type": "diagnoosi",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2022-05-19T10:40:00+03:00",
+      "topic": "verenpaine",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "icd10": "I10",
+        "nimi": "Essentiaalinen hypertensio",
+        "tila": "aktiivinen"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-med-005",
+      "source": "lääkelista",
+      "record_type": "lääkitys",
+      "authored_by_role": "lääkäri",
+      "recorded_at": "2026-09-08T09:30:00+03:00",
+      "topic": "verenpaine",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "lääke": "hydroklooritiatsidi",
+        "atc": "C03AA03",
+        "annos": "25 mg x 1",
+        "tila": "aktiivinen",
+        "puuttuneet_annokset_30d": 6
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-note-011",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-25T13:10:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Kotikäynti, asiakkaan huoli omasta tilanteestaan",
+        "teksti": "Asiakas kertoi, että hänen säännöllinen tablettinsa on jäänyt ottamatta useana päivänä huimauksen ja väsymyksen vuoksi. Hän ei ole ollut yhteydessä vastaanotolle asiasta. Asiakas toivoo, että tilanne tarkistetaan seuraavalla käynnillä ja että jatkosta sovitaan yhdessä. Kotimittari on rikki, joten oma seuranta ei ole onnistunut viime viikkoina.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-note-012",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-20T11:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Naapuruston meluhaitta",
+        "teksti": "Asiakas kertoi, että naapurin koira on haukkunut öisin ja hän toivoo isännöitsijän yhteydenottoa asiaan. Hän kysyi myös, voiko taloyhtiön järjestyssääntöjä muuttaa.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-note-013",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-26T11:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurantalomake arkistoon",
+        "teksti": "Lääkityksen seurantalomakkeen kopio toimitettiin arkistoon ja arkistointikuittaus kirjattiin. Asiakasta ei tavattu eikä hänen voinnistaan tai lääkityksen toteutumisesta tehty havaintoja.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    },
+    {
+      "record_id": "bound-lab-005-alignment",
+      "source": "laboratoriopalvelu",
+      "record_type": "tutkimustulos",
+      "authored_by_role": "laakari",
+      "recorded_at": "2026-09-29T08:00:00+03:00",
+      "topic": "kolesteroli",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "tutkimus": "LDL",
+        "arvo": 3.4,
+        "yksikkö": "mmol/l",
+        "tulkinta": "poikkeava"
+      },
+      "source_person_id": "bound-source-005",
+      "erikoisala": "Kotihoito",
+      "suorituspaikka": "Synteettinen kotihoidon yksikkö 005"
+    }
+  ]
+}

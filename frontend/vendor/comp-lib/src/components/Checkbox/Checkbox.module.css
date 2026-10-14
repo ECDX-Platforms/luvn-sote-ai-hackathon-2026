@@ -1,0 +1,60 @@
+/* Checkbox. Figma: Form controls / Checkbox (35:36). Styleguide: Components → Checkbox and task item; Shared state model; Accessibility 2.5.8. */
+.checkbox {
+  /* Target height: 24 compact (WCAG 2.5.8, Figma min height 24), 44 in comfortable density (styleguide). */
+  --target: var(--space-lg);
+  display: inline-flex;
+  max-width: 100%; /* never wider than its container, so one long word wraps */
+  align-items: flex-start;
+  gap: var(--space-xs);
+  /* Padding centres one line of text in the target; longer labels grow the row. */
+  padding-block: calc((var(--target) - var(--lh-body)) / 2);
+  color: var(--color-text);
+  cursor: pointer;
+}
+/* Same density switch in Radio and Toggle: change all three together (no token goes 24 → 44). */
+:global([data-density='comfortable']) .checkbox { --target: var(--control-lg); }
+@media (max-width: 639px) { .checkbox { --target: var(--control-lg); } }
+
+/* The box sits centred on the first text line. */
+.slot { display: flex; flex: none; align-items: center; height: var(--lh-body); }
+.box { position: relative; display: grid; place-items: center; width: 16px; height: 16px; }
+
+.input {
+  appearance: none;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  cursor: inherit;
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+.input:checked { border-color: var(--color-primary); background: var(--color-primary); }
+
+/* Tick: lucide check at 12px. strokeWidth 2 on lucide's 24px grid = Figma's 1px at 12px. */
+.tick {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  color: var(--color-on-primary);
+  stroke-width: 2; /* library rule: 1px line at 12px */
+  pointer-events: none;
+  visibility: hidden;
+}
+.input:checked + .tick { visibility: visible; }
+
+.label { min-width: 0; overflow-wrap: break-word; }
+
+/* Hover: not used. Figma has no hover state and the styleguide defines none; a 4% fill on a 16px box is not visible. */
+
+/* Focus ring on the box: 2px focus colour, 2px offset, follows the 4px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: line border, surface, muted tick and label. Never lower opacity. */
+.disabled { color: var(--color-text-muted); cursor: not-allowed; }
+.disabled .input,
+.disabled .input:checked { border-color: var(--color-line); background: var(--color-surface); }
+.disabled .tick { color: var(--color-text-muted); }

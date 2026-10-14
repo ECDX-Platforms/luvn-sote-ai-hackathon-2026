@@ -1,0 +1,116 @@
+{
+  "persona_id": "bound-persona-012-neuvola-lapsi",
+  "label": "Onni Laakso — neuvolan terveystarkastus huoltajan kanssa",
+  "source_person_id": "bound-source-012",
+  "records": [
+    {
+      "record_id": "bound-demo-012",
+      "source": "potilastietojärjestelmä",
+      "record_type": "perustieto",
+      "authored_by_role": "rekisterisihteeri",
+      "recorded_at": "2026-08-20T08:00:00+03:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "consent_holder": "guardian",
+      "payload": {
+        "syntymävuosi": 2019,
+        "sukupuoli": "poika",
+        "kotikunta": "Vantaa",
+        "äidinkieli": "suomi",
+        "asumismuoto": "koti, huoltajan kanssa"
+      },
+      "source_person_id": "bound-source-012",
+      "erikoisala": "Neuvola",
+      "suorituspaikka": "Synteettinen neuvolan yksikkö 012"
+    },
+    {
+      "record_id": "bound-mittaus-012",
+      "source": "neuvolan esitietolomake",
+      "record_type": "mittaus",
+      "authored_by_role": "huoltaja",
+      "recorded_at": "2026-09-05T18:30:00+03:00",
+      "topic": "kasvu",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "consent_holder": "guardian",
+      "payload": {
+        "pituus_cm": 121,
+        "paino_kg": 22.4,
+        "yksikkö": "cm/kg"
+      },
+      "source_person_id": "bound-source-012",
+      "form": {
+        "form_type": "neuvolan terveystarkastuksen esitietolomake",
+        "version": "2026.1",
+        "service": "neuvola"
+      },
+      "concept_key": "neuvola.kasvu.v1.2026-09-tarkastus",
+      "erikoisala": "Neuvola",
+      "suorituspaikka": "Synteettinen neuvolan yksikkö 012"
+    },
+    {
+      "record_id": "bound-mittaus-013",
+      "source": "neuvolan terveystarkastus",
+      "record_type": "mittaus",
+      "authored_by_role": "terveydenhoitaja",
+      "recorded_at": "2026-09-18T09:15:00+03:00",
+      "topic": "kasvu",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "consent_holder": "guardian",
+      "payload": {
+        "pituus_cm": 121,
+        "paino_kg": 22.4,
+        "yksikkö": "cm/kg"
+      },
+      "source_person_id": "bound-source-012",
+      "form": {
+        "form_type": "neuvolan kasvukäyrä",
+        "version": "2026.1",
+        "service": "neuvola"
+      },
+      "concept_key": "neuvola.kasvu.v1.2026-09-tarkastus",
+      "erikoisala": "Neuvola",
+      "suorituspaikka": "Synteettinen neuvolan yksikkö 012"
+    },
+    {
+      "record_id": "bound-note-020",
+      "source": "neuvolan kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "terveydenhoitaja",
+      "recorded_at": "2026-09-18T10:00:00+03:00",
+      "topic": "neuvola",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "consent_holder": "guardian",
+      "payload": {
+        "otsikko": "Neuvolan terveystarkastus, kasvun ja unen tarkistus",
+        "teksti": "Kasvu ja uni ovat sujuneet tavanomaisesti. Huoltaja kertoi arjen sujuvan ja että lapsi nukkuu yönsä. Esitietolomake käytiin läpi yhdessä huoltajan kanssa, eikä siinä ollut huolenaiheita.",
+        "kirjaaja": "terveydenhoitaja"
+      },
+      "source_person_id": "bound-source-012",
+      "erikoisala": "Neuvola",
+      "suorituspaikka": "Synteettinen neuvolan yksikkö 012"
+    },
+    {
+      "record_id": "bound-self-012",
+      "source": "kouluterveydenhuollon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "kouluterveydenhoitaja",
+      "recorded_at": "2026-09-10T12:00:00+03:00",
+      "topic": "kouluterveydenhuolto",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "consent_holder": "self",
+      "payload": {
+        "otsikko": "Kouluterveydenhuollon oma yhteydenotto",
+        "teksti": "Oppilas otti itse yhteyttä kouluterveydenhuoltoon ja toivoi, että asia käsitellään hänen omana asianaan.",
+        "kirjaaja": "kouluterveydenhoitaja"
+      },
+      "source_person_id": "bound-source-012",
+      "erikoisala": "Neuvola",
+      "suorituspaikka": "Synteettinen neuvolan yksikkö 012"
+    }
+  ]
+}

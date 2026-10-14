@@ -1,0 +1,62 @@
+/* Dialog. Figma: Overlays / Dialog (51:207), Example / Dialog on scrim (51:255). Styleguide: Dialog and typed confirmation,
+   Elevation & Depth (overlay border, shadow, scrim), Shapes (radius none), Typography (title-md, body), Motion (duration-slow), Accessibility. */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md); /* title, content and actions 16 apart (Figma) */
+  box-sizing: border-box;
+  width: 30rem; /* sm 480 (Figma). In rem, so it grows with the user's font size. */
+  max-width: calc(100vw - 2 * var(--space-md)); /* phones: the screen minus 16 on each side */
+  max-height: calc(100dvh - 2 * var(--space-md));
+  margin: auto; /* centred, as the native modal dialog */
+  padding: var(--space-lg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-overlay);
+  overflow: hidden; /* only the content scrolls */
+}
+
+/* The native dialog is display: none while closed; keep it so. */
+.dialog:not([open]) { display: none; }
+
+.sm { width: 30rem; }
+.md { width: 40rem; } /* md 640 (Figma) */
+
+/* Scrim: black at 40% (light) or 64% (dark), from the --scrim token. */
+.dialog::backdrop { background: var(--scrim); }
+
+/* Enter: duration-slow, opacity only. 0s under reduced motion (base.css).
+   No transform: while it runs, a transform would make fixed tooltips and menus inside place themselves relative to the dialog. */
+.dialog[open] { animation: dialog-enter var(--duration-slow) var(--ease); }
+.dialog[open]::backdrop { animation: scrim-enter var(--duration-slow) var(--ease); }
+@keyframes dialog-enter { from { opacity: 0; } }
+@keyframes scrim-enter { from { opacity: 0; } }
+/* base.css stops motion on every element, but ::backdrop is not matched by its * selector: stop it here. */
+@media (prefers-reduced-motion: reduce) { .dialog[open]::backdrop { animation: none; } }
+
+/* Title: title-md 20/28 600. Wraps, words stay whole. */
+.title { margin: 0; min-width: 0; overflow-wrap: break-word; }
+
+/* Content (Figma: Content slot): body text. Scrolls on its own when the dialog reaches the screen height. */
+.content {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  /* Room for the 2px focus ring at 2px offset of a control inside, which the scroll box would clip otherwise (2.4.11).
+     The negative margin keeps the Figma layout. */
+  padding: var(--space-2xs);
+  margin: calc(-1 * var(--space-2xs));
+}
+
+/* Actions bottom right, 8 apart, 24 below the content (16 gap + 8). Secondary first, primary last. Wrap on narrow screens. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+}

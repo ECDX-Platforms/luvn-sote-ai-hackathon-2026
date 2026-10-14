@@ -1,0 +1,37 @@
+/* Block grid. Figma: Layouts / Layout / Block grid (133:764): Desktop 133:761 (3 across), Laptop 133:762 (2 across), Phone 133:763 (1).
+   Styleguide: Layout (Breakpoints; the block grid itself is NEW: the styleguide does not define it, Figma does).
+   Tablet (640-1023px) is not yet in Figma; it keeps the laptop structure (2 across). */
+.blockGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start; /* Rows keep their content height; cells in a row share the tallest height, so hairlines line up. */
+  flex: 1 0 auto; /* Fills main in the AppShell. */
+  min-width: 0;
+}
+.blockGrid > * { min-width: 0; }
+
+/* Columns are divided by a 1px line rule on the right of each cell except the last in its row. Drawn inside the cell
+   (Figma's stroke does not take width), so the columns stay equal. Each Block brings its own bottom hairline. */
+@media (min-width: 640px) {
+  .blockGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blockGrid > * { box-shadow: inset -1px 0 0 var(--color-line); }
+  .blockGrid > :nth-child(2n) { box-shadow: none; }
+}
+@media (min-width: 1280px) {
+  .blockGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .blockGrid > :nth-child(2n) { box-shadow: inset -1px 0 0 var(--color-line); }
+  .blockGrid > :nth-child(3n) { box-shadow: none; }
+}
+
+/* Forced colours drop box shadows: draw the rules as real borders there. */
+@media (forced-colors: active) and (min-width: 640px) {
+  .blockGrid > * { box-shadow: none; border-right: 1px solid CanvasText; }
+}
+@media (forced-colors: active) and (min-width: 640px) and (max-width: 1279px) {
+  .blockGrid > :nth-child(2n) { border-right: 0; }
+}
+@media (forced-colors: active) and (min-width: 1280px) {
+  .blockGrid > :nth-child(3n) { border-right: 0; }
+}
+
+/* States: a layout is not interactive. */

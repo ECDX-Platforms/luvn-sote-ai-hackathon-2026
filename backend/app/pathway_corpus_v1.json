@@ -1,0 +1,42 @@
+{
+  "corpus_version": "pathways-v1",
+  "illustrative": true,
+  "provenance": "Authored stand-in for this demo. NOT UpToDate, NOT Käypä hoito, NOT clinical guidance. Every citation carries this label; the UpToDate capture seam in app.knowledge replaces this corpus when access lands.",
+  "note": "Written as mechanism fixtures: short, non-prescriptive process steps, plus one deliberately unsupported step and one that contradicts a synthetic record, so the gate has something real to refuse.",
+  "entries": [
+    {
+      "entry_id": "medication_follow_up",
+      "topic": "lääkitys",
+      "title": "Lääkityksen toteutumisen selvittäminen",
+      "audience": "professional",
+      "steps": [
+        {"step_id": "s1", "text": "Selvitä, mitkä annokset ovat jääneet ottamatta ja mistä syystä."},
+        {"step_id": "s2", "text": "Kysy haittavaikutuksista, erityisesti huimauksesta ja turvotuksesta."},
+        {"step_id": "s3", "text": "Tarkista, onko henkilö lopettanut jonkin lääkityksen omatoimisesti."},
+        {"step_id": "s4", "text": "Jatka amlodipiinilääkitystä entisellään ilman muutoksia."}
+      ]
+    },
+    {
+      "entry_id": "mental_health_assessment",
+      "topic": "mielenterveys",
+      "title": "Mielialanseurannan tarkistaminen",
+      "audience": "professional",
+      "steps": [
+        {"step_id": "s1", "text": "Tarkista PHQ-9-kokonaispistemäärä ja sen muutos edelliseen mittaukseen."},
+        {"step_id": "s2", "text": "Kysy unesta ja arjessa jaksamisesta omin sanoin."},
+        {"step_id": "s3", "text": "Varmista, että itsetuhoisuutta koskeva osio on käsitelty erikseen."}
+      ]
+    },
+    {
+      "entry_id": "functioning_service_needs",
+      "topic": "toimintakyky",
+      "title": "Arjessa selviytymisen ja tuen tarpeen kartoitus",
+      "audience": "professional",
+      "steps": [
+        {"step_id": "s1", "text": "Kartoita arjessa selviytymistä ja apuvälineiden tarvetta."},
+        {"step_id": "s2", "text": "Selvitä, onko IADL-arviointi tehty ja milloin."},
+        {"step_id": "s3", "text": "Kysy, kuka auttaa arjessa ja onko tuki riittävää."}
+      ]
+    }
+  ]
+}

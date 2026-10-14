@@ -1,0 +1,22 @@
+/* Metric row. Figma: Data display / Metric row (49:203), Layouts / Grid / Metrics (129:539). Styleguide: Components → Metric (vitals), Layout → Breakpoints, Inner grids; Implementation .metrics. */
+/* The row owns every hairline; a Metric draws none itself. In Figma each Metric cell draws its own right rule. */
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--color-line);
+}
+
+/* 4 columns (≥1024px): a rule right of every cell except the last of each row and the last cell. */
+.row > * { border-right: 1px solid var(--color-line); }
+.row > :nth-child(4n),
+.row > :last-child { border-right: 0; }
+.row > :nth-child(n + 5) { border-top: 1px solid var(--color-line); } /* More than 4 cells: a hairline above the next row. */
+
+/* 2 columns below 1024px (styleguide breakpoint). */
+@media (max-width: 1023px) {
+  .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row > :nth-child(4n) { border-right: 1px solid var(--color-line); }
+  .row > :nth-child(2n),
+  .row > :last-child { border-right: 0; }
+  .row > :nth-child(n + 3) { border-top: 1px solid var(--color-line); }
+}

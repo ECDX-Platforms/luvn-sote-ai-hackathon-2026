@@ -1,0 +1,246 @@
+{
+  "bound-encounter-002-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-demo-002": null,
+      "bound-dx-002": null,
+      "bound-dx-003": null,
+      "bound-med-002": null,
+      "bound-med-003": null,
+      "bound-note-002": null
+    },
+    "permitted_record_ids": [
+      "bound-demo-002",
+      "bound-dx-002",
+      "bound-dx-003",
+      "bound-med-002",
+      "bound-med-003",
+      "bound-note-002"
+    ]
+  },
+  "bound-encounter-003-mielenterveys-laakari": {
+    "consent_holder_by_record": {
+      "bound-arviointi-003": null,
+      "bound-demo-003": null,
+      "bound-dx-004": null,
+      "bound-med-004": null,
+      "bound-note-003": null,
+      "bound-note-019": null
+    },
+    "permitted_record_ids": [
+      "bound-arviointi-003",
+      "bound-demo-003",
+      "bound-dx-004",
+      "bound-med-004",
+      "bound-note-003",
+      "bound-note-019"
+    ]
+  },
+  "bound-encounter-003-mielenterveys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-arviointi-003": null,
+      "bound-demo-003": null,
+      "bound-dx-004": null,
+      "bound-med-004": null,
+      "bound-note-003": null
+    },
+    "permitted_record_ids": [
+      "bound-arviointi-003",
+      "bound-demo-003",
+      "bound-dx-004",
+      "bound-med-004",
+      "bound-note-003"
+    ]
+  },
+  "bound-encounter-003-toimintakyky-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-demo-003": null,
+      "bound-note-010": null
+    },
+    "permitted_record_ids": [
+      "bound-demo-003",
+      "bound-note-010"
+    ]
+  },
+  "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": {
+    "consent_holder_by_record": {
+      "bound-arviointi-006": null,
+      "bound-arviointi-007": null,
+      "bound-demo-004": null,
+      "bound-note-005": null,
+      "bound-note-009": null,
+      "bound-paatos-005": null,
+      "bound-paatos-007": null
+    },
+    "permitted_record_ids": [
+      "bound-arviointi-006",
+      "bound-arviointi-007",
+      "bound-demo-004",
+      "bound-note-005",
+      "bound-note-009",
+      "bound-paatos-005",
+      "bound-paatos-007"
+    ]
+  },
+  "bound-encounter-005-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-demo-005": null,
+      "bound-dx-005": null,
+      "bound-med-005": null,
+      "bound-note-011": null,
+      "bound-note-012": null,
+      "bound-note-013": null
+    },
+    "permitted_record_ids": [
+      "bound-demo-005",
+      "bound-dx-005",
+      "bound-med-005",
+      "bound-note-011",
+      "bound-note-012",
+      "bound-note-013"
+    ]
+  },
+  "bound-encounter-006-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-014": null
+    },
+    "permitted_record_ids": [
+      "bound-note-014"
+    ]
+  },
+  "bound-encounter-007-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-015": null
+    },
+    "permitted_record_ids": [
+      "bound-note-015"
+    ]
+  },
+  "bound-encounter-008-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-016": null
+    },
+    "permitted_record_ids": [
+      "bound-note-016"
+    ]
+  },
+  "bound-encounter-009-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-017": null
+    },
+    "permitted_record_ids": [
+      "bound-note-017"
+    ]
+  },
+  "bound-encounter-010-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-scale-000": null,
+      "bound-note-scale-001": null,
+      "bound-note-scale-002": null,
+      "bound-note-scale-003": null,
+      "bound-note-scale-004": null,
+      "bound-note-scale-005": null,
+      "bound-note-scale-006": null,
+      "bound-note-scale-007": null,
+      "bound-note-scale-008": null,
+      "bound-note-scale-009": null,
+      "bound-note-scale-010": null,
+      "bound-note-scale-011": null,
+      "bound-note-scale-012": null,
+      "bound-note-scale-013": null,
+      "bound-note-scale-014": null,
+      "bound-note-scale-015": null,
+      "bound-note-scale-016": null,
+      "bound-note-scale-017": null,
+      "bound-note-scale-018": null,
+      "bound-note-scale-019": null,
+      "bound-note-scale-020": null,
+      "bound-note-scale-021": null,
+      "bound-note-scale-022": null,
+      "bound-note-scale-023": null,
+      "bound-note-scale-024": null,
+      "bound-note-scale-025": null,
+      "bound-note-scale-026": null,
+      "bound-note-scale-027": null,
+      "bound-note-scale-028": null,
+      "bound-note-scale-029": null,
+      "bound-note-scale-030": null,
+      "bound-note-scale-031": null,
+      "bound-note-scale-032": null,
+      "bound-note-scale-033": null,
+      "bound-note-scale-034": null,
+      "bound-note-scale-035": null,
+      "bound-note-scale-036": null,
+      "bound-note-scale-037": null,
+      "bound-note-scale-038": null,
+      "bound-note-scale-039": null,
+      "bound-note-scale-040": null,
+      "bound-note-scale-041": null
+    },
+    "permitted_record_ids": [
+      "bound-note-scale-000",
+      "bound-note-scale-001",
+      "bound-note-scale-002",
+      "bound-note-scale-003",
+      "bound-note-scale-004",
+      "bound-note-scale-005",
+      "bound-note-scale-006",
+      "bound-note-scale-007",
+      "bound-note-scale-008",
+      "bound-note-scale-009",
+      "bound-note-scale-010",
+      "bound-note-scale-011",
+      "bound-note-scale-012",
+      "bound-note-scale-013",
+      "bound-note-scale-014",
+      "bound-note-scale-015",
+      "bound-note-scale-016",
+      "bound-note-scale-017",
+      "bound-note-scale-018",
+      "bound-note-scale-019",
+      "bound-note-scale-020",
+      "bound-note-scale-021",
+      "bound-note-scale-022",
+      "bound-note-scale-023",
+      "bound-note-scale-024",
+      "bound-note-scale-025",
+      "bound-note-scale-026",
+      "bound-note-scale-027",
+      "bound-note-scale-028",
+      "bound-note-scale-029",
+      "bound-note-scale-030",
+      "bound-note-scale-031",
+      "bound-note-scale-032",
+      "bound-note-scale-033",
+      "bound-note-scale-034",
+      "bound-note-scale-035",
+      "bound-note-scale-036",
+      "bound-note-scale-037",
+      "bound-note-scale-038",
+      "bound-note-scale-039",
+      "bound-note-scale-040",
+      "bound-note-scale-041"
+    ]
+  },
+  "bound-encounter-011-laakitys-sairaanhoitaja": {
+    "consent_holder_by_record": {
+      "bound-note-018": null
+    },
+    "permitted_record_ids": [
+      "bound-note-018"
+    ]
+  },
+  "bound-encounter-012-neuvola-terveydenhoitaja": {
+    "consent_holder_by_record": {
+      "bound-demo-012": "guardian",
+      "bound-mittaus-012": "guardian",
+      "bound-mittaus-013": "guardian",
+      "bound-note-020": "guardian"
+    },
+    "permitted_record_ids": [
+      "bound-demo-012",
+      "bound-mittaus-012",
+      "bound-mittaus-013",
+      "bound-note-020"
+    ]
+  }
+}

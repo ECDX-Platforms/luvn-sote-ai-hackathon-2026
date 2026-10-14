@@ -1,0 +1,20 @@
+/* Block state. Figma: Patterns / Block state (55:275). Styleguide: Components → Empty, loading and error states; Block (section); Alert; Button. */
+/* Title, padding 24 and the bottom hairline come from Block; the title row keeps its 16px to the content. */
+
+/* Empty: one sentence, at most one action, 16 between them, padding 48 0. */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-2xl) 0;
+}
+/* Stretch (capped at 75ch), so one long word breaks instead of pushing out of the block. */
+.message { align-self: stretch; max-width: 75ch; min-width: 0; color: var(--color-text-muted); overflow-wrap: break-word; }
+.action { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+/* Error: the alert (full width), the retry button and any data already loaded, 16 apart (Figma: block gap 16). */
+.error { display: flex; flex-direction: column; gap: var(--space-md); min-width: 0; }
+.error > * { min-width: 0; }
+.error > .action { align-self: flex-start; }
+

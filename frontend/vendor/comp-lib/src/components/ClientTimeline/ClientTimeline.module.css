@@ -1,0 +1,292 @@
+/* Client timeline ("Timeline (client view)"). Figma: Data display / Timeline (242:4559); State Today 241:2822, Scrolled back 242:3252, Lined up 242:3889.
+   NEW: the styleguide's Timeline (client view), variant B (horizontal scroll with scroll cues).
+   Styleguide: Components → Timeline (client view), Charts (data colour), Shared state model, Colors → primary-tint
+   (zone), interaction-tint, link, Typography (overline lane names, caption axis and legend, title-sm list titles),
+   Layout (breakpoints, sidebar width 216), Motion, Accessibility (1.4.10 reflow, 2.1.1 keyboard, 2.5.8, 4.1.3),
+   Content (dates). */
+
+/* Shared widths with Timeline row (TimelineRow.module.css): label column 216 (120 on phones, Figma), arrow 32,
+   64px per month. */
+.timeline {
+  --tl-month: var(--space-3xl);
+  --_label-w: var(--sidebar-w);
+  --_arrow-w: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md); /* 16 between the parts (Figma) */
+  min-width: 0;
+  color: var(--color-text);
+}
+@media (max-width: 639px) {
+  .timeline { --_label-w: calc(var(--space-3xl) + var(--space-2xl) + var(--space-xs)); } /* 120 */
+}
+
+/* ===== 1–3. Controls, scroll buttons, legend ===== */
+/* One row each, wrapping: 12 between lines, 24 between groups (Figma). */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-lg);
+  min-width: 0;
+}
+/* Caption ("Show", "Line up on") and its segmented control, 8 apart. On a narrow screen the control goes under it. */
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+  max-width: 100%;
+}
+.groupLabel { white-space: nowrap; }
+.segments { max-width: 100%; } /* segments shrink and their labels wrap rather than run off a phone screen */
+/* Phones: five lanes or four line-up options do not fit one line at 17px. The segments wrap onto a second line, so
+   words stay whole (the Segmented control alone would break them inside). Composition via className only. */
+@media (max-width: 639px) {
+  .segments { flex-wrap: wrap; }
+}
+
+/* Filter note: "Your filter hides N lanes" and the "Show all lanes" button. */
+.filterNote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.filterNote:empty { display: none; }
+.filterText { min-width: 0; overflow-wrap: break-word; }
+
+/* Scroll buttons ‹ Earlier · Today · Later ›: Segment look (Segmented control CSS), but actions, not choices: no
+   pressed state. A direction with nothing more is disabled: text-muted label, aria-disabled (stays focusable). */
+.scrollButton[aria-disabled='true'],
+.scrollButton[aria-disabled='true']:hover,
+.scrollButton[aria-disabled='true']:active {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Legend: every shape and the zone, 8 between key and word, 8 16 between keys (Figma). */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-md);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.zoneSwatch {
+  flex: none;
+  width: var(--space-lg);
+  height: var(--space-xs);
+  background: var(--color-primary-tint);
+}
+@media (forced-colors: active) {
+  .zoneSwatch { forced-color-adjust: none; border: 1px solid GrayText; background: Canvas; }
+}
+
+/* ===== 4. Range line ===== */
+.range { min-width: 0; margin: 0; overflow-wrap: break-word; }
+
+/* ===== 5. Scroll region ===== */
+.scrollArea { min-width: 0; }
+
+/* Edge buttons: a slim row above the track, "‹ Earlier" at the track's left (label column + 8), "Later ›" at its
+   right (arrow column + 8), each only when there is more in that direction. 36 high in compact (28 + 8). */
+.edges {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap; /* never wider than the page: on a very narrow screen "Later ›" goes under "‹ Earlier" */
+  justify-content: space-between;
+  gap: var(--space-xs);
+  box-sizing: border-box;
+  min-height: calc(var(--control-sm) + var(--space-xs));
+  padding: 0 calc(var(--_arrow-w) + var(--space-xs)) var(--space-xs) calc(var(--_label-w) + var(--space-xs));
+}
+.edgeLater { margin-left: auto; }
+/* Phones: the 44px buttons and the label column do not fit side by side, so the edge buttons sit at the region's
+   edges instead of the track's (Figma has no phone layout for them). */
+@media (max-width: 639px) {
+  .edges { padding-right: 0; padding-left: 0; }
+}
+
+/* The region scrolls sideways; the page never does (WCAG 1.4.10). Focusable (tabindex 0) so arrow keys scroll it.
+   Focus ring from the base layer (2px focus, 2px offset). No gradients or shadows as scroll cues (Figma). */
+.region {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+}
+
+/* As wide as the track needs, at least as wide as the region. 4px at the bottom keeps the last row's focus ring
+   inside the region. */
+.content {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  min-width: 100%;
+  padding-bottom: var(--space-2xs);
+}
+
+/* Axis: 24 high (28 comfortable). Label and arrow columns are blank and sticky, so labels slide under them. */
+.axis {
+  display: flex;
+  min-width: 100%;
+}
+.axisLabel,
+.axisArrow {
+  position: sticky;
+  z-index: 1;
+  flex: none;
+  background: var(--color-surface);
+}
+.axisLabel { left: 0; width: var(--_label-w); }
+.axisArrow { right: 0; width: var(--_arrow-w); }
+.axisTrack {
+  position: relative;
+  flex: 1 0 auto;
+  width: calc(var(--tl-month) * var(--tl-months));
+  height: calc(var(--lh-small) + var(--space-xs));
+  overflow: clip;
+}
+/* Month labels in caption, 4px after their month line. January shows the year only. "Today" (or the line-up event)
+   in 600, text colour. */
+.tick {
+  position: absolute;
+  top: var(--space-2xs);
+  left: calc(var(--tl-month) * var(--at) + var(--space-2xs));
+  white-space: nowrap;
+}
+.tickStrong { color: var(--color-text); font-weight: 600; }
+
+/* Lanes: overline name (+ caption), surface background, padding 16 0 4, 1px line below (Figma). The text is
+   sticky, so the name stays in view while the track scrolls. */
+.lane { min-width: 100%; }
+.laneHeader {
+  min-width: 100%;
+  padding: var(--space-md) 0 var(--space-2xs);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.laneText {
+  position: sticky;
+  left: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-xs);
+  box-sizing: border-box;
+  max-width: var(--tl-viewport, 100%);
+}
+.laneName,
+.laneCaption { min-width: 0; overflow-wrap: break-word; }
+
+/* ===== 6. Change lists ===== */
+/* Two columns, 32 apart (Figma); one column on phones (styleguide breakpoints). */
+.changes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+.changes:empty { display: none; }
+@media (max-width: 639px) {
+  .changes { grid-template-columns: 1fr; gap: var(--space-lg); }
+}
+.changeColumn { min-width: 0; }
+.changeHeading {
+  margin: 0 0 var(--space-xs); /* 8 to the list (Figma) */
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+.changeList { margin: 0; padding: 0; list-style: none; }
+.changeItem { border-top: 1px solid var(--color-line); }
+
+/* A change line: date 88 (caption), what (body + source caption), › 16 in link. Padding 8 0, 12 between. At least 44
+   high when it is a button (target size). */
+.change {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-xs) 0;
+  color: var(--color-text);
+  text-align: start;
+}
+.changeButton {
+  min-height: var(--control-lg);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+.changeButton:hover,
+.changeButton:active { background-color: var(--color-interaction-tint); } /* clickable: interaction-tint (v2.3) */
+.changeButton:focus-visible { position: relative; z-index: 1; outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.changeDate {
+  flex: none;
+  width: calc(var(--space-3xl) + var(--space-lg)); /* 88 */
+  overflow-wrap: break-word;
+}
+.what {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+.changeText { color: var(--color-text); overflow-wrap: break-word; }
+.changeSource { overflow-wrap: break-word; }
+.changeArrow {
+  display: inline-flex;
+  flex: none;
+  color: var(--color-link);
+}
+.changeArrow > svg { width: 16px; height: 16px; stroke-width: 1.5; }
+
+/* Empty list: one sentence in body, text-muted (styleguide Empty state). */
+.empty {
+  margin: 0;
+  padding: var(--space-xs) 0;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+}
+
+/* Disclosure "Earlier in this window · N changes": › in link (down when open), label in body text. At least 44 high,
+   padding 8 0, 8 between, 1px line above (Figma). */
+.disclosure {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--control-lg);
+  margin: 0;
+  padding: var(--space-xs) 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+.disclosure:hover,
+.disclosure:active { background-color: var(--color-interaction-tint); }
+.disclosure:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.disclosureIcon { display: inline-flex; flex: none; color: var(--color-link); }
+.disclosureIcon > svg { width: 16px; height: 16px; stroke-width: 1.5; }
+.disclosureText { min-width: 0; overflow-wrap: break-word; }

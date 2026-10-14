@@ -1,0 +1,66 @@
+/* Radio and Radio group. Figma: Form controls / Radio (35:60). Styleguide: Components → Checkbox and task item (Radio);
+   Text input (label, hint spacing); Shared state model; Accessibility 2.5.8. */
+.radio {
+  /* Target height: 24 compact (WCAG 2.5.8, Figma min height 24), 44 in comfortable density (styleguide). */
+  --target: var(--space-lg);
+  display: inline-flex;
+  max-width: 100%; /* never wider than its container, so one long word wraps */
+  align-items: flex-start;
+  gap: var(--space-xs);
+  /* Padding centres one line of text in the target; longer labels grow the row. */
+  padding-block: calc((var(--target) - var(--lh-body)) / 2);
+  color: var(--color-text);
+  cursor: pointer;
+}
+/* Same density switch in Checkbox and Toggle: change all three together (no token goes 24 → 44). */
+:global([data-density='comfortable']) .radio { --target: var(--control-lg); }
+@media (max-width: 639px) { .radio { --target: var(--control-lg); } }
+
+/* The circle sits centred on the first text line. */
+.slot { display: flex; flex: none; align-items: center; height: var(--lh-body); }
+.circle { position: relative; display: grid; place-items: center; width: 16px; height: 16px; }
+
+.input {
+  appearance: none;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  cursor: inherit;
+  transition: border-color var(--duration-fast) var(--ease);
+}
+/* Selected: a primary ring and a 6px primary dot. */
+.input:checked { border-color: var(--color-primary); }
+.dot {
+  position: absolute;
+  width: 6px; /* 6px dot: a fixed shape size from the styleguide (Radio), not a spacing value */
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  pointer-events: none;
+  visibility: hidden;
+}
+.input:checked + .dot { visibility: visible; }
+
+.label { min-width: 0; overflow-wrap: break-word; }
+
+/* Hover: not used, as on Checkbox. Figma and the styleguide define none. */
+
+/* Focus ring around the circle: 2px focus colour, 2px offset; the outline stays round.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: line ring, muted dot and label. Never lower opacity. */
+.disabled { color: var(--color-text-muted); cursor: not-allowed; }
+.disabled .input,
+.disabled .input:checked { border-color: var(--color-line); background: var(--color-surface); }
+.disabled .dot { background: var(--color-text-muted); }
+
+/* Group: legend in body-strong, hint 4px under it, options 8px below (same spacing as Field). */
+.group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.legend { max-width: 100%; padding: 0; color: var(--color-text); overflow-wrap: break-word; }
+.hint { margin-top: var(--space-2xs); overflow-wrap: break-word; }
+.options { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; margin-top: var(--space-xs); }

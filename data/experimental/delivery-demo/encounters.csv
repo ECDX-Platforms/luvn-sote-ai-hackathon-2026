@@ -1,0 +1,11 @@
+encounter_id,source_person_id,role,purpose,example_label,demo_name,consent_holders,life_stage
+demo-enc-01-medication-conflict,demo-source-01,sairaanhoitaja,medication_follow_up,Aino Rautakallio,Lääkitysristiriita,,
+demo-enc-02-missed-doses,demo-source-02,sairaanhoitaja,medication_follow_up,Eero Vähäkangas,Puuttuvat annokset ja mittaukset,,
+demo-enc-03-phq9,demo-source-03,sairaanhoitaja,mental_health_assessment,Sanni Lehtimaa,PHQ-9-arvio,,
+demo-enc-04-iadl-rai,demo-source-04,sosiaalityontekija,functioning_service_needs,Tellervo Niskakangas,IADL ja RAI,,
+demo-enc-05-iadl-due,demo-source-05,sairaanhoitaja,functioning_service_needs,Ikääntyneen toimintakyvyn ja palvelutarpeen arvio (IADL erääntynyt),Veikko Salmela (s. 1953),,
+demo-enc-06-functioning-nurse,demo-source-06,sairaanhoitaja,functioning_service_needs,Reetta Kivelä,"Toimintakyky, sairaanhoitaja",,
+demo-enc-07-functioning-therapist,demo-source-06,fysioterapeutti,functioning_service_needs,Reetta Kivelä,"Toimintakyky, fysioterapeutti",,
+demo-enc-08-vammaispalvelut,demo-source-07,sosiaalityontekija,functioning_service_needs,Jarmo Peltomäki,Vammaispalvelujen esitiedot,,
+demo-enc-09-guardian-split,demo-source-08,terveydenhoitaja,child_health_checkup,Vilja Korhonen,Huoltajan ja oman suostumuksen jako,guardian,child
+demo-enc-10-duplicate-facts,demo-source-09,terveydenhoitaja,child_health_checkup,Onni Haapala,Sama kasvutieto kahdessa lomakkeessa,guardian,child

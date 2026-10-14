@@ -1,0 +1,51 @@
+/* Identity strip. Figma: App shell / Identity strip (52:227). Styleguide: Patient block and identity strip, Layout tokens,
+   Accessibility (2.4.11 scroll-padding-top, set in base.css). */
+
+/* Holder: sticks to the top of the screen inside its column and takes no height, so the strip overlays the content.
+   Styleguide over its starter CSS: the starter CSS fixes the strip with left: var(--sidebar-w), which ties it to the shell;
+   sticking inside the column gives the same place ("fixed at the top of the main area") at every width.
+   Needs no overflow on its ancestors (the AppShell sets none). */
+.holder {
+  position: sticky;
+  top: 0;
+  z-index: 3; /* Above the page content, below overlays. */
+  height: 0;
+}
+
+/* Strip: min height 44 (64 on phones, --identity-h), surface, hairline below, padding 8 24. */
+.strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  column-gap: var(--space-xs); /* Styleguide over Figma: 8 between name, dot and details (starter CSS); Figma uses 4. */
+  min-height: var(--identity-h);
+  padding: var(--space-xs) var(--space-lg);
+  background: var(--color-surface);
+  /* Hairline drawn inside the min height, so two lines on phones give exactly 64 (24 + 24 + 8 + 8). */
+  box-shadow: inset 0 -1px 0 var(--color-line);
+  color: var(--color-text-muted); /* details and dots */
+}
+.strip[hidden] { display: none; }
+
+/* Forced colours drop box shadows: keep the hairline as a real border there. */
+@media (forced-colors: active) {
+  .strip { box-shadow: none; border-bottom: 1px solid CanvasText; }
+}
+
+.name { min-width: 0; color: var(--color-text); overflow-wrap: break-word; }
+.separator { flex: none; }
+.detail { min-width: 0; overflow-wrap: break-word; }
+
+/* Phones: two lines, name on the first, details on the second (min height 64), 16px sides. */
+@media (max-width: 639px) {
+  .strip { padding-left: var(--space-md); padding-right: var(--space-md); }
+  .name { flex-basis: 100%; }
+  .name + .separator { display: none; } /* No dot at the start of the second line. */
+}
+
+/* States: not interactive. Hover, focus, pressed, selected, disabled, error and loading do not apply. */

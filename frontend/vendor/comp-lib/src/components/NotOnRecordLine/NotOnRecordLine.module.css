@@ -1,0 +1,54 @@
+/* Not on record line. Figma: Patterns / Not on record line (249:258), State=Missing (249:246), State=Complete (249:254).
+   Styleguide v2.3: Thin record page, Shapes (Hairline), Typography (Roles), Icons. NEW: not defined in the styleguide beyond the pattern. */
+
+/* One flex row that wraps: label and tags (or check and sentence). 1px line rule on top, padding 12 0, gap 8 (Figma).
+   Not interactive, so no hover, focus or target size. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text);
+}
+
+/* "Not on record" in body-strong. Styleguide over Figma: Figma's text is one line (auto-width); code lets it wrap, words stay whole. */
+.label {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+/* The list is only there for screen readers: its box is removed so the tags join the label's flex row and wrap with it
+   (Figma: one wrapping row). The reset keeps the list semantics in current browsers. */
+.kinds {
+  display: contents;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* min-width 0 + max-width 100%: a long kind name wraps inside its tag instead of pushing the line wider (Tag wraps its label). */
+.kind {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Complete: the check is 16px, 1px line (stroke 1.5 on lucide's 24px grid), in the sentence's text-muted colour. */
+.check {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+}
+.check > svg { width: 16px; height: 16px; stroke-width: 1.5; }
+
+/* The sentence is caption (12/16, text-muted; 14/20 in comfortable density). Wraps, words stay whole. */
+.complete {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}

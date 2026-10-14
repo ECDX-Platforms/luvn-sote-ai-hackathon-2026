@@ -1,0 +1,23 @@
+{
+  "persona_id": "bound-persona-006-other-person-control",
+  "label": "Kaisa Rantala — toisen henkilön tieto",
+  "source_person_id": "bound-source-006",
+  "records": [
+    {
+      "record_id": "bound-note-014",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-22T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Puolison oma hoito",
+        "teksti": "Puoliso kertoi unohtaneensa omat valkoiset pillerinsä työmatkan aikana. Asiakas ei ollut paikalla, eikä tekstissä kuvata asiakkaan omaa vointia tai hoitoa.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-006"
+    }
+  ]
+}

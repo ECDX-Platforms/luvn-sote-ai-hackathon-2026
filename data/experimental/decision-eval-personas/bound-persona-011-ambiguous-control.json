@@ -1,0 +1,23 @@
+{
+  "persona_id": "bound-persona-011-ambiguous-control",
+  "label": "Lempi Järvinen — epäselvä maininta",
+  "source_person_id": "bound-source-011",
+  "records": [
+    {
+      "record_id": "bound-note-018",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-24T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Varmistamaton maininta",
+        "teksti": "Kirjauksessa mainitaan, että joku ehkä jätti jonkin tabletin väliin, mutta ei selviä oliko kyse asiakkaasta, milloin se tapahtui tai mitä tabletilla tarkoitettiin. Tietoa ei ole varmistettu.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-011"
+    }
+  ]
+}

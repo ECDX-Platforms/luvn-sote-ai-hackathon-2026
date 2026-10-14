@@ -1,0 +1,32 @@
+/* Now cell. Figma: Data display / Now cell (213:2193). Styleguide v2.2: Components → Now strip (first look),
+   Typography → Roles (body, title-lg, metric, caption) and Density, Content (numbers). NEW (13 Oct, hierarchy). */
+/* Padding 16 24 24 (phones: 16 16 24, below), gap 4, no fill, no radius. No hairlines here: the Now strip draws every rule
+   (in Figma the strip's cells draw their own right rule; a Now cell used alone has none). */
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  border-radius: var(--radius-none);
+  color: var(--color-text);
+}
+
+/* Label (body, text-muted from .muted), word value (title-lg) and detail (caption, text-muted from .t-caption) wrap;
+   words stay whole (Figma's auto-width label is a known Figma gap). Each text spans the cell (Figma: min-width full). */
+.label,
+.word,
+.detail {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* Phones (< 640px): 16 at the sides, like a Block (styleguide Layout tokens: block padding on phones), so a title-lg
+   date fits a 2-per-row cell at 320px. Top 16 and bottom 24 stay. */
+@media (max-width: 639px) {
+  .cell { padding-inline: var(--space-md); }
+}
+
+/* Number value: metric (35/40, 500); comfortable density and phones switch .t-metric to metric-sm (29/36).
+   Tabular figures. Never breaks inside its digits, so no overflow-wrap here (styleguide Content). */
+.number { font-variant-numeric: tabular-nums; }

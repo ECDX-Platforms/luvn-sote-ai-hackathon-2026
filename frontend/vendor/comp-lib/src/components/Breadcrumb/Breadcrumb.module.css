@@ -1,0 +1,31 @@
+/* Breadcrumb. Figma: Navigation / Breadcrumb (46:148). Styleguide: Header (breadcrumb in caption, text-muted), Colors → link, Content. */
+.breadcrumb { min-width: 0; }
+
+/* Levels and separators 4px apart. Wraps onto a second line when the path is long. */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* Parent levels: Link size sm (tag 12/16 500, link colour, underlined).
+   Figma over the styleguide, open question for Theo: the styleguide's Header puts the whole breadcrumb in caption text-muted
+   (its sample markup is plain text, no links). Figma makes the parent levels links. They are kept as links, because a
+   breadcrumb that cannot navigate has no use, and a link follows the styleguide's link rule (link colour, underlined).
+   Styleguide wins over Figma: Figma's parent-level text has no underline; its own description and the styleguide say links are always underlined. */
+
+/* Separator "›" and the current level: caption (12/16 400, text-muted). The current level is plain text, not a link. */
+.separator { flex: none; }
+
+/* States: the parent links have the Link states (focus ring; hover not used). The current level is not interactive. */

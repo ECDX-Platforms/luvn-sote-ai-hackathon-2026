@@ -1,0 +1,20 @@
+/* Key-value list. Figma: Data display / Key-value list (49:144), Key-value pair (49:141), Layouts / Grid / Key-value (129:536).
+   Styleguide: Components → Key-value list, Layout → Breakpoints, Inner grids; Implementation .kv. */
+/* Figma draws the list as wrapping rows of fixed 144px pairs; code uses the styleguide grid (equal columns per breakpoint).
+   The styleguide starter CSS adds a 16px bottom margin; the component has no outer margin, so the block decides the space. */
+.list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-2xs) var(--space-lg); /* row 4, column 24 */
+}
+
+/* 3 columns from 640px to 1279px. */
+@media (max-width: 1279px) { .list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* 2 columns on phones (< 640px). */
+@media (max-width: 639px) { .list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.pair { display: flex; flex-direction: column; min-width: 0; }
+
+/* Text wraps; an identifier wraps anywhere rather than being cut off. Tabular figures come from the base font settings. */
+.label { overflow-wrap: anywhere; }
+.value { color: var(--color-text); overflow-wrap: anywhere; }

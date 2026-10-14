@@ -1,0 +1,57 @@
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# node
+node_modules/
+dist/
+
+# local feedback log
+backend/data/
+
+# pi session logs / local artifacts
+.pi/sessions/
+# Native MCP is per-machine: the browser bridge port and its token path live outside this repo.
+.pi/mcp.json
+.env
+
+.vendor
+
+# dev.sh launcher pidfile
+.dev.pids
+
+# Local hosting parameters must not be committed, wherever they live. There is no tracked exception any
+# more: the one that existed pinned a stale image and buildRevision and was deleted on 2026-10-11 (see
+# docs/hosting-runbook.md, "The hosting parameters file is deleted, deliberately").
+**/hosting/*.parameters.json
+**/hosting*.parameters.json
+
+# Tool caches
+.ruff_cache/
+
+# Foundry artifacts may contain note-derived text; keep them local.
+.foundry/
+
+# Exhaustive style x preset x mode capture output: generated, reviewed in place, not committed.
+.scratch/ui-remake/generated/
+
+# Exhaustive design-system-migration capture output: generated, reviewed in place, not committed.
+.scratch/design-system-migration/captures/generated/
+
+# Ad-hoc verification screenshots (working evidence, not deliverables)
+_ws_verify.png
+.scratch/browser-checks/
+
+# Offensive-security notes and prompt-injection tooling do not belong in a submission tree.
+# Kept outside the repository at ~/luvn-security-notes-outside-repo/ (2026-10-10).
+LUVN-RECON.md
+pi-toolkit/
+
+# Local browser-test evidence: screenshots taken while exercising the app with Chrome DevTools
+# Protocol. They are working evidence for one session, not deliverables, and the written findings live
+# in the workstream's markdown.
+.scratch/final-touches/browser/
+logs/*.diff
+Hackathon_data.zip

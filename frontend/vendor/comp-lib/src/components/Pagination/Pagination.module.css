@@ -1,0 +1,18 @@
+/* Pagination. Figma: Navigation / Pagination (46:198). Styleguide: Data table, Button (Ghost), Typography (caption), Shared state model.
+   NEW: the styleguide has no pagination; composed from Icon button sm and the caption role. */
+
+/* Range, then Previous and Next, 8px apart. */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* Range: caption (12/16 400, text-muted), tabular figures from the base font settings.
+   The visible text and a hidden copy of the widest (last page) range share one grid cell, right-aligned,
+   so the range keeps its width and the buttons stay in place while paging. */
+.range { display: inline-grid; justify-items: end; min-width: 0; }
+.range > * { grid-area: 1 / 1; }
+.reserve { visibility: hidden; }
+
+/* Buttons: Icon button sm (28 square, 44 in comfortable density), with its own hover, focus and disabled states. */

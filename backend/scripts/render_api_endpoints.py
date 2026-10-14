@@ -1,0 +1,556 @@
+"""Render `docs/api-endpoints.md` from the application's own route table.
+
+The routes carry no docstrings, so the prose here — what each endpoint is for, what it returns, when it
+refuses — is written by hand. What is *not* hand-written is which endpoints exist: `render()` walks
+`app.main.app.routes` and refuses to render if the application has a route this table does not describe, or
+if this table describes a route the application no longer has. That is the whole point. A document listing
+endpoints goes stale the moment someone adds one, and a stale endpoint list is worse than none.
+
+    cd backend && .venv/bin/python scripts/render_api_endpoints.py          # write it
+    cd backend && .venv/bin/python scripts/render_api_endpoints.py --check  # the gate
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+TARGET = ROOT / "docs" / "api-endpoints.md"
+sys.path.insert(0, str(ROOT / "backend"))
+
+# FastAPI's own surfaces, not ours to document or to count.
+FRAMEWORK_PATHS = {"/openapi.json", "/docs", "/redoc", "/docs/oauth2-redirect"}
+
+# The fallbacks, documented together in the table below rather than one row per HTTP method: listing them per
+# method would be noise and would also *hide* a new method on one of them. They are still asserted per method
+# (`REQUIRED_FALLBACK_METHODS`), so a fallback that narrows fails, and a fourth fallback would fail too.
+FALLBACK_PATHS = {"/api", "/api/{path:path}", "/{path:path}"}
+
+# What each fallback does, in the order the document lists them, paired with the path whose methods are
+# rendered beside it.
+FALLBACK_BEHAVIOUR: tuple[tuple[str, str], ...] = (
+    ("/api/{path:path}",
+     "`404` with a JSON `{\"detail\": \"Not Found\"}` body. An unknown API path answers as an API rather than "
+     "as HTML, so a client that mistypes a route gets something it can parse."),
+    ("/api", "The same `404` JSON, for the bare prefix."),
+    ("/{path:path}",
+     "The requested **file** when it exists — the built assets are served from here — otherwise the "
+     "single-page shell for an extensionless path, so a client-side deep link gets the app rather than a "
+     "`404`. It refuses with `404` when `LUVN_STATIC_DIR` is not configured, when the path escapes that "
+     "directory, when a path that is *missing* looks like an asset (`assets/…`, or anything with a file "
+     "extension), and when the shell file itself is absent. \"Any non-API path\" would be too generous a "
+     "description of all that."),
+)
+
+INTRO = """# The LUVN product API
+
+Generated from the running application by `backend/scripts/render_api_endpoints.py`. `scripts/check.sh` runs
+that script with `--check`, so this document and the application's route table cannot disagree: adding,
+renaming or removing a route fails the gate until this file moves with it. The prose is written by hand and
+the endpoint *set* is asserted, which is the split that keeps an endpoint list from going quietly stale.
+
+## Where the boundary is
+
+**The application authenticates nobody.** Every deployment sits behind the Container Apps ingress, which
+performs Entra ID authentication and then authorises the caller against an allowlist of principals. A request
+that reaches the code below has therefore already been authenticated, and "who may call this API at all" is
+answered by the ingress policy, not by anything in this repository.
+
+**The application can additionally narrow *which encounters* a caller may read**, as an opt-in deployment
+configuration rather than authentication: `LUVN_ACCESS_POLICY` (inline JSON) or `LUVN_ACCESS_POLICY_FILE` (a
+mounted file) maps principals to encounter scopes, `backend/app/access.py` documents the shape, and with both
+unset the open behaviour below is exactly what it was. When a policy *is* configured, `GET /api/encounters`
+returns only the caller's encounters and every encounter-scoped route refuses an encounter outside the
+caller's scope with `403` — the same body whether or not that encounter **exists**, on the route's own
+canonical path (a non-canonical spelling of the same path matches no route and answers the uniform
+unknown-API `404`, which is routing rather than an existence signal), so the refusal is not an existence
+oracle. The catalogue is a read of a set and has no `403`: an unnamed principal gets an empty page.
+A policy that cannot be parsed fails closed with a `500` naming the defect; it never falls back to open.
+
+**What an unauthenticated caller actually gets is a `401`, not a redirect** — measured against the deployed
+instance, including with a browser's `Accept: text/html`, because the tempting assumption here is a login
+redirect and it is wrong:
+
+```
+HTTP/2 401
+www-authenticate: Bearer realm="<host>", authorization_uri="https://login.microsoftonline.com/<tenant>/oauth2/v2.0/authorize", resource_id="<audience>"
+```
+
+There is no `Location` header and no body. The response names the authorization endpoint and leaves the
+redirect to the client, which is why a browser reaches the login page and a script sees a `401` it can act
+on. A client calling this API should therefore expect `401` plus `WWW-Authenticate`, and treat the absence of
+a body on that response as normal. The tenant and audience are deployment configuration, so they are shown
+here as placeholders rather than copied into a document that would then be stale.
+
+Consequences worth stating plainly:
+
+- **These endpoints are not public.** They are reachable only through that ingress, in that tenant, by a
+  principal on that allowlist.
+- **A deployed instance with the ingress policy disabled is an unauthenticated instance.** The policy is
+  configuration, not code, and nothing in the application would refuse a caller if it were removed.
+- **`/health/live` and `/health/ready` are behind the same boundary as everything else**, and answer `401`
+  to an unauthenticated caller like everything else. They are platform probes, not public status pages.
+
+## The endpoints
+
+| Method | Path | What it is for | Success | Refusals |
+| --- | --- | --- | --- | --- |
+"""
+
+OUTRO = """
+## The fallbacks
+
+The methods below are rendered from the routes rather than asserted, because the earlier wording claimed
+"any method" and the `/api` fallbacks do not register `HEAD` — a claim the checked table would have carried
+indefinitely.
+
+| Method | Path | Behaviour |
+| --- | --- | --- |
+"""
+
+OUTRO_TAIL = """`/openapi.json`, `/docs` and `/redoc` are FastAPI's own, and are excluded from the table above.
+
+## Calls this API does not offer
+
+- **No writes other than feedback.** There is no endpoint that creates, edits or deletes a record, an
+  encounter or a person. The corpus is loaded out of band by a job
+  (`python -m app.load_sql --from-blob`), which is the only writer, and the application's identity holds
+  `db_datareader` alone.
+- **No endpoint returns a corpus file.** The runtime image carries no corpus; every byte served is read from
+  Azure SQL at request time.
+- **No endpoint decides anything.** Proposals and assessments are computed and returned for a professional to
+  accept, reject or edit; `/feedback` records that decision, and the decision itself is never the service's.
+"""
+
+
+class RenderError(RuntimeError):
+    """Raised when the documentation and the application cannot be reconciled."""
+
+
+ENDPOINTS: dict[tuple[str, str], dict[str, str]] = {
+    ("GET", "/health/live"): {
+        "purpose": "Liveness. Answers whether the process is up, without touching the corpus.",
+        "success": "`200` `{status, revision}` — `revision` is the build revision the image was built with, "
+                   "or `\"unknown\"` when it was not set.",
+        "refusals": "None. It does not read the corpus, so it stays `200` while the corpus is unreachable. "
+                    "Nothing else reports that either: readiness covers the built frontend, not the database, "
+                    "and a failed corpus read shows up as the catalogue this instance already holds rather "
+                    "than as a failing probe.",
+    },
+    ("GET", "/health/ready"): {
+        "purpose": "Readiness. Answers whether the process can serve **the built frontend**.",
+        "success": "`200` `{status: \"ready\", revision}`.",
+        "refusals": "`503` `{status: \"not_ready\", revision}` only when `LUVN_STATIC_DIR` is configured and "
+                    "its `index.html` is missing — a deploy that lost its frontend. **It does not read the "
+                    "corpus**, deliberately: the corpus is fetched per request, and the narration and Decision-1 "
+                    "stages are optional rather than readiness dependencies. A database outage therefore "
+                    "does not take the instance out of rotation; see `/api/encounters` for what a failed "
+                    "read does instead.",
+    },
+    ("POST", "/api/encounters/{encounter_id}/chat/stream"): {
+        "purpose": "**The assistant (Avustaja).** One question answered by a tool-using agent over the cached, "
+                   "permitted picture, streamed as server-sent events. The agent's tools read exactly the picture "
+                   "the briefing shows -- its records, the pre-filled esitiedot, the engine's own assessment, the "
+                   "release's forms -- and nothing else. Every sentence about the person cites record ids and is "
+                   "verified by Decision-1 against exactly those records before it is sent; a proposed step is "
+                   "published as a proposal, labelled the model's, only when every record it cites is in the "
+                   "picture and every figure in it is traceable. The body is `{turn_id, question, digest_id?, "
+                   "history?}`; `history` is the client's own transcript (questions and the sentences it "
+                   "displayed), model context only, never stored.",
+        "success": "`200` `text/event-stream`: `progress` (`reading`/`replaying`), `tool` (`{name}`) per tool "
+                   "read, `sentence` (`{text, source_ids}`) per VERIFIED sentence as it is confirmed, and one "
+                   "final `turn` event carrying the stored turn (`turn` with `outcome`, `suggestions[]` and "
+                   "`generator_state`; `digest`; `guideline_links`; `answer_notice`) plus an `assistant` block "
+                   "(`status`, `model`, `tool_calls`, `proposed_sentences`, `verified_sentences`). Each statement "
+                   "carries its class — `answer_lead`, `rule_output`, `external_evidence`, `model_summary` or "
+                   "`knowledge_advice` (a proposed step) — and its evidence ids; an `external_evidence` statement "
+                   "is a recorded Käypä hoito -suositus cited beside the verified sentence that supports it, with "
+                   "its title, date and deep link and no clinical content. `generator_state` is `not_configured`, "
+                   "`withheld` (a model was called and nothing of its text is published, without naming what was "
+                   "withheld) or `published`. `outcome` is `answer` with citations, or `procedural_refusal` "
+                   "carrying one cause-neutral sentence — the same bytes for every refusal. The digest freezes the "
+                   "subject (the selected records, the role, the purpose and the rule version), and on the wire "
+                   "omits the internal `persona_id` join key. The turn is recorded against the authenticated actor "
+                   "(ids, classes, labels and evidence; the text of a proposed step is the only statement text "
+                   "kept, so a retry can replay it after re-verification), and a retry under a stored `turn_id` "
+                   "replays the stored turn without a model call. Raw model text is never streamed.",
+        "refusals": "`401` without a principal; `403` outside a configured policy's scope; `409` "
+                    "`{reason: encounter_changed}` for a stale `digest_id`, decided before the stream opens; "
+                    "an `error` event (`{status, detail}`) when the turn could not be recorded, in which case "
+                    "nothing is shown as saved; a `turn_id` that conflicts with an earlier request arrives the "
+                    "same way with status `409`; `422` for a body outside the schema. With no model configured "
+                    "the stream carries the engine's own findings and steps, or the one cause-neutral refusal.",
+    },
+    ("GET", "/api/encounters/{encounter_id}/chat/prompts"): {
+        "purpose": "The questions this encounter invites, offered before the first one is asked. Each is "
+                   "derived from a row the briefing itself renders — the risk assessment, a recorded conflict, "
+                   "pending actions, the record the day view leads with, an open esitieto question — and carries "
+                   "the visible evidence that justified it, because a question implied by a withheld record would "
+                   "disclose that the record exists. At most four, offered and never answered here.",
+        "success": "`200` `{prompts: [{text, why, evidence_record_ids}], guideline_links, actor: {name}}`. `actor.name` is the caller's **own** principal name from `X-MS-CLIENT-PRINCIPAL-NAME`, so the panel can greet them by it; it is null when the platform asserted an id without a name, and the UI degrades to a name-less greeting. `guideline_links` carries Käypä hoito -suositus citations as deep links in the publisher's prescribed `/hoiNNNNN` form with `www.kaypahoito.fi` named; no guideline content is reproduced, because the terms permit linking and prohibit use of the content to develop an AI application. No `persona_id`: the UI keys its decisions by turn and suggestion, so the internal audit join key is not on the wire.",
+        "refusals": "`401` without an authenticated principal; `403` for an encounter outside the scope a "
+                    "configured access policy gives this caller (the same body for a withheld and a "
+                    "non-existent encounter, on the route's canonical path); `404` for an encounter id this instance does "
+                    "not have.",
+    },
+    ("GET", "/api/encounters/{encounter_id}/decisions"): {
+        "purpose": "**What this professional has already decided on this encounter.** The caller's own "
+                   "proposal and chat-suggestion decisions, so a reload can render them as decided instead "
+                   "of offering the same action again. Scoped by the platform principal in "
+                   "`X-MS-CLIENT-PRINCIPAL-ID` **and** by the encounter: another professional's decision on "
+                   "the same proposal is not this caller's, is not a conflict for them, and is not reported "
+                   "here in any form — no id, no action, no count, no boolean. Separate from `Picture` "
+                   "because `Picture` is a pure function of `(encounter, mode)` that is compared between "
+                   "arms and captured as an artifact.",
+        "success": "`200` `{encounter_id, proposals, chat_suggestions}`. `proposals` is "
+                   "`[{proposal_id, action, decided_at}]` and `chat_suggestions` is "
+                   "`[{turn_id, suggestion_id, action, decided_at}]` — the id(s), the action and the server "
+                   "time, and nothing else: no actor id (the caller is the actor), no note, no proposal text "
+                   "and no evidence ids. `turn_id` is part of a suggestion's identity because suggestion ids "
+                   "restart at `s0` on every turn.",
+        "refusals": "`401` without an authenticated principal, the same body as the write routes; `403` for an "
+                    "encounter outside the scope a configured access policy gives this caller (the same body "
+                    "for a withheld and a non-existent encounter); `404` for "
+                    "an encounter id this instance does not have.",
+    },
+    ("POST", "/api/encounters/{encounter_id}/prefill/reviews"): {
+        "purpose": "**Accept, edit or reject one pre-filled form answer.** Body `{review_id, form_id, "
+                   "question_id, verdict, edited_text?}` with `verdict` one of `vahvistettu`, `muokattu`, "
+                   "`hylätty`; `edited_text` (max 2000 characters) is required with `muokattu` and refused "
+                   "with the other two. The verdict is stored append-only under the platform principal, as "
+                   "the one audit row of the decision: actor, encounter, corpus generation, form, question, "
+                   "verdict. **Nothing is written back** to the form, the record the answer was filled from, "
+                   "or the cached briefing: the pre-fill stays a proposal and the verdict stays beside it. "
+                   "A second verdict on the same answer is kept in order, not refused — confirm, then edit, "
+                   "are both on the record.",
+        "success": "`200` `{ok, review_id, form_id, question_id, verdict, edited_text, recorded_at, label}`. A "
+                   "retry under the same `review_id` with the same body returns the stored row.",
+        "refusals": "`400` for `muokattu` without text or text with another verdict (checked before any lookup); "
+                    "`401` without an authenticated principal; `403` for an encounter outside the scope a "
+                    "configured access policy gives this caller; `404` for an unknown encounter; `409` when "
+                    "`review_id` was already used with a different body; `422` for a malformed body; `503` "
+                    "when the row could not be written — an unrecorded verdict is not acknowledged.",
+    },
+    ("GET", "/api/encounters/{encounter_id}/prefill/reviews"): {
+        "purpose": "**This professional's own verdicts on the encounter's pre-filled answers.** Scoped by the "
+                   "platform principal and the encounter, exactly as `/decisions`: another professional's "
+                   "verdict is not reported here in any form — no id, no count, no boolean.",
+        "success": "`200` `{encounter_id, reviews}`; `reviews` is `[{review_id, form_id, question_id, verdict, "
+                   "edited_text, decided_at}]` in decision order, newest last.",
+        "refusals": "`401` without an authenticated principal; `403` for an encounter outside the caller's "
+                    "configured scope; `404` for an unknown encounter.",
+    },
+    ("POST", "/api/chat/reviews"): {
+        "purpose": "Record what the professional decided about one suggestion: `accept`, `edit` or `dismiss`, "
+                   "one decision per suggestion and recorded against the authenticated actor — and only when "
+                   "the caller is the actor who asked the turn, so a decision cannot be made inside someone "
+                   "else's turn. `accept` means *accepted for checking* — the label rendered is "
+                   "`Tallennettu palveluun`, never that anything was done.",
+        "success": "`200` `{ok, review_id, suggestion_id, action, actor_id, digest_id, recorded_at, label}`. "
+                   "**Idempotent per `review_id`**, so a retry after a dropped response is safe.",
+        "refusals": "`400` when the action is unknown, when `edit` carries no text, when text accompanies "
+                    "anything but `edit`, or when the suggestion is not part of the turn; `401` without an "
+                    "authenticated principal; `403` when no such turn exists *or* it belongs to another "
+                    "professional (one indistinguishable answer, so the lookup is not an oracle); `409` when "
+                    "the turn's **stored** digest is no longer current — checked unconditionally on every "
+                    "decision, whether or not the caller sends `digest_id`, because this is the path that "
+                    "writes the audit record — when the suggestion already has a different decision (the "
+                    "caller's own duplicate, carrying `reason: already_decided` in the body), or when "
+                    "`review_id` conflicts with an earlier request; `422` for an id outside the schema; `503` "
+                    "when the review could not be stored.",
+    },
+    ("GET", "/api/diagnostics"): {
+        "purpose": "What this instance believes it is: useful when a deployment looks wrong and you need to "
+                   "know which build answered and what it was configured with.",
+        "success": "`200` `{revision, hosted, spa_enabled, foundry_agent}`. `hosted` is the deployment's "
+                   "`LUVN_HOSTED` flag, and `spa_enabled` is the separate question of whether the built shell "
+                   "is actually present — a distinction worth keeping, because an instance can be configured "
+                   "as hosted and still have lost its frontend. `foundry_agent` reports whether narration is "
+                   "configured and the state of its token.",
+        "refusals": "None. It reports configuration rather than records, and reads no corpus.",
+    },
+    ("GET", "/api/encounters"): {
+        "purpose": "The operator catalogue, **paged and searchable**: the encounters this instance can show, "
+                   "for the picker and the worklist. `limit` (default 50, maximum 500), `offset` (default 0), "
+                   "`q` (a case- and diacritic-insensitive substring over the display labels — `MÄKINEN`, "
+                   "`mäkinen` and `Makinen` all find `Taisto Mäkinen`) and `role` (one professional lens) select "
+                   "the page, and the response carries the counts so a client never has to download the "
+                   "catalogue to measure it.",
+        "success": "`200` `{encounters, total, count, limit, offset, query, role, aggregate}`. `encounters` is "
+                   "the page — `{encounter_id, role, role_label, purpose, purpose_label, example_label, "
+                   "picker_label}` in the operator's order — and `total` is how many rows matched `q`/`role` "
+                   "across the whole catalogue, so `offset` can be walked without guessing. `aggregate` is "
+                   "computed over the **whole** catalogue and is deliberately unaffected by `limit`, `offset`, "
+                   "`q` or `role`: `catalogue` is the encounter/person/purpose/role count the dashboard reads, "
+                   "`roster` the professional roles present (whole-catalogue, so a Rooli selector is complete "
+                   "on the first page), and `matching` the same counts for the current filter, which is what a "
+                   "role-scoped worklist reads.",
+        "refusals": "`422` for a `limit` outside `1..500`, a negative `offset`, a non-integer page value, or a "
+                    "`q` longer than 200 characters — invalid paging is rejected rather than silently clamped, "
+                    "because a clamp answers a question the caller did not ask. `503` when the encounter "
+                    "*configuration* is incomplete — an encounter that cannot be resolved against the personas. "
+                    "**A failed corpus read is not a refusal**: the catalogue metadata is re-read from the source for every worklist request, and a "
+                    "read that raises keeps and serves the catalogue already held, so a database hiccup cannot "
+                    "blank the navigation. That means this endpoint can answer `200` with data older than the "
+                    "corpus, which is the deliberate trade — the two cases are told apart by whether the read "
+                    "raised, and a corpus that genuinely has no encounters is served as empty rather than as an "
+                    "error. **With a configured access policy this is the caller's catalogue**: `encounters`, "
+                    "`total` and `aggregate` are all computed over the caller's scope and nothing else, and a "
+                    "principal the policy does not name gets an empty page rather than a `403` — a read of a "
+                    "set has no refusal, and an empty worklist is the honest answer.",
+    },
+    ("GET", "/api/encounters/{encounter_id}"): {
+        "purpose": "One encounter's worklist row, by id (ADR-0025 §4), so a deep link or a lens sibling is resolved "
+                   "by id and scope rather than by scanning a page the caller holds. Built by the same function as "
+                   "the catalogue's rows, so the two cannot drift.",
+        "success": "`200` `{encounter_id, role, role_label, purpose, purpose_label, example_label, picker_label}`, "
+                   "exactly the row `/api/encounters` returns for that id. Metadata only: no record is read and no "
+                   "picture is built.",
+        "refusals": "`403` when a policy is configured and the id is outside the caller's scope, with the same body "
+                    "an unknown id gets under that policy, so the refusal is not an existence oracle. `404` "
+                    "`unknown encounter` when no policy is configured and the id does not exist. Authorization is "
+                    "the catalogue's: an unnamed caller under a policy is refused, not answered `401`.",
+    },
+    ("GET", "/api/worklist"): {
+        "purpose": "**The day (Työpäivä).** One day's scheduled appointments for a role, from the release's own "
+                   "appointment tables, each row carrying the lens that opens the briefing and the readiness and "
+                   "attention summary of that briefing's cached row. `day` (ISO date, default today) and `role` "
+                   "(one professional lens, default all) select the rows; the response also carries the "
+                   "appointment count for each day of a fifteen-day strip around `day`, so a date picker is "
+                   "complete without a second read.",
+        "success": "`200` `{day, role, rows, count, ready, days, warmup}`. `warmup` is `{last_built_at}`: when the "
+                   "briefings cache was last written, as an ISO timestamp, or `null` when nothing has been prepared "
+                   "(or the backend has no cache) — a timestamp over the whole cache, never a count, so it names "
+                   "nothing outside the caller's scope. `rows` are `{appointment_id, encounter_id, "
+                   "scheduled_on, domain, status_text, urgency_text, contact_record_id, role, role_label, purpose, "
+                   "purpose_label, example_label, readiness, attention}` — `readiness` is `ready` when a fresh "
+                   "briefing is cached for the day and `pending` otherwise, and `attention` is that briefing's "
+                   "summary (risk level, conflicts, running medications, the Decision-1 urgency lead) or `null`. "
+                   "Every number in `attention` is a count of rows the briefing itself renders. Rows are ordered "
+                   "urgent-contact first (the source's own wording), then by the cached risk level, then by id. "
+                   "An appointment whose person has no lens in that domain is scheduled but has nothing to open, "
+                   "and is not a row. Reads the appointments table and the briefings cache only: no record is "
+                   "read and no pipeline runs.",
+        "refusals": "`422` for a `day` that is not an ISO date or a `role` the policy layer does not know. With "
+                    "a configured access policy the rows outside the caller's scope are not returned, exactly as "
+                    "`/api/encounters` narrows its page; with none, any authenticated presenter reads any day.",
+    },
+    ("GET", "/api/encounters/{encounter_id}/picture"): {
+        "purpose": "**The briefing.** The decision-picture for one encounter: the records the lens admits, "
+                   "the selection evidence for each, the risk and its alerts, the assessments derived from "
+                   "the records, conflicts and duplicate facts, the form catalogue, the invitations to "
+                   "review, and the narration's provenance.",
+        "success": "`200` — one picture object: `records` (priority and accessible-other), `risk`, `situation`, "
+                   "`assessments`, `conflicts`, `duplicate_facts`, `form_catalogue`, `proposals`, `actions`, "
+                   "`risk_reasons_by_record`, `selection`, `citations`, `narrative`, and the `narration_*` fields that mark model-drafted "
+                   "text and record which model produced it.",
+        "refusals": "`403` for an encounter outside the scope a configured access policy gives this caller "
+                    "(the same body for a withheld and a non-existent encounter, on the route's canonical path); `404` for an encounter id "
+                    "this instance does not have; `422` for a `mode` outside "
+                    "`normal`, `decision-off` and `foundry-off` — the three values the query parameter accepts, "
+                    "where `normal` is the default and each `-off` value disables one optional stage.",
+    },
+    ("POST", "/api/encounters/{encounter_id}/feedback"): {
+        "purpose": "Record what a professional did with one proposal: `accept`, `edit` or `dismiss` (the "
+                   "literals the schema accepts, not `reject`). The decision is recorded against the "
+                   "authenticated actor, **one decision per proposal per professional**: several roles "
+                   "legitimately see the same proposal through their own lens, so one professional's decision "
+                   "does not consume another's slot, and the stored event names who decided. It carries the "
+                   "proposal's own text, status and evidence ids so what was accepted can be reconstructed. "
+                   "One of the three writes this API offers, alongside the assistant turn and the chat review.",
+        "success": "`200` `{ok: true, event_id, recorded_at, actor_id, actor_name, actor_source}`. "
+                   "**Idempotent per `event_id`**: repeating the same request returns the stored event and its "
+                   "original `recorded_at` rather than recording a second one, so a retry after a dropped "
+                   "response is safe.",
+        "refusals": "`400` when `action` is `edit` and no note is given, or when a note accompanies anything "
+                    "else — a stateless request-shape check that runs before any proposal lookup, so it cannot "
+                    "be used to learn whether a proposal id exists; `401` without an authenticated principal; "
+                    "`403` for an encounter outside the scope a configured access policy gives this caller "
+                    "(the same body for a withheld and a non-existent encounter, on the route's canonical path); "
+                    "`409` `proposal is no longer available` when the encounter has no such proposal (one body, "
+                    "never a `404`: it must not read as \"exists but not for you\"), or `this proposal already "
+                    "has a decision` when *this* actor already decided it — a different professional's earlier "
+                    "decision is not a refusal at all, and that duplicate carries `reason: already_decided` "
+                    "in the body so the client can render it as the caller's own earlier decision rather "
+                    "than as a generic rejection; `422` for a body that does not match the schema; `503` "
+                    "when the event could not be stored — an explicit *not acknowledged* rather than a silent "
+                    "success.",
+    },
+}
+
+
+# Every method a route can answer. The fallbacks claim "any", so they are held to all of them, and a
+# documented endpoint is held to exactly the methods it answers — an undocumented method on a real path is a
+# route the document does not describe.
+HTTP_METHODS = frozenset({"GET", "POST", "PUT", "PATCH", "DELETE"})
+ALL_METHODS = HTTP_METHODS | {"HEAD", "OPTIONS"}
+# What each fallback must keep answering. `HEAD` is deliberately not required — these routes do not register
+# it, and the table renders the methods it finds rather than claiming a set. The shell fallback answers `GET`
+# alone because that is all a page navigation needs; the API fallbacks answer every verb so that a mistyped
+# route is refused as an API rather than as HTML, whichever verb it used.
+REQUIRED_FALLBACK_METHODS: dict[str, set[str]] = {
+    "/api": set(HTTP_METHODS | {"OPTIONS"}),
+    "/api/{path:path}": set(HTTP_METHODS | {"OPTIONS"}),
+    "/{path:path}": {"GET"},
+}
+
+
+def routes() -> dict[tuple[str, str], str]:
+    """Every route the application actually serves, as `(method, path) -> handler name`.
+
+    **Every** method, including `HEAD` and `OPTIONS`. An earlier version filtered those out, which meant a
+    route reachable only by `HEAD` was invisible to this check — the endpoint set could grow and the document
+    would still be declared in agreement. Filtering belongs in the comparison, where it can be justified per
+    path, not in the collection, where it hides things.
+    """
+    found: dict[tuple[str, str], str] = {}
+    for method, path, name in _walk():
+        if path in FRAMEWORK_PATHS:
+            continue
+        found[(method, path)] = name
+    return found
+
+
+def _all_paths() -> set[str]:
+    """Every path the application serves, of any route type, mounts followed.
+
+    Separate from `_walk()` because FastAPI serves `/openapi.json`, `/docs` and `/redoc` as plain Starlette
+    `Route`s rather than `APIRoute`s, so a walk that collects only `APIRoute`s cannot see them — which is how
+    the first version of the framework-path assertion failed while the routes were right there.
+    """
+    from starlette.routing import Mount
+
+    from app import main
+
+    paths: set[str] = set()
+
+    def descend(routes, prefix: str) -> None:
+        for route in routes:
+            path = prefix + getattr(route, "path", "")
+            paths.add(path)
+            if isinstance(route, Mount):
+                descend(route.routes, path)
+
+    descend(main.app.routes, "")
+    return paths
+
+
+def _walk(prefix: str = "") -> list[tuple[str, str, str]]:
+    """Every route the application serves, mounts followed, **nothing filtered out**.
+
+    Unfiltered on purpose. An earlier version filtered the framework paths while collecting them and then
+    tried to assert they were present, which can never succeed — the assertion has to look at the raw walk.
+    """
+    from fastapi.routing import APIRoute
+    from starlette.routing import Mount
+
+    from app import main
+
+    found: list[tuple[str, str, str]] = []
+
+    def descend(routes, prefix: str) -> None:
+        for route in routes:
+            path = prefix + getattr(route, "path", "")
+            if isinstance(route, Mount):
+                # A mounted sub-application serves routes of its own. Walking only APIRoute meant a whole
+                # mounted surface could be added and the document would still be declared in agreement, so
+                # mounts are followed and their routes must be documented like any other.
+                descend(route.routes, path)
+                continue
+            if not isinstance(route, APIRoute):
+                continue
+            for method in route.methods:
+                found.append((method, path, route.name))
+
+    descend(main.app.routes, prefix)
+    return found
+
+
+def render() -> str:
+    live = routes()
+    # The document tells the reader that `/openapi.json`, `/docs` and `/redoc` are FastAPI's own. Skipping
+    # them in the table is right; skipping them silently would let that sentence go false, so their presence
+    # is asserted instead. (FastAPI lets a deployment turn all three off.)
+    served_paths = _all_paths()
+    missing_framework = sorted(path for path in FRAMEWORK_PATHS if path not in served_paths)
+    if missing_framework:
+        raise RenderError(
+            "this document says FastAPI serves " + ", ".join(sorted(FRAMEWORK_PATHS))
+            + f", but the application does not serve {missing_framework} — the deployment has disabled them"
+        )
+    documented = set(ENDPOINTS)
+    # A route is documented when the table names that method on that path, or when the path is a fallback —
+    # and a fallback is only documented if it answers every method, because that is what the table says.
+    undocumented = sorted(
+        (method, path) for method, path in live
+        if (method, path) not in documented
+        and not (path in FALLBACK_PATHS and method in ALL_METHODS)
+    )
+    imaginary = sorted(documented - set(live))
+    for fallback in sorted(FALLBACK_PATHS):
+        served = {method for method, path in live if path == fallback}
+        if not served:
+            raise RenderError(
+                f"this document describes the fallback {fallback}, which the application no longer serves"
+            )
+        missing = sorted(REQUIRED_FALLBACK_METHODS[fallback] - served)
+        if missing:
+            raise RenderError(
+                f"the fallback {fallback} no longer answers {missing}: the document renders these methods "
+                f"from the routes, so this means the fallback itself narrowed"
+            )
+    if undocumented:
+        raise RenderError(
+            "the application serves routes this document does not describe: "
+            + ", ".join(f"{method} {path}" for method, path in undocumented)
+            + " — add them to ENDPOINTS in scripts/render_api_endpoints.py"
+        )
+    if imaginary:
+        raise RenderError(
+            "this document describes routes the application does not serve: "
+            + ", ".join(f"{method} {path}" for method, path in imaginary)
+            + " — remove them, a listed endpoint that answers nothing is worse than an omission"
+        )
+
+    lines = [INTRO.rstrip("\n")]
+    for method, path in sorted(ENDPOINTS, key=lambda item: (item[1], item[0])):
+        entry = ENDPOINTS[(method, path)]
+        lines.append(
+            f"| `{method}` | `{path}` | {entry['purpose']} | {entry['success']} | {entry['refusals']} |"
+        )
+    lines.append(OUTRO.rstrip("\n"))
+    for path, behaviour in FALLBACK_BEHAVIOUR:
+        methods = ", ".join(f"`{method}`" for method in sorted(m for m, p in live if p == path))
+        lines.append(f"| {methods} | `{path}` | {behaviour} |")
+    lines.append("")
+    lines.append(OUTRO_TAIL.rstrip("\n"))
+    return "\n".join(lines) + "\n"
+
+
+def main(argv: list[str]) -> int:
+    check = "--check" in argv
+    try:
+        rendered = render()
+    except RenderError as error:
+        print(f"render_api_endpoints: {error}", file=sys.stderr)
+        return 1
+    if check:
+        current = TARGET.read_text(encoding="utf-8") if TARGET.is_file() else ""
+        if current != rendered:
+            print(
+                f"{TARGET.relative_to(ROOT)} is stale: re-run "
+                f"`cd backend && .venv/bin/python scripts/render_api_endpoints.py`",
+                file=sys.stderr,
+            )
+            return 1
+        print(f"{TARGET.relative_to(ROOT)} matches the application's routes")
+        return 0
+    TARGET.parent.mkdir(parents=True, exist_ok=True)
+    TARGET.write_text(rendered, encoding="utf-8")
+    print(f"wrote {TARGET.relative_to(ROOT)} ({len(rendered.splitlines())} lines)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

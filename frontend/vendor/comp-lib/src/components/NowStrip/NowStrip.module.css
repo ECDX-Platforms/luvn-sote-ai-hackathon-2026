@@ -1,0 +1,25 @@
+/* Now strip. Figma: Data display / Now strip (213:2194). Styleguide v2.2: Components → Now strip (first look),
+   Layout → Breakpoints (1024px, like the Metrics inner grid). NEW (13 Oct, hierarchy). */
+/* The strip owns every rule: a 1px line rule below, and one between cells (the last cell of a row has none).
+   In Figma each cell draws its own right rule; a Now cell used alone has none. No top rule (Figma).
+   Grid rows stretch their cells, so all cells in a row are the same height (styleguide). */
+.strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* 4 per row (≥1024px). */
+.strip > * { border-right: 1px solid var(--color-line); }
+.strip > :nth-child(4n),
+.strip > :last-child { border-right: 0; }
+.strip > :nth-child(n + 5) { border-top: 1px solid var(--color-line); } /* More than 4 cells: a rule above the next row. */
+
+/* 2 per row below 1024px (styleguide breakpoint). The second row gets a rule above it. */
+@media (max-width: 1023px) {
+  .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .strip > :nth-child(4n) { border-right: 1px solid var(--color-line); }
+  .strip > :nth-child(2n),
+  .strip > :last-child { border-right: 0; }
+  .strip > :nth-child(n + 3) { border-top: 1px solid var(--color-line); }
+}

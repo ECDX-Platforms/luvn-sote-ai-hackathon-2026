@@ -1,0 +1,208 @@
+{
+  "persona_id": "bound-persona-004-sosiaalipalvelut",
+  "label": "Sanni Lehtinen — Sosiaalipalvelut, perhetyön asiakkuus",
+  "records": [
+    {
+      "record_id": "bound-demo-004",
+      "source": "sosiaalitoimi",
+      "record_type": "perustieto",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2024-02-05T09:00:00+02:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "syntymävuosi": 1990,
+        "sukupuoli": "nainen",
+        "kotikunta": "Espoo",
+        "äidinkieli": "suomi"
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-note-005",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-10T13:00:00+03:00",
+      "topic": "perhetyö",
+      "sensitivity_tag": "highly_sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Perhetyön tarpeen arviointi",
+        "teksti": "Perheessä on kolme alaikäistä lasta. Vanhempi kertoo arjen kuormittuneisuudesta ja taloudellisesta niukkuudesta. Palvelutarve arvioidaan korkeaksi. Sovittu perhetyön aloittamisesta ja ohjauksesta talous- ja velkaneuvontaan. Kirjaus sisältää arkaluonteisia perhetietoja.",
+        "käyntityyppi": "neuvottelu"
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-arviointi-006",
+      "source": "sosiaalitoimi",
+      "record_type": "arviointi",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-20T10:00:00+03:00",
+      "topic": "toimintakyky",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "instrumentti": "IADL",
+        "versio": "demo-v1",
+        "vastaukset": {
+          "i1": 1,
+          "i2": 0,
+          "i3": 0,
+          "i4": 1,
+          "i5": 1,
+          "i6": 1
+        }
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-note-009",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-21T10:00:00+03:00",
+      "topic": "sosiaalipalvelut",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Asiointiapu",
+        "teksti": "Asiakas ei saanut vahvistettua verkkolomakkeen lähettämistä ja pyytää rinnalla kulkevaa asiointiapua.",
+        "käyntityyppi": "arviointi"
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-paatos-005",
+      "source": "sosiaalitoimi",
+      "record_type": "päätös",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-12T10:00:00+03:00",
+      "topic": "perhetyö",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "päätös": "perhetyön myöntäminen",
+        "peruste": "sosiaalihuoltolain mukainen palvelutarpeen arviointi",
+        "voimassa": "2026-12-31"
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-paatos-007",
+      "source": "sosiaalitoimi",
+      "record_type": "päätös",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-12T10:30:00+03:00",
+      "topic": "toimintakyky",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "päätös": "toimintakyvyn arvioinnin määräaika",
+        "peruste": "arviointi on määräaikainen ja tarkistettava ennen jatkopäätöstä",
+        "voimassa": "2026-08-31"
+      },
+      "form": {
+        "form_type": "IADL",
+        "service": "toimintakyky",
+        "version": "demo-v1",
+        "due_at": "2026-08-31T12:00:00+03:00"
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-arviointi-007",
+      "source": "sosiaalitoimi",
+      "record_type": "arviointi",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-18T09:00:00+03:00",
+      "topic": "toimintakyky",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "instrumentti": "RAI",
+        "versio": "demo-v1",
+        "vastaukset": {
+          "r1": 2,
+          "r2": 1
+        }
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-asiointi-006",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-08T09:15:00+03:00",
+      "topic": "yhteydenotto",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "kanava": "puhelu",
+        "suunta": "lähtevä",
+        "aihe": "alkuarvio",
+        "yhteenveto": "Sovittu tapaaminen perhetyön aloittamiseksi."
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-asiointi-007",
+      "source": "asiointitapahtumat",
+      "record_type": "asiointitapahtuma",
+      "authored_by_role": "asiakas",
+      "recorded_at": "2026-09-05T19:40:00+03:00",
+      "topic": "yhteydenotto",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "kanava": "verkkopalvelu",
+        "suunta": "saapuva",
+        "aihe": "yhteydenottopyyntö",
+        "yhteenveto": "Pyysi yhteydenottoa perhetyöstä."
+      },
+      "source_person_id": "bound-source-004"
+    },
+    {
+      "record_id": "bound-note-004-alignment",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "perhetyö",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Synteettinen lisärivi",
+        "teksti": "Synteettinen testimerkintä, ei asiakastietoa.",
+        "kirjaaja": "sosiaalityöntekijä"
+      },
+      "source_person_id": "bound-source-004",
+      "erikoisala": "Sosiaalipalvelut",
+      "suorituspaikka": "Synteettinen yksikkö 004"
+    },
+    {
+      "record_id": "bound-note-004-draft",
+      "source": "sosiaalitoimi",
+      "record_type": "vapaateksti",
+      "authored_by_role": "ohjaaja",
+      "recorded_at": "2026-09-29T10:00:00+03:00",
+      "topic": "perhetyö",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Synteettinen luonnos",
+        "teksti": "Synteettinen luonnos odottaa ammattilaisen tarkistusta.",
+        "kirjaaja": "ohjaaja"
+      },
+      "source_person_id": "bound-source-004",
+      "erikoisala": "Sosiaalipalvelut",
+      "suorituspaikka": "Synteettinen yksikkö 004",
+      "state": "draft",
+      "responsible_approver": "sosiaalityontekija"
+    }
+  ],
+  "source_person_id": "bound-source-004"
+}

@@ -1,0 +1,122 @@
+/* Grouped record row. Figma: Data display / Grouped record row (187:1491).
+   Styleguide: Components → Data table, Status flag and tag, Shared state model; Shapes (Hairline, Focus ring, Radius);
+   Icons; Typography (Roles, Density); Accessibility (1.4.12, 2.5.8). NEW: not defined in the styleguide. */
+
+/* The group: the row button, then the records when open, then a 1px line rule below everything.
+   The rule is drawn inside the group (inset shadow), as in Figma: the bottom stroke adds no height, so a collapsed
+   row is exactly 36. position + z-index (below) only lift a focused group above its neighbours. */
+.group {
+  position: relative;
+  box-shadow: inset 0 -1px 0 var(--color-line);
+}
+
+/* ===== Row (the button) ===== */
+/* Figma: min-height 36 (size/row), gap 8, name group left, summary right. 44 in comfortable density (--row-h),
+   which also makes the whole row a 44px target on phones (WCAG 2.5.8). min-height, not height (1.4.12).
+   Every part sits on a 24px first line (the tag's height), top-aligned, so chevron, name, code, tag and summary
+   stay on one line when the name wraps (like table cells, which are top-aligned).
+   Code choice: Figma centres a 24px line in the row with 4px padding; code puts the same line at the same place with
+   padding (row height − 24) / 2 = 6 compact, 10 comfortable. One-line rows measure the same as Figma.
+   When there is no room, the summary wraps onto its own line and stays at the right edge (margin auto). */
+.row {
+  --line-h: var(--space-lg);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  column-gap: var(--space-xs);
+  width: 100%;
+  min-height: var(--row-h);
+  margin: 0;
+  padding: calc((var(--row-h) - var(--line-h)) / 2) 0;
+  border: 0;
+  border-radius: var(--radius-none); /* Square: rows are structure, so the focus ring stays square too. */
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+/* Hover and pressed look the same: interaction-tint behind the row (shared state model; Figma State = Hover).
+   When the row is open, only the row itself is filled, not the records under it. */
+.row:hover,
+.row:active { background: var(--color-interaction-tint); }
+/* Closed, the row's bottom edge is the group's rule. The row's own fill would cover the group's shadow, so the
+   closed row draws the same 1px rule over its fill. */
+.row[aria-expanded='false'] { box-shadow: inset 0 -1px 0 var(--color-line); }
+
+/* Focus ring: 2px focus colour, 2px offset, square (Figma State = Focus; styleguide). */
+.row:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+/* The focused group sits above its neighbours, so the next row's hover fill never covers the ring. */
+.group:focus-within { z-index: 1; }
+
+/* Chevron, then the label parts. min-width 0 so long text wraps instead of pushing the row wider. */
+.lead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* 16px chevron in link colour (v2.3: the arrow of anything clickable carries the accent). Right when closed, down when open (icon swap, no
+   rotation). Its box is one 24px label line high, so it stays centred on the first line when the name wraps. */
+.chevron {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: var(--line-h);
+  color: var(--color-link);
+}
+.chevron > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 at 16px = Figma's 1px line */
+
+/* Name, code and Long-term tag, 8 apart, each centred on the 24px line by its own block padding
+   ((24 − line height) / 2), so they line up with the chevron's first line. They wrap when the row is narrow. */
+.label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  column-gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Styleguide over Figma: Figma's texts are auto-width (one line). Code wraps long text, words stay whole. */
+.name {
+  min-width: 0;
+  padding-block: max(0px, calc((var(--line-h) - var(--lh-body)) / 2)); /* 2 compact, 0 comfortable */
+  overflow-wrap: break-word;
+}
+
+/* The code is an identifier: never truncated, never broken inside (styleguide Key-value list, Content). Tabular figures. */
+.code {
+  padding-block: calc((var(--line-h) - var(--lh-small)) / 2); /* 4 compact, 2 comfortable */
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+} /* Colour text-muted from .t-caption. */
+
+.tag { flex: none; }
+
+/* Summary: the one key fact ("Latest <date>"), caption, text-muted (from .t-caption). Wraps at spaces; dates keep their non-breaking spaces. */
+.summary {
+  min-width: 0;
+  padding-block: calc((var(--line-h) - var(--lh-small)) / 2);
+  margin-inline-start: auto;
+  overflow-wrap: break-word;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Records (open) ===== */
+/* Figma: indented 24, 8 below the last record, then the rule. Each record row brings its own height and rules. */
+.records { padding: 0 0 var(--space-xs) var(--space-lg); }
+.records[hidden] { display: none; }
+
+/* Detail line (Figma: Detail, 213:2211; updated 13 Oct, styleguide v2.2 one key fact per row): the record count and
+   first date, caption text-muted (from .t-caption), straight under the row and straight above the first record
+   (Figma: no gap, 16 high). Wraps at spaces; dates keep their non-breaking spaces; tabular figures. */
+.detail {
+  min-width: 0;
+  overflow-wrap: break-word;
+  font-variant-numeric: tabular-nums;
+}

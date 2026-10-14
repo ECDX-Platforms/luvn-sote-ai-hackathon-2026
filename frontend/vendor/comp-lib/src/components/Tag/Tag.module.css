@@ -1,0 +1,24 @@
+/* Tag. Figma: Tags and flags / Tag (36:40). Styleguide: Components → Status flag and tag, Shapes → Shape inventory (Tag border), Typography → Roles (tag). */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs); /* Figma gap 4. Only one child today, so it has no visible effect. */
+  max-width: 100%;
+  /* Height 24 (styleguide). min-height, not height: text spacing can grow (WCAG 1.4.12). 24 = --space-lg; there is no tag-height token. */
+  min-height: var(--space-lg);
+  /* Code over styleguide: the styleguide says padding 0 8. Code adds a block padding of (24 − line height − 2px border) / 2:
+     3px compact, 1px comfortable. On one line it is invisible (the tag is exactly 24 high either way); when a long label
+     wraps, the lines keep the same inset from the border instead of touching it. */
+  padding: calc((var(--space-lg) - var(--lh-small) - 2px) / 2) var(--space-xs);
+  /* Tag border: 1px line, lighter than a control on purpose, so a tag never looks clickable. */
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  /* Styleguide over Figma: Figma's label is auto-width (one line). Code wraps long labels instead of overflowing (WCAG 1.4.10). */
+  overflow-wrap: break-word; /* words stay whole; only a word longer than the tag breaks */
+}
+
+/* min-width 0 lets the label shrink below its longest word, so break-word can break a word longer than the tag
+   (a flex item never shrinks below its content otherwise, and the word would stick out). */
+.label { min-width: 0; }

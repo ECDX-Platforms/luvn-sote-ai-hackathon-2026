@@ -1,0 +1,55 @@
+/* Caution item. Figma: Data display / Caution item (176:830). NEW: composed from Status tag, Tag and Source reference.
+   Styleguide: Components → Status flag and tag (status tag for allergies and risk labels), Overview rule 6 (status is
+   icon + word + colour), Typography → Roles (body-strong, caption), Shapes → Shape inventory (hairline), Content. */
+
+/* Item: padding 8 0, content on the left, source on the right, centred (Figma: 52 high with a two-line fact).
+   When there is not room for both, the source moves under the content. */
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-md); /* Code over Figma: Figma has no gap; 16 keeps the source off a long fact */
+  min-width: 0; /* inside a flex or grid parent, long text must not widen the parent */
+  padding: var(--space-xs) 0;
+  color: var(--color-text);
+}
+
+/* Bottom rule: 1px line drawn inside the item (as in Figma), so the item keeps its height. */
+.rule { box-shadow: inset 0 -1px 0 var(--color-line); }
+
+/* Forced colours drop box shadows: keep the hairline as a real border there. */
+@media (forced-colors: active) {
+  .rule { box-shadow: none; border-bottom: 1px solid CanvasText; }
+}
+
+/* Content: tag slot, then the fact lines, 12px apart. */
+.content {
+  display: flex;
+  flex: 1 1 20rem; /* the fact wraps first; the source moves under it only when the content would be narrower than 20rem */
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+/* Tag slot: a fixed width so the facts line up in a list. Figma: 116 at the 12px tag text. Code scales it with the tag
+   text (116 / 12 × the small font size): 116 compact, about 135 comfortable, where "Not recorded" is wider. */
+.slot {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  width: calc(var(--fs-small) * 116 / 12);
+}
+
+/* Fact (body-strong) over qualifier (caption, text-muted). Styleguide over Figma: Figma's lines are one line; code wraps. */
+.lines {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.line { min-width: 0; overflow-wrap: break-word; }
+
+.source { flex: 0 1 auto; } /* may shrink: a long record type wraps instead of sticking out */
+
+/* Not interactive except the source reference (its states come from Source reference). Hover, focus, selected, disabled,
+   error and loading do not apply to the item itself. */

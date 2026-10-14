@@ -1,0 +1,23 @@
+.git
+.pi
+.scratch
+.foundry
+azure
+docs
+backend/tests
+backend/scripts
+HANDOFF.md
+AGENTS.md
+.env
+**/.env
+**/.venv
+**/node_modules
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/dist
+backend/data
+*.log
+# No corpus is copied into the runtime image (see the Dockerfile); excluding it here as well means a
+# future `COPY . .` cannot ship it by accident.
+data/

@@ -1,0 +1,292 @@
+{
+  "registry_version": "luvn-knowledge-registry-v1",
+  "checked_at": "2026-10-10",
+  "note": [
+    "One row per candidate external source, with only what was actually verified. `machine_readable` is",
+    "the verdict on whether an automated client can obtain structured data, not on whether the data is",
+    "open in principle. A source with no machine-readable interface stays out of the retrieval layer",
+    "however good its licence looks, and a snapshot is never hand-transcribed into a source."
+  ],
+  "sources": [
+    {
+      "id": "thl-code-service",
+      "title": "THL national Code Service (Kansallinen koodistopalvelu)",
+      "publisher": "THL (content) and Kela (platform)",
+      "licence": "SNOMED International Affiliate Member agreement for the national SNOMED CT subsets published on the Code Service. Operator decision 2026-10-12: this system is the operating organisation's own official social- and health-care information system, which is the class the service description's free-retrieval scope names, so the code lists are used inside it",
+      "licence_basis": "conditional permission scoped to information systems of organisations operating in Finland, not an open-data licence; the operator affirms this system is one of them (decision of 2026-10-12, recorded in .scratch/finnish-knowledge-sources/issues/08-codeserver-licence-position.md). The decision covers use inside the organisation's own systems and does not grant redistribution",
+      "attribution": "SNOMED International and THL",
+      "machine_readable": true,
+      "interface": {
+        "kind": "soap-wsdl",
+        "url": "https://koodistopalvelu.kanta.fi/codeserver/ws/services/CodeserviceService?wsdl",
+        "verified_at": "2026-10-09",
+        "verified_http_status": 200,
+        "verified_content_type": "text/xml",
+        "operations": [
+          "GetInfo",
+          "GetSupportedCodeSystems",
+          "GetSupportedRelationships",
+          "GetSupportedServices"
+        ]
+      },
+      "rest_documentation": "https://koodistopalvelu.kanta.fi/codeserver/swagger/index.html",
+      "interface_document": "https://www.kanta.fi/documents/20143/106828/Kansallisen+koodistopalvelun+rajapinta+ja+liittymisohje+20231127.pdf",
+      "constraints": [
+        "The interfaces are reachable only from Finland, including Ahvenanmaa; outside Finland they are reachable only for permitted source countries through nationalcodeservice.kanta.fi",
+        "Automated extraction is documented as best done through the message or Web Services interface",
+        "Content support: koodistopalvelu@thl.fi; platform support: tekninentuki@kanta.fi"
+      ],
+      "redistribution": "not open data; do not redistribute, and do not serve a snapshot outside the organisation's own systems"
+    },
+    {
+      "id": "fimea-open-data",
+      "title": "Fimea open data (medicinal products basic register, availability disruptions, interchangeable products, Lääke75+)",
+      "publisher": "Fimea",
+      "licence": "CC BY 4.0",
+      "licence_basis": "national catalogue licence field `cc-by-4.0` / Creative Commons Attribution 4.0",
+      "attribution": "Fimea",
+      "machine_readable": false,
+      "interface": null,
+      "catalogue": "https://avoindata.suomi.fi/data/en_GB/dataset/fimea-avoin-data",
+      "catalogue_checked_at": "2026-10-09",
+      "reason": "the national catalogue carries one resource with no format and no download URL (a link to the human page), the catalogue's own `isopen` flag is false, and fimea.fi answers HTTP 403 to a non-browser client, so no automated structured distribution could be confirmed",
+      "constraints": [
+        "Ask Fimea (ict@fimea.fi) for the machine-readable distribution before relying on this source",
+        "The operator may download a file by hand, but then it is an operator-supplied snapshot with recorded provenance, not a fetched source"
+      ],
+      "redistribution": "CC BY 4.0 permits redistribution with attribution, once a real distribution is confirmed"
+    },
+    {
+      "id": "uptodate-expert-ai",
+      "title": "UpToDate Expert AI",
+      "publisher": "Wolters Kluwer Health",
+      "licence": "event-scoped hackathon access (browser credentials valid 7 days from issue); production use requires a Wolters Kluwer agreement",
+      "licence_basis": "vendor-provided event access, not an open licence; captures are event-scoped and must not be redistributed or committed unless the terms allow it",
+      "attribution": "UpToDate, Wolters Kluwer",
+      "machine_readable": false,
+      "interface": null,
+      "reason": "the event path is manual prompting in a browser; the vendor states a production API exists but it is not available to this build, so the event path is an operator-supplied capture carrying its prompt, audience, capture time and SHA-256",
+      "constraints": [
+        "Credentials pending from the vendor; valid 7 days from issue",
+        "Answers default to a physician register, so the audience must be stated in the prompt and shown on the rendered statement",
+        "UpToDate content in the product description is professional guidance, not our finding: it is attributed, dated and never paraphrased into an unsourced claim"
+      ],
+      "redistribution": "not permitted for the event-scoped access"
+    },
+    {
+      "id": "kanta-code-service",
+      "title": "Finnish national Code Service (Koodistopalvelu) — ICD-10, ATC and laboratory nomenclature",
+      "publisher": "THL (content) and Kela (platform), Elisa CodeServer",
+      "licence": "CodeServer käyttöoikeuslisenssi (Elisa Oyj) for the platform; THL owns the content. Operator decision 2026-10-12: this system is the operating organisation's own official social- and health-care information system, which is the class the service description names (\"haettavissa kansallisiin sosiaali- ja terveydenhuollon sähköisissä asiakirjajärjestelmiin\"), so the code lists are retrieved and used inside it",
+      "licence_basis": "operator-affirmed scope decision of 2026-10-12, recorded in .scratch/finnish-knowledge-sources/issues/08-codeserver-licence-position.md. It is NOT a claim that the service is open data, and it does not grant redistribution. Anonymous GET access to the JSON REST API; THL owns the content, Kela the platform, Elisa the CodeServer product",
+      "attribution": "THL / Koodistopalvelu (ICD-10: THL; ATC: Fimea; laboratory nomenclature: Kuntaliitto)",
+      "machine_readable": true,
+      "interface": {
+        "kind": "rest-json",
+        "url": "https://koodistopalvelu.kanta.fi/codeserver/csapi/v8/classifications",
+        "verified_at": "2026-10-09",
+        "verified_http_status": 200,
+        "verified_content_type": "application/json",
+        "specification": "https://koodistopalvelu.kanta.fi/codeserver/resources/apidocs/v8/openapi.yaml",
+        "operations": [
+          "GET /classifications",
+          "GET /classifications/{id}/conceptcodes"
+        ]
+      },
+      "constraints": [
+        "Reachable only from Finland, including Ahvenanmaa; outside Finland only for permitted source countries through nationalcodeservice.kanta.fi",
+        "GET is documented as requiring no authentication; POST/PUT/PATCH/DELETE require a JWT",
+        "Large classifications are officially meant to be taken as `julkaisut` publication files, but the anonymous REST API returns the same codes and needs no JSF session",
+        "FinLOINC on the Code Service is only the 156-code physiological-measurement subset, not the full LOINC release"
+      ],
+      "redistribution": "not open data. Under the 2026-10-12 scope decision the operator may use the code lists inside the organisation's own systems, but the snapshot stays local (gitignored) and is never redistributed, mirrored or re-served. Ask koodistopalvelu@thl.fi before any publication"
+    },
+    {
+      "id": "kaypa-hoito-links",
+      "title": "Käypä hoito clinical guidelines — linking and citation only",
+      "publisher": "Suomalainen Lääkäriseura Duodecim",
+      "licence": "Site terms of use, Finnish text dated 2.2.2026: linking to a guideline is explicitly permitted, and citation is permitted under prescribed forms; using, copying, sharing or otherwise exploiting the content to train, develop or improve any AI application is prohibited",
+      "licence_basis": "the terms bind the user, and the only carve-out is a minor amount for the user's own private use in an application that neither stores the data permanently nor uses it for training — a multi-user product with a database satisfies neither limb",
+      "attribution": "Duodecim and the Käypä hoito working groups; the site name www.kaypahoito.fi must appear in any republication",
+      "machine_readable": false,
+      "rest_documentation": "https://www.kaypahoito.fi/kaypa-hoito/kayttooikeudet",
+      "interface_document": "https://www.kaypahoito.fi/kaypa-hoito/kayttooikeudet/linkittaminen",
+      "constraints": [
+        "No API and no bulk download of content exists; a WordPress sitemap index at /wp-sitemap.xml is metadata only",
+        "The prescribed link form is https://www.kaypahoito.fi/hoiNNNNN, where the hoi code identifies one guideline",
+        "Citation must name the latest published version and must display www.kaypahoito.fi",
+        "The English rights page is dated 29.4.2021 and omits the AI clause entirely, so it understates the restriction; cite the Finnish text",
+        "Content must never be ingested into an index, embedded, or placed in a model prompt, regardless of commercial status"
+      ],
+      "redistribution": "linking and citation only; content ingestion is prohibited by the 2.2.2026 AI clause",
+      "reason": "there is no API and no bulk download of the content, and the terms of use prohibit ingesting it into any AI system, so only linking and citation are permitted; the site root itself was read at HTTP 200 (text/html) on 2026-10-10, which establishes that the guidelines are reachable, not that their content is usable"
+    },
+    {
+      "id": "finto-tero",
+      "title": "TERO — Finnish Ontology of Health and Welfare (via Finto)",
+      "publisher": "National Library of Finland (Finto), maintaining the Finnish thesauri and ontologies",
+      "licence": "CC BY 3.0",
+      "licence_basis": "verified at https://finto.fi/tero/en/ on 2026-10-12 as the publisher's own statement; note it is an older CC version than CC BY 4.0",
+      "attribution": "Finnish Terminology Centre TSK / Finto",
+      "machine_readable": true,
+      "interface": {
+        "kind": "rest-json",
+        "url": "https://api.finto.fi/rest/v1/tero/search?query=<term>&lang=fi",
+        "verified_at": "2026-10-12",
+        "verified_http_status": 200,
+        "verified_content_type": "application/json",
+        "operations": [
+          "GET /rest/v1/vocabularies — 54 vocabularies, including tero",
+          "GET /rest/v1/tero/search?query=verenpaine&lang=fi&limit=3 — concept URIs and prefLabels",
+          "GET /rest/v1/tero/label?uri=http://www.yso.fi/onto/tero/p7682&lang=fi — prefLabel and altLabels"
+        ]
+      },
+      "rest_documentation": "https://api.finto.fi/",
+      "interface_document": "https://finto.fi/en/",
+      "constraints": [
+        "TERO is concept labels and synonyms; the search also returns YSO concepts, which are a different vocabulary with its own licence, so YSO hits are not covered by the TERO licence",
+        "TERO is general health-and-welfare terminology: useful for Finnish labels, concepts and phrasing, and it carries no clinical recommendations",
+        "Languages offered are en, fi and sv with fi as the default"
+      ],
+      "redistribution": "CC BY 3.0 permits redistribution with attribution; concept labels and synonyms only; YSO hits require their own licence"
+    },
+    {
+      "id": "thl-sote-sanastot",
+      "title": "THL Sote-sanastot (Finnish social and healthcare vocabularies)",
+      "publisher": "THL",
+      "licence": "CC BY 4.0",
+      "licence_basis": "verified at https://sotesanastot.thl.fi on 2026-10-12 as stated on the site; the web service source code is EUPL-1.2",
+      "attribution": "THL (Terveyden ja hyvinvoinnin laitos)",
+      "machine_readable": true,
+      "interface": {
+        "kind": "rest-json",
+        "url": "https://sotesanastot.thl.fi/api/vocabularies",
+        "verified_at": "2026-10-12",
+        "verified_http_status": 200,
+        "verified_content_type": "application/json",
+        "operations": [
+          "GET /api/vocabularies — 8 vocabularies with metadata and publish dates",
+          "GET /api/vocabularies/{vocabularyId}/concepts — concepts list with preferred labels and status",
+          "GET /api/vocabularies/{vocabularyId}/concepts/{conceptId} — concept details with synonyms, definitions, notes and status"
+        ]
+      },
+      "rest_documentation": "https://sotesanastot.thl.fi",
+      "interface_document": "https://sotesanastot.thl.fi",
+      "constraints": [
+        "These are information-management concepts (terms, synonyms, definitions, status), NOT clinical codes, and no guideline content is stored",
+        "Concepts are in the 'concept' namespace; they do not label ATC, ICD-10, measure or instrument codes"
+      ],
+      "redistribution": "CC BY 4.0 permits redistribution with attribution; terms, definitions and status only; no clinical guideline text is stored",
+      "national_headings_sourced": [
+        "Toimintakyky"
+      ],
+      "national_terms_sourced": [
+        "toimintakykymittari"
+      ]
+    },
+    {
+      "id": "fhir-fi-base-profiles",
+      "title": "FHIR FI Base Profiles — Finnish security and visibility code systems",
+      "publisher": "HL7 Finland / fhir-fi",
+      "licence": "CC0-1.0",
+      "licence_basis": "verified at https://raw.githubusercontent.com/fhir-fi/finnish-base-profiles/c5ae42c51cad6b4df0f4fd65857de18606e3963a/LICENSE.md on 2026-10-12 (CC0 1.0 Universal legal code)",
+      "attribution": "HL7 Finland / fhir-fi",
+      "machine_readable": true,
+      "interface": {
+        "kind": "raw-fsh",
+        "url": "https://raw.githubusercontent.com/fhir-fi/finnish-base-profiles/c5ae42c51cad6b4df0f4fd65857de18606e3963a/input/fsh/codesystems/security.fsh",
+        "verified_at": "2026-10-12",
+        "verified_http_status": 200,
+        "verified_content_type": "text/plain; charset=utf-8",
+        "operations": [
+          "GET raw security.fsh (FiBaseSecurityLabelCS)",
+          "GET raw releaseforpatientviewing-cs.fsh (FiBaseReleaseforPatientViewingCS)"
+        ]
+      },
+      "rest_documentation": "https://github.com/fhir-fi/finnish-base-profiles",
+      "interface_document": "https://github.com/fhir-fi/finnish-base-profiles",
+      "constraints": [
+        "Labels are display-only: do not wire them into any policy, permission or visibility decision",
+        "No profiles are vendored — only the code systems' labels for security and visibility"
+      ],
+      "redistribution": "CC0-1.0 dedication — public domain dedication, no restrictions"
+    },
+    {
+      "id": "yti-interoperability-platform",
+      "title": "YTI Interoperability Platform (Yhteentoimivuusalusta) — code registries",
+      "publisher": "Digi- ja väestötietovirasto (DVV)",
+      "licence": "per item — CC0 or CC BY 4.0, chosen by the publisher (DVV terms 10.1.2020 §8: \"lähtökohtaisesti CC0 tai CC BY 4.0 -lisensseillä\"; CC BY-ND 4.0 also observed on sanastot.suomi.fi)",
+      "licence_per_item": true,
+      "licence_basis": "per-item licensing under DVV Yhteentoimivuusalustan käyttöehdot sisällöntuottajaorganisaatioille (10.1.2020 §8); each item carries its own licence. The API specification is licensed under EUPL-1.2 separately from the content",
+      "api_specification_licence": "EUPL-1.2 (upstream OpenAPI documents declare license: EUPL-1.2, with termsOfService pointing to EUPL-1.1)",
+      "attribution": "Digi- ja väestötietovirasto (DVV) and the publishing organizations",
+      "machine_readable": true,
+      "interface": {
+        "kind": "rest-json",
+        "url": "https://koodistot.suomi.fi/codelist-api/api/v1/coderegistries",
+        "verified_at": "2026-10-12",
+        "verified_http_status": 200,
+        "verified_content_type": "application/json",
+        "operations": [
+          "GET /codelist-api/api/v1/coderegistries"
+        ]
+      },
+      "rest_documentation": "https://koodistot.suomi.fi/codelist-api/",
+      "interface_document": "https://yhteentoimiva.suomi.fi/",
+      "constraints": [
+        "sotute holds one legislative scheme (saadostyyppi / Statute type classification), not clinical code lists",
+        "The content licence is per item (CC0, CC BY 4.0, or CC BY-ND 4.0) chosen by the publishing organization, not a uniform platform licence",
+        "API specification is licensed under EUPL-1.2 (with termsOfService noting EUPL-1.1); consuming the HTTP API does not copyleft downstream code, but client libraries or OpenAPI spec files carry copyleft obligations if vendored",
+        "Public GET API requires no authentication"
+      ],
+      "redistribution": "per item: depends on the item's individual licence (CC0 or CC BY 4.0 permit redistribution with attribution; CC BY-ND 4.0 restricts derivative works). API specification is EUPL-1.2"
+    },
+    {
+      "id": "thl-maarays-5-2024-annexes",
+      "title": "THL Määräys 5/2024 (olennaiset vaatimukset) and its annexes — Liite 2 requirement list, profiles 3a–3h, Liite 4 system form",
+      "publisher": "THL",
+      "licence": "THL's site terms assert copyright by default — \"Thl.fi-verkkopalvelussa olevan aineiston tekijänoikeudet kuuluvat THL:lle, ellei toisin mainita\" (https://thl.fi/tietoa-sivustosta, updated 13.7.2026) — while permitting text quotation with attribution and linking. Whether the detached .xlsx annexes are part of the regulation exempt under Tekijänoikeuslaki 404/1961 9 § 1 mom 2 k, or independent works protected under 9 § 2 mom, is an OPEN question of law. The annexes ARE bound to the regulation by its own text: \"Tämän määräyksen liitteenä olevat profiilit ovat velvoittavia…\" (Määräys 5/2024 § 7)",
+      "licence_basis": "Owner work-around decision 2026-10-12, recorded in .scratch/finnish-knowledge-sources/issues/07-sosmeta-and-maaraykset.md §4: during the demo window, cite and quote-with-source; do not vendor; parse a workbook only at runtime into a gitignored area. This is an owner decision, NOT a legal finding, and it does not settle the §9 2 mom question",
+      "attribution": "THL — Sosiaali- ja terveydenhuollon järjestelmien ja hyvinvointisovellusten olennaiset vaatimukset (Määräys 5/2024)",
+      "machine_readable": true,
+      "interface": {
+        "kind": "document-files",
+        "url": "https://thl.fi/documents/249325000/266075394/THL-maarays_5-2024_Liite_2-Olennaisten_vaatimusten_luettelo-403.xlsx/f6c6e50f-65b4-3f70-19d6-b74fba13abe2?t=1782449130924",
+        "verified_at": "2026-10-12",
+        "verified_http_status": 200,
+        "verified_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "operations": [
+          "GET Liite 2 Olennaisten vaatimusten luettelo (xlsx, v403 22.6.2026, 554 254 bytes)",
+          "GET Määräys 5/2024 olennaiset vaatimukset (pdf, 437 817 bytes)",
+          "GET Määräys 4/2024 luokittelu ja sertifiointi (pdf, 578 234 bytes)"
+        ]
+      },
+      "rest_documentation": "https://thl.fi/ohjeita-ammattilaisille/maaraykset-ja-sertifiointi",
+      "interface_document": "https://thl.fi/tietoa-sivustosta",
+      "constraints": [
+        "Owner work-around is time-scoped to the demo window and is not a licence: it permits citing, short quotation with the source cited, and runtime parsing",
+        "Requirement identifiers, verified URLs and short quoted requirement texts may be pinned; the workbook itself is never committed",
+        "If the full matrix is needed at runtime, fetch it into a gitignored temporary area and discard it afterwards",
+        "Redistribution of the annex files is not permitted under the work-around; the underlying licence question remains open (ask sotetiedonhallinta@thl.fi or obtain a legal read)"
+      ],
+      "redistribution": "not permitted as a workbook. Cite, quote short requirement texts with attribution, or parse at runtime into a gitignored area; never vendor or re-serve the annex files"
+    },
+    {
+      "id": "sosmeta-data-components",
+      "title": "Sosmeta — sosiaalihuollon asiakirjarakenteiden ja metatietojen palvelu (data components and document definitions)",
+      "publisher": "THL",
+      "licence": "no content licence is stated on the service; the pages link only to a privacy statement, an accessibility statement and visitor tracking",
+      "licence_basis": "verified by direct fetch 2026-10-12: https://sosmeta.thl.fi/data-components and a component page state no licence, so thl.fi's site-wide copyright claim applies by default — the service does not 'state otherwise' in the sense of that clause",
+      "attribution": "THL — Sosmeta",
+      "machine_readable": false,
+      "reason": "server-rendered HTML with per-component Excel downloads, a schema download and an Atom change feed; it exposes no documented API and states no licence, so no automated distribution may be treated as licensed",
+      "constraints": [
+        "Host trap: sosmeta.fi answers HTTP 200 while serving a PHP/MySQL fatal error; the live host is sosmeta.thl.fi",
+        "Cite deep links (/data-components/{uuid}, /document-definitions/list) or record identifiers and dates; do not vendor schemas, field definitions or component lists",
+        "A document definition can be downloaded as a schema or as an all-public-schemas archive, but under an unstated licence it stays a citation",
+        "The Atom change feed at /rss/changes is usable as a change signal; versions are date strings such as 2026-09-11 and 2026-08-26R02"
+      ],
+      "redistribution": "not permitted: licence not stated. Cite by URL and pin identifiers and dates only"
+    }
+  ]
+}

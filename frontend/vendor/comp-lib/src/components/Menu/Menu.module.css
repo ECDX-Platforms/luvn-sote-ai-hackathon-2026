@@ -1,0 +1,102 @@
+/* Menu. Figma: Overlays / Menu (51:159) and Menu item (51:158). Styleguide: Elevation & Depth (overlays), Shapes (radius none),
+   Overview rule 9 (selection bar), Shared state model, Motion (duration-slow for menu enter), Accessibility (1.4.13, 2.4.11).
+   NEW: the styleguide names the menu as an overlay but does not detail it; composed from the overlay, Nav item and Button rules. */
+.menu {
+  /* Space between trigger and menu. NEW: not in Figma; the trigger's focus ring has moved into the menu by then. */
+  --menu-gap: var(--space-2xs);
+  position: fixed; /* placed from the trigger in JS, so scroll areas (wide tables) cannot clip it */
+  top: 0;
+  left: 0;
+  z-index: 10; /* NEW: no z-index tokens. Same layer as Tooltip, above the styleguide's fixed app chrome (3, 4). */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  /* Width 240 (Figma). In rem, so it grows with the user's font size; never wider than the screen minus the gaps. */
+  width: min(15rem, calc(100vw - 2 * var(--menu-gap)));
+  /* A long menu never runs off the screen: at most the screen height minus 16 above and below; its items scroll. */
+  max-height: calc(100dvh - 2 * var(--space-md));
+  padding: var(--space-2xs) 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-overlay);
+  animation: menu-enter var(--duration-slow) var(--ease); /* 0s under reduced motion (base.css) */
+}
+
+/* Items and separators keep their height when the menu scrolls. */
+.menu > * { flex-shrink: 0; }
+
+/* display: flex above would otherwise override the hidden attribute. */
+.menu[hidden] { display: none; }
+
+/* Enter: opacity only. A transform would make the fixed tooltips inside it relative to the menu while it runs. */
+@keyframes menu-enter { from { opacity: 0; } }
+
+/* Item: height 36 (44 in comfortable density), padding 0 12, gap 8, control role, square like a nav item. */
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  min-height: var(--control-h); /* min-height, not height: long labels wrap (WCAG 1.4.12) */
+  /* Figma: padding 0 12. The 4 above and below only shows when a label wraps, so wrapped lines do not touch the next item.
+     A one-line item stays 36 (20 line + 8 < 36). */
+  padding: var(--space-2xs) var(--space-sm);
+  border: 0;
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.danger { color: var(--color-critical-fg); }
+
+/* Hover and pressed look the same. Keyboard focus shows the focus ring, not a fill (shared state model). */
+.item:hover, .item:active { background: var(--color-interaction-tint); } /* v2.3; danger items keep the critical label */
+
+/* Focus ring: 2px focus colour, 2px offset, square like the item. */
+.item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+/* Exception, only when the menu scrolls: the scroll box clips anything outside it, so the ring is drawn 2px inside
+   the item instead, or its sides would be cut off (2.4.11, 2.4.7). */
+.menu[data-scroll] .item:focus-visible { outline-offset: -2px; }
+
+/* Scrolling only when the menu is taller than its max-height (set from JS as data-scroll). A scroll box always clips
+   its content, so a short menu stays overflow: visible and keeps the full 2px-offset focus ring. */
+.menu[data-scroll] {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: var(--space-2xs); /* a focused item scrolls fully into view, past the 4px menu padding */
+}
+
+/* Selected (current option): text colour, weight 600, 2px selection bar on the left in text colour (rule 9, Figma agrees). */
+.item[aria-checked='true'] { color: var(--color-text); font-weight: 600; }
+.item[aria-checked='true']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--color-text);
+}
+
+/* Disabled: muted text and icon, no hover fill. Never lower opacity. */
+.item[aria-disabled='true'],
+.item[aria-disabled='true']:hover,
+.item[aria-disabled='true']:active {
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.icon { display: inline-flex; flex: none; width: 16px; height: 16px; }
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px. Colour follows the label. */
+
+/* Styleguide over Figma: Figma's label is auto-width and never wraps. Code wraps, words stay whole. */
+.label { min-width: 0; overflow-wrap: break-word; }
+
+/* Separator: a Divider with 4 above and below (Figma). */
+.separator { padding: var(--space-2xs) 0; }

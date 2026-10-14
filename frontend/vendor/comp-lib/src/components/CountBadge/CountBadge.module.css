@@ -1,0 +1,19 @@
+/* Count badge. NEW: not in the styleguide. Figma: Tags and flags / Count badge (47:241).
+   Styleguide: Emphasis states (inverse pair), Shapes → Radius (sm, like the key hint), Typography → Roles (tag), Overview rule 6. */
+.countBadge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  /* Figma: height 16, min width 16. Both follow the tag line height: 16 compact (= Figma), 20 in comfortable density,
+     where the number is 14/20. min-height, not height: text spacing can grow (WCAG 1.4.12). */
+  min-width: var(--lh-small);
+  min-height: var(--lh-small);
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-sm);
+  /* Neutral only: inverse fill (text colour), on-inverse number. A status colour would say "critical" by colour alone. */
+  background: var(--color-inverse);
+  color: var(--color-on-inverse);
+  white-space: nowrap; /* one-line chrome: a number, at most "99+" */
+  /* Tabular figures come from the base layer (font-feature-settings "tnum"). */
+}

@@ -1,0 +1,10 @@
+/* Skeleton. Figma: Data display / Skeleton (49:140). Styleguide: Components → Empty, loading and error states (Loading), Motion (no shimmer). */
+/* Figma: 8px gap between bars, no outer margin. The styleguide starter CSS puts an 8px margin above and below each bar; the component keeps
+   only the gap, so the block's own spacing decides the space around it. */
+.skeleton { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+
+/* Static bars: 12px high, line colour, radius 0. No shimmer, no animation. Width is a share of the container (40–80%), not fixed px. */
+.bar { display: block; height: var(--space-sm); border-radius: var(--radius-none); background: var(--color-line); }
+
+/* Forced-colours mode drops backgrounds: draw the bar as a border there. */
+@media (forced-colors: active) { .bar { background: none; border-top: var(--space-sm) solid CanvasText; height: 0; } }

@@ -1,0 +1,37 @@
+/* Timeline today line. Figma: Patterns / Timeline today line (187:2364), review frame Timeline — review (187:2367).
+   Styleguide: Components → Timeline entry; Shapes (Hairline, Selection bar); Typography (Roles); Content (dates).
+   NEW: not defined in the styleguide. */
+
+/* Code over Figma: Figma's description asks for role="separator" on this list item. Code keeps a plain <li>
+   (a separator in an <ol> breaks the list for axe and screen readers, and hides the date); see TimelineTodayLine.tsx.
+   Label, 8px gap, then the rule to the end of the row. Padding 8 0: 36 high in compact, 40 in comfortable
+   (the label line grows to 24). Not interactive, so there is no target size to meet. */
+.today {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  list-style: none;
+}
+
+/* "Today · date" in body-strong, text colour. Styleguide over Figma: Figma's label is auto-width (one line);
+   code wraps a long label, words stay whole. */
+.label {
+  min-width: 0;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+/* The date never breaks inside (numbers stay whole). */
+.date { white-space: nowrap; }
+
+/* 1px line-strong rule: stronger than the line hairlines between entries, and not the 2px selection bar
+   (Figma description). A real border, so it stays visible in forced colours. Always at least 24 wide. */
+.rule {
+  flex: 1 1 0;
+  min-width: var(--space-lg);
+  border-top: 1px solid var(--color-line-strong);
+}
+
+/* No CSS here for the entry after the today line. That entry has no top hairline (Figma review frame 187:2367: only
+   the today rule sits above it) and turns its own rule off: `<TimelineEntry showTopRule={false}>` (Figma: Show top rule off). */

@@ -1,0 +1,31 @@
+/* Flag. Figma: Tags and flags / Flag (36:39). Styleguide: Components → Status flag and tag, Icons, Overview rule 6, Colors → Contrast (flags on hover rows). */
+.flag {
+  display: inline-flex;
+  align-items: flex-start; /* the icon sits on the first line when a long label wraps */
+  gap: var(--space-2xs);
+  max-width: 100%;
+  /* No background, no border, no padding: the flag sits on whatever row or text it is in. */
+  /* Top, not baseline: an inline-flex box with an icon first would otherwise grow a 36px table row (runbook, Known traps). */
+  vertical-align: top;
+  /* Styleguide over Figma: Figma's label is auto-width (one line); the starter CSS has nowrap. Code wraps long labels,
+     words stay whole (brief: text wraps; WCAG 1.4.10). */
+  overflow-wrap: break-word;
+}
+
+/* min-width 0 lets the label shrink below its longest word, so break-word can break a word longer than the flag. */
+.label { min-width: 0; }
+
+.critical { color: var(--color-critical-fg); }
+.warning { color: var(--color-warning-fg); }
+.success { color: var(--color-success-fg); }
+.info { color: var(--color-info-fg); }
+
+/* 16px icon in the status fg, centred on the first text line (20 compact, 24 comfortable). */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */

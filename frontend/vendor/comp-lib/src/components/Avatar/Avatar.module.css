@@ -1,0 +1,17 @@
+/* Avatar. Figma: Navigation / Avatar (38:37). Styleguide: Shapes → Shape inventory (Avatar), Radius (full), Header. */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  /* Fixed size: one-line chrome (styleguide Accessibility 1.4.12). Stays 28px in comfortable density. */
+  width: 28px; /* Styleguide size (Shape inventory: 28px circle), no token: --control-sm grows to 44 on phones. */
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--color-avatar); /* v2.3: graphite, not the accent */
+  color: var(--color-on-avatar);
+  white-space: nowrap;
+  user-select: none;
+}
+/* Type: .t-initials (12/16, 600). It does not move with density, so the initials always fit the 28px circle. */
+/* States: not interactive, so hover, focus, pressed, selected, disabled, error and loading do not apply. */

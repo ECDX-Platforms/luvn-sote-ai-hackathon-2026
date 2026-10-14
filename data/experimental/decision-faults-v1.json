@@ -1,0 +1,69 @@
+{
+  "fixture_id": "jev-faults-v1",
+  "purpose": "mental_health_assessment",
+  "role": "sairaanhoitaja",
+  "source_person_id": "synthetic-fault-person-001",
+  "adjudication": "none; mock responses exercise fail-closed behavior, not relevance truth",
+  "records": [
+    {
+      "record_id": "fault-001-baseline-protected",
+      "source_person_id": "synthetic-fault-person-001",
+      "source": "synthetic-fault-fixture",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-20T00:00:00Z",
+      "topic": "mielenterveys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {"teksti": "Synteettinen merkintä: mieliala on vaihdellut viime viikkoina."}
+    },
+    {
+      "record_id": "fault-002-relevant-keyword-miss",
+      "source_person_id": "synthetic-fault-person-001",
+      "source": "synthetic-fault-fixture",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-21T00:00:00Z",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {"teksti": "Synteettinen merkintä: henkilö pyytää keskustelua jaksamisestaan."}
+    },
+    {
+      "record_id": "fault-003-keyword-decoy",
+      "source_person_id": "synthetic-fault-person-001",
+      "source": "synthetic-fault-fixture",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-22T00:00:00Z",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {"teksti": "Synteettinen laitehuolto-ohje sisältää sanan mieliala, mutta ei kuvaa henkilön vointia."}
+    },
+    {
+      "record_id": "fault-004-other-person-mention",
+      "source_person_id": "synthetic-fault-person-001",
+      "source": "synthetic-fault-fixture",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-23T00:00:00Z",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {"teksti": "Synteettinen merkintä kertoo kuvitteellisen sisaruksen tuen tarpeesta, ei henkilön tilanteesta."}
+    },
+    {
+      "record_id": "fault-005-denied-record",
+      "source_person_id": "synthetic-fault-person-001",
+      "source": "synthetic-fault-fixture",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sairaanhoitaja",
+      "recorded_at": "2026-09-24T00:00:00Z",
+      "topic": "sosiaalipalvelut",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {"teksti": "SYNTHETIC-DENIED-MARKER"}
+    }
+  ]
+}

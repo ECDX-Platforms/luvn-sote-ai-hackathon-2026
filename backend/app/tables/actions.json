@@ -1,0 +1,105 @@
+{
+  "_meta": "ILLUSTRATIVE -- synthetic demo policy, pending clinical/legal sign-off. Not law, not LUVN guidance.",
+  "table": "actions",
+  "rules": [
+    {
+      "rule_id": "act-ei-arvioitavissa",
+      "priority": 200,
+      "when": [{ "field": "situation_type", "op": "==", "value": "ei_arvioitavissa" }],
+      "output": { "actions": ["Pyydä lisätietoja ennen arviota"] }
+    },
+    {
+      "rule_id": "act-akuutti-korkea",
+      "priority": 100,
+      "when": [
+        { "field": "situation_type", "op": "==", "value": "akuutti" },
+        { "field": "risk_level", "op": "==", "value": "korkea" }
+      ],
+      "output": { "actions": ["Järjestä päivystysarvio välittömästi", "Tarkista vitaalit ja happikyllästeisyys", "Varmista hengitysteiden avoimuus"] }
+    },
+    {
+      "rule_id": "act-akuutti-kohtalainen",
+      "priority": 90,
+      "when": [
+        { "field": "situation_type", "op": "==", "value": "akuutti" },
+        { "field": "risk_level", "op": "==", "value": "kohtalainen" }
+      ],
+      "output": { "actions": ["Oireenmukainen hoito ja seuranta", "Ohjaa hakeutumaan päivystykseen, jos oireet pahenevat", "Varmista riittävä nesteytys"] }
+    },
+    {
+      "rule_id": "act-mielenterveys-korkea",
+      "priority": 85,
+      "when": [
+        { "field": "situation_type", "op": "==", "value": "mielenterveys" },
+        { "field": "risk_level", "op": "==", "value": "korkea" }
+      ],
+      "output": { "actions": ["Järjestä psykiatrin arvio", "Arvioi itsetuhoisuus ja turvallisuus", "Kytke kriisipäivystys tarvittaessa"] }
+    },
+    {
+      "rule_id": "act-mielenterveys-kohtalainen",
+      "priority": 75,
+      "when": [
+        { "field": "situation_type", "op": "==", "value": "mielenterveys" },
+        { "field": "risk_level", "op": "==", "value": "kohtalainen" }
+      ],
+      "output": { "actions": ["Jatka mielialan ja unen seurantaa", "Harkitse lääkärin arviota", "Tarjoa keskustelutukea"] }
+    },
+    {
+      "rule_id": "act-sosiaali",
+      "priority": 70,
+      "when": [{ "field": "situation_type", "op": "==", "value": "sosiaalipalvelut" }],
+      "output": { "actions": ["Arvioi palvelutarve", "Ohjaa talous- ja velkaneuvontaan", "Kirjaa päätös ja perustelut"] }
+    },
+    {
+      "rule_id": "act-krooninen-korkea",
+      "priority": 65,
+      "when": [
+        { "field": "situation_type", "op": "==", "value": "krooninen" },
+        { "field": "risk_level", "op": "==", "value": "korkea" }
+      ],
+      "output": { "actions": ["Tarkista lääkitys ja sen toteutuminen", "Kutsu lääkärin vastaanotolle", "Kirjaa lääkemuutos ja tiedota potilasta"] }
+    },
+    {
+      "rule_id": "act-krooninen",
+      "priority": 55,
+      "when": [{ "field": "situation_type", "op": "==", "value": "krooninen" }],
+      "output": { "actions": ["Jatka omaseurantaa", "Tarkista lääkityksen toteutuminen", "Suunnittele kontrollikäynti"] }
+    },
+    {
+      "rule_id": "act-phq9-vaikea",
+      "priority": 86,
+      "when": [{ "field": "risk_rule_id", "op": "==", "value": "risk-phq9-vaikea" }],
+      "output": { "actions": ["Järjestä lääkärin tai psykiatrin arvio", "Arvioi itsetuhoisuus ja turvallisuus", "Käynnistä masennuksen hoitopolku ja sovi seuranta"] }
+    },
+    {
+      "rule_id": "act-verenpaine-korkea",
+      "priority": 67,
+      "when": [{ "field": "risk_rule_id", "op": "==", "value": "risk-verenpaine-korkea" }],
+      "output": { "actions": ["Toista verenpainemittaus ja kirjaa tulos molemmista käsivarsista", "Käy läpi nykyinen verenpainelääkitys ja sen toteutuminen", "Sovi kontrollimittaus 1–3 kuukauden päähän", "Käy läpi elintapamuutokset: suola, liikunta, painonhallinta"] }
+    },
+    {
+      "rule_id": "act-laakitysristiriita",
+      "priority": 71,
+      "when": [{ "field": "risk_rule_id", "op": "==", "value": "risk-laakitysristiriita" }],
+      "output": { "actions": ["Varmista ajantasainen lääkelista ennen seuraavaa annosta", "Kirjaa ristiriita ja sen ratkaisu", "Tarkista, tarvitaanko lääkärin arvio lääkemuutoksesta"] }
+    },
+    {
+      "rule_id": "act-hoitamattomuus",
+      "priority": 66,
+      "when": [{ "field": "risk_rule_id", "op": "==", "value": "risk-hoitamattomuus" }],
+      "output": { "actions": ["Keskustele annosten väliin jäämisen syistä", "Tarkista annosjakelu ja muistutukset", "Sovi seurantasoitto kahden viikon päähän"] }
+    },
+    {
+      "rule_id": "act-iadl-merkittava",
+      "priority": 72,
+      "when": [{ "field": "risk_rule_id", "op": "==", "value": "risk-iadl-merkittava" }],
+      "output": { "actions": ["Arvioi palvelutarve ja kotona selviytyminen", "Selvitä kotihoidon ja tukipalveluiden tarve", "Sovi toimintakyvyn uudelleenarviointi"] }
+    },
+    {
+      "rule_id": "act-yleinen-fallback",
+      "priority": 0,
+      "when": [],
+      "output": { "actions": ["Jatka tilanteen seurantaa"] }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+/* App shell. Figma: Layouts (125:131), the shell around Layout / Main and side, One column and Block grid (Desktop, Laptop, Phone).
+   Styleguide: App shell, Layout (Breakpoints, Screen anatomy), Accessibility (landmarks, 1.4.10 reflow, 2.4.11). */
+
+/* Sidebar 216 plus the content column, both on surface. Main content has no max width. */
+.appShell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* The sidebar runs the full height of the page, so its right rule does too (Figma). */
+.sidebar { display: flex; min-width: 0; }
+
+/* Content column: header, then main. Differs from the styleguide's markup pattern, which puts the header inside main:
+   outside main the header is the page banner landmark (Accessibility: landmarks header, nav, main, aside).
+   Content column: header, then main. Main fills the rest of the height, so a layout's column rule reaches the bottom.
+   No overflow here: the identity strip sticks inside this column. */
+.content { display: flex; flex-direction: column; min-width: 0; }
+.main { display: flex; flex-direction: column; flex: 1 0 auto; min-width: 0; }
+
+/* Bottom navigation: phones only. */
+.bottomNav { display: none; }
+
+/* Tablet (640-1023px): the styleguide hides the sidebar behind a header menu button. Not yet in Figma, so the laptop
+   structure (sidebar plus one column) is kept down to 640px. */
+
+/* Phones (< 640px): one column, no sidebar, bottom navigation fixed to the bottom of the screen.
+   Without a bottom bar (a JavaScript caller left out the required bottomNav) the sidebar stays, so navigation is never lost. */
+@media (max-width: 639px) {
+  .appShell { grid-template-columns: minmax(0, 1fr); }
+  .withBottomNav .sidebar { display: none; }
+  .bottomNav {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3; /* Above the page content, below overlays (same level as the identity strip). */
+    /* Clear of the home indicator on phones that have one (needs viewport-fit=cover in the app's viewport meta). */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--color-surface);
+  }
+  /* Keep the end of the page clear of the bar plus 16px room. --bottom-nav-h is the bar's measured height (AppShell.tsx),
+     so labels that wrap and larger text are covered. Until it is measured: 56 item + 2 x 4 padding (styleguide: 72 with the room). */
+  .withBottomNav .main { padding-bottom: calc(var(--bottom-nav-h, calc(var(--control-lg) + var(--space-sm))) + var(--space-md)); }
+  /* Focus not hidden under the bar (WCAG 2.4.11): scrolling to a focused element leaves the bar's height free. */
+  :global(html):has(.withBottomNav) { scroll-padding-bottom: calc(var(--bottom-nav-h, calc(var(--control-lg) + var(--space-sm))) + var(--space-md)); }
+}
+
+/* States: the shell is not interactive. */

@@ -1,0 +1,221 @@
+/* Timeline row. Figma: Data display / Timeline row (239:3026); State Default 239:2970, Hover 239:2981, Open 239:2992.
+   NEW: the styleguide's Timeline (client view) row; composed from its rules.
+   Styleguide: Components → Timeline (client view), Shared state model (v2.3: clickable rows are one button with a ›
+   arrow and the interaction tint), Shapes (hairline, selection bar, focus ring), Typography (body-strong, caption),
+   Layout (sidebar width 216), Content (dates), Accessibility (2.5.8 target size, 1.4.12, 1.4.10). */
+
+/* Columns (Figma): label 216 (120 on phones: Figma's Timeline description; the styleguide says nothing about the
+   timeline on phones), track 64px per month, arrow 32. Timeline uses the same widths for its axis and edge buttons. */
+.item {
+  --_label-w: var(--sidebar-w);
+  --_arrow-w: var(--space-xl); /* 32 */
+  --_month: var(--tl-month, var(--space-3xl)); /* 64 per month */
+  min-width: 100%;
+}
+@media (max-width: 639px) {
+  .item { --_label-w: calc(var(--space-3xl) + var(--space-2xl) + var(--space-xs)); } /* 120 */
+}
+
+/* ===== Main: label · track · arrow ===== */
+/* The row fills its container; the track takes the rest. 1px line rule below (Figma: Main border-bottom). */
+.row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 100%;
+  border-bottom: 1px solid var(--color-line);
+  background-color: var(--color-surface); /* opaque: the sticky label and arrow cells take it (inherit) and cover the track */
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+/* Hover and pressed look the same: interaction-tint on the whole row (v2.3, Figma State=Hover). */
+.row:hover,
+.row:active { background-color: var(--color-interaction-tint); }
+
+/* Label: name (body-strong) over meta (caption, text-muted). Padding 8 16 8 0, at least 44 high (target size, in
+   compact and comfortable density). Sticky: it stays put while the track scrolls sideways. */
+.label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--_label-w);
+  min-height: var(--control-lg); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  padding: var(--space-xs) var(--space-md) var(--space-xs) 0;
+  background-color: inherit;
+}
+.label:focus-within { z-index: 2; } /* the focus ring (below) is drawn from the label and must lie above the arrow cell */
+
+/* Open: the 2px selection bar in text colour on the label (styleguide rule 9), with 8px padding after it (Figma). */
+.open .label {
+  border-left: 2px solid var(--color-text);
+  padding-left: var(--space-xs);
+}
+
+/* The row's one button. Its look is the label text; the row draws hover and the pointer. */
+.button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Text wraps; words stay whole (Figma's text is fixed width too). Dates in the meta carry non-breaking spaces. */
+.name,
+.meta {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.name { color: var(--color-text); }
+
+/* Focus ring (2px focus, 2px offset, square: the row is structure).
+   On its own: around the whole row. Without :has() the button's own ring is kept. */
+.button:focus-visible { outline: none; }
+.row:has(.button:focus-visible) {
+  z-index: 1;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+@supports not selector(:has(*)) {
+  .button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+}
+
+/* In the Timeline's scrolling region the row is wider than the view, so a ring on the row would be cut off at the
+   sides. The ring is drawn from the sticky label instead, across the visible width (--tl-viewport, set by Timeline):
+   2px outside the row at the top and bottom, and pulled 4px inside at the sides so the region does not clip it.
+   Code over styleguide: the side offset is inward there. */
+.inScroll .row:has(.button:focus-visible) { outline: none; }
+.inScroll .button:focus-visible::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--space-2xs);
+  width: calc(var(--tl-viewport, 100%) - var(--space-xs));
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  pointer-events: none;
+}
+.inScroll .open .button:focus-visible::after { left: calc(var(--space-2xs) - 2px); } /* measured from inside the 2px bar */
+
+/* ===== Track ===== */
+/* 64px per month, at least as long as the timeline (--tl-months). Decorative (aria-hidden). Behind the marks:
+   - the "since last contact" zone in primary-tint (background, --tl-zone-from to --tl-zone-to),
+   - 1px month lines in `line` (::before), every --tl-grid-step months from --tl-grid-offset, up to --tl-grid-end,
+   - the 2px today line (or the line-up event line) in `text` (::after) at --tl-line-at.
+   Timeline sets these per view; a row on its own has month lines only. No gradients as scroll cues: the gradients here
+   only draw the lines. */
+.track {
+  --_zone: var(--color-primary-tint);
+  --_grid: var(--color-line);
+  --_line: var(--color-text);
+  position: relative;
+  flex: 1 0 auto;
+  width: calc(var(--_month) * var(--tl-months, 6));
+  overflow: clip; /* marks at the edges stay in the track */
+  background: linear-gradient(var(--_zone), var(--_zone)) no-repeat;
+  background-position: calc(var(--_month) * var(--tl-zone-from, 0)) 0;
+  background-size: calc(var(--_month) * (var(--tl-zone-to, 0) - var(--tl-zone-from, 0))) 100%;
+}
+.track::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--_month) * var(--tl-grid-end, var(--tl-months, 6)) + 1px); /* + 1px: the line at the last day drawn (+6 mo) */
+  background: linear-gradient(to right, var(--_grid) 0 1px, transparent 1px) repeat-x;
+  background-position: calc(var(--_month) * var(--tl-grid-offset, 0)) 0;
+  background-size: calc(var(--_month) * var(--tl-grid-step, 1)) 100%;
+}
+.track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--_month) * var(--tl-line-at, -1)); /* none by default: off the start of the track, clipped */
+  width: 2px;
+  background: var(--_line);
+}
+
+/* Forced colours replace backgrounds and drop gradients: keep the month lines and the today line with system colours.
+   The zone is a tint only and is left out there. */
+@media (forced-colors: active) {
+  .track { forced-color-adjust: none; --_zone: transparent; --_grid: GrayText; --_line: CanvasText; }
+}
+
+/* ===== Arrow ===== */
+/* 32 wide, a 16px › in link colour (the arrow of anything clickable), centred. Open: it turns down. Sticky right. */
+.arrow {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--_arrow-w);
+  background-color: inherit;
+  color: var(--color-link);
+}
+.arrow > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 at 16px = Figma's 1px line */
+
+/* ===== Records (open) ===== */
+/* Right under the row: padding 4 0 16 16, 1px line rule below (Figma). In the Timeline it stays in view while the
+   track scrolls (sticky, as wide as the visible region). */
+.records {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  width: var(--tl-viewport, 100%);
+  padding: var(--space-2xs) 0 var(--space-md) var(--space-md);
+  border-bottom: 1px solid var(--color-line);
+}
+.recordList { margin: 0; padding: 0; list-style: none; }
+
+/* Record: date column 160, then title · facts · source, 16 apart; padding 8 0; a 1px rule between records. */
+.record {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-xs) 0;
+}
+.record + .record { border-top: 1px solid var(--color-line); }
+.recordDate {
+  flex: none;
+  width: calc(var(--space-3xl) * 2 + var(--space-xl)); /* 160 */
+  overflow-wrap: break-word;
+}
+.recordBody {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+.recordTitle,
+.facts,
+.more { min-width: 0; margin: 0; overflow-wrap: break-word; }
+.recordTitle { color: var(--color-text); }
+.source { display: flex; min-width: 0; }
+.more { padding-top: var(--space-xs); }
+
+/* Phones: the date goes above the record, so the text keeps the width. */
+@media (max-width: 639px) {
+  .record { flex-direction: column; gap: var(--space-2xs); }
+  .recordDate { width: auto; }
+}
+
+/* Disabled, error and loading do not apply to a row (loading: use Skeleton). Selected is the open state. */

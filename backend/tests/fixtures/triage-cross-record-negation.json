@@ -1,0 +1,34 @@
+{
+  "fixture_id": "triage-cross-record-negation-v1",
+  "description": "A negated free-text symptom is followed by a master record with no punctuation or separator beyond the flattened space.",
+  "today": "2026-09-29",
+  "records": [
+    {
+      "record_id": "cross-negation-note",
+      "record_type": "vapaateksti",
+      "recorded_at": "2026-09-28T08:00:00+00:00",
+      "topic": "hoito",
+      "payload": {"teksti": "ei ole kuumetta"}
+    },
+    {
+      "record_id": "cross-negation-master",
+      "record_type": "perustieto",
+      "recorded_at": "2026-09-28T08:00:00+00:00",
+      "topic": "hoito",
+      "payload": {"asuinalue": "Testikunta"}
+    }
+  ],
+  "expected_current_bug": {
+    "acute": true,
+    "situation_type": "akuutti",
+    "risk_level": "kohtalainen",
+    "actions": ["Oireenmukainen hoito ja seuranta", "Ohjaa hakeutumaan päivystykseen, jos oireet pahenevat", "Varmista riittävä nesteytys"],
+    "reason": "The shared haystack's later perustieto token makes the negated note's clause a master clause, bypassing note negation suppression."
+  },
+  "expected_after_fix": {
+    "acute": false,
+    "situation_type": "yleinen",
+    "risk_level": "matala",
+    "actions": ["Jatka tilanteen seurantaa"]
+  }
+}

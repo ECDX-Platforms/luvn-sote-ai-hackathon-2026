@@ -1,0 +1,19 @@
+/* Bottom navigation. Figma: Layouts / Phone variants, "Bottom navigation" placeholder only (126:471, 133:759): not yet designed.
+   Styleguide: Side navigation (phone: bottom bar, 4 items, 5 at most, icon above label, 2px top bar), Breakpoints, Responsive block.
+   Where it shows (phones only) and that it is fixed to the bottom of the screen is set by the AppShell. */
+.bottomNav {
+  padding: var(--space-2xs) var(--space-xs); /* Styleguide Responsive block: nav padding 4 8. */
+  border-top: 1px solid var(--color-line); /* Hairline above, as in the Figma placeholder. */
+  background: var(--color-surface);
+}
+
+/* Items share the bar width equally. NavItem (bottom-bar layout): icon above label, at least 56 high, 2px bar on the top edge. */
+.list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item { display: flex; flex: 1 1 0; min-width: 0; }
+
+/* States: the bar itself is not interactive. Its nav items keep their own states (hover, focus, selected). */

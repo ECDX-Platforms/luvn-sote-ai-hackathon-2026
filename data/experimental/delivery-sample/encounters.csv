@@ -1,0 +1,3 @@
+encounter_id,source_person_id,role,purpose,example_label,demo_name,consent_holders,life_stage
+delivery-encounter-medication,delivery-source-001,sairaanhoitaja,medication_follow_up,Taisto Mäkinen,Synteettinen esimerkki D,,
+delivery-encounter-service-needs,delivery-source-002,sosiaalityontekija,functioning_service_needs,Onni Laakso,Synteettinen esimerkki E,,

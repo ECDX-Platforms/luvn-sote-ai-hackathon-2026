@@ -1,0 +1,11 @@
+/* One column. Figma: Layouts / Layout / One column (133:561): Desktop 133:558, Laptop 133:559, Phone 133:560. Styleguide: Layout.
+   The same at every width: Blocks stacked full width, touching, with only their bottom hairline between them.
+   Main content has no max width; running text inside a block stays within 75 characters (.prose). */
+.oneColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto; /* Fills main in the AppShell. */
+  min-width: 0;
+}
+
+/* States: a layout is not interactive. */

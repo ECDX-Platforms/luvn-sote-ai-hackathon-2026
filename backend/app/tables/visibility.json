@@ -1,0 +1,42 @@
+{
+  "_meta": "ILLUSTRATIVE -- synthetic demo policy, pending clinical/legal sign-off. Not law, not LUVN guidance.",
+  "sensitivity_rank": { "none": 0, "sensitive": 1, "highly_sensitive": 2 },
+  "roles": {
+    "laakari": {
+      "label": "Lääkäri",
+      "consent_scopes": ["treatment", "social_care"],
+      "max_sensitivity": "highly_sensitive",
+      "exclude_topics": []
+    },
+    "sairaanhoitaja": {
+      "label": "Sairaanhoitaja",
+      "consent_scopes": ["treatment"],
+      "max_sensitivity": "sensitive",
+      "exclude_topics": ["toimeentulo"]
+    },
+    "sosiaalityontekija": {
+      "label": "Sosiaalityöntekijä",
+      "consent_scopes": ["social_care"],
+      "max_sensitivity": "highly_sensitive",
+      "exclude_topics": []
+    },
+    "terveydenhoitaja": {
+      "label": "Terveydenhoitaja",
+      "consent_scopes": ["treatment"],
+      "max_sensitivity": "sensitive",
+      "exclude_topics": []
+    },
+    "fysioterapeutti": {
+      "label": "Fysioterapeutti",
+      "consent_scopes": ["treatment"],
+      "max_sensitivity": "sensitive",
+      "exclude_topics": []
+    },
+    "potilas": {
+      "label": "Potilas",
+      "consent_scopes": ["treatment", "social_care", "self"],
+      "max_sensitivity": "sensitive",
+      "exclude_topics": []
+    }
+  }
+}

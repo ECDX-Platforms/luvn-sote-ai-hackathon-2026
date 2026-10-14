@@ -1,0 +1,90 @@
+/* Host Grotesk, self-hosted.
+ *
+ * The design system does not bundle a font: `--font-sans` is `"Host Grotesk", system-ui, sans-serif`
+ * (vendored tokens.css, from LUVN-Component-Library @ 014b02a, ADR-0026) and the library's README says the
+ * app loads its own. If this file did not declare the face, body text would fall back silently to
+ * system-ui, which no static check sees; design-system.test.mjs asserts that the family named by --font-sans
+ * is declared here, at weights 400, 500 and 600.
+ *
+ * Self-hosting keeps the container self-contained — no external request from a clinical demo, and the built
+ * image renders identically with no network.
+ *
+ * Source: @fontsource/host-grotesk 5.3.0 (Fontsource static WOFF2, one file per weight; the package was
+ * fetched once to extract these files and is NOT a dependency of this product). Only the two subsets this
+ * product can need are vendored; the latin-ext file is never fetched unless a character outside the latin
+ * range is rendered, because `unicode-range` lets the browser decide.
+ *
+ * Files (SHA-256):
+ *   host-grotesk-latin-400.woff2      66c5700221ce1f6155614a3f869f89c29d48e0a5cf7b8ec1d94f382fae7deef6
+ *   host-grotesk-latin-500.woff2      b7cfe5468f906d3a94c035bfc7d290568b8406d740491eb20697e8d2141aba4f
+ *   host-grotesk-latin-600.woff2      91897e9f297d83ea11c844c9db6e4b535b7d85cb8aff7a12c3e75acd07e087e8
+ *   host-grotesk-latin-ext-400.woff2  be0a936b5647f379ebb0d07be48fa89f1ec4cf97a09346d34cc018e685cdb2a9
+ *   host-grotesk-latin-ext-500.woff2  9abc39aa469a5ab8d5dc3f8e2a25d2f0e274d3a01473fcc7efe5255d50afea6c
+ *   host-grotesk-latin-ext-600.woff2  d18607dda0a0d7f387b4e18ed4483e83ed0d26ea96a169c6d11c23a3e6b5b67c
+ *
+ * These are STATIC instances (one weight per file), so each weight is its own face. Licensed under the SIL
+ * Open Font License 1.1; see public/fonts/LICENSE-HostGrotesk-OFL.txt.
+ */
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-ext-400.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-ext-500.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/host-grotesk-latin-ext-600.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}

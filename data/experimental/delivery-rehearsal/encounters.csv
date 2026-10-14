@@ -1,0 +1,7 @@
+encounter_id,source_person_id,role,purpose,example_label,demo_name,consent_holders,life_stage
+rehearsal-encounter-medication-nurse,rehearsal-source-001,sairaanhoitaja,medication_follow_up,Harjoitushenkilö A,Synteettinen harjoitus A,,
+rehearsal-encounter-medication-doctor,rehearsal-source-002,laakari,medication_follow_up,Harjoitushenkilö B,Synteettinen harjoitus B,,
+rehearsal-encounter-service-needs-social,rehearsal-source-003,sosiaalityontekija,functioning_service_needs,Harjoitushenkilö C,Synteettinen harjoitus C,,
+rehearsal-encounter-service-needs-therapist,rehearsal-source-004,fysioterapeutti,functioning_service_needs,Harjoitushenkilö D,Synteettinen harjoitus D,,
+rehearsal-encounter-mental-health-doctor,rehearsal-source-005,laakari,mental_health_assessment,Harjoitushenkilö E,Synteettinen harjoitus E,,
+rehearsal-encounter-child-health-nurse,rehearsal-source-006,terveydenhoitaja,child_health_checkup,Harjoitushenkilö F,Synteettinen harjoitus F,,

@@ -1,0 +1,107 @@
+/* Header. Figma: App shell / Header (52:174). Styleguide: Header, App shell, Layout (spacing, breakpoints), Accessibility (one h1, 1.4.10 reflow). */
+.header {
+  display: flex;
+  flex-wrap: wrap; /* Narrow screens: the tools move under the title instead of scrolling sideways (WCAG 1.4.10). */
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface); /* One surface with the sidebar: hairlines only. */
+  color: var(--color-text);
+  /* The header does not stick (styleguide Accessibility 2.4.11); the identity strip does. */
+}
+
+/* Title block: fills the free space. Breadcrumb (caption) directly above the page title, no gap, as in Figma.
+   It keeps at least 12rem before the tools wrap below it. NEW: 12rem is the LongWord test width, no token.
+   Styleguide over Figma: Figma clips the title on one line; here it wraps. */
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Tools: search, bell, user, 16 apart, vertically centred. They wrap among themselves on very narrow screens. */
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Search: 280 wide as in Figma, never below the Search's own min width 240 (styleguide), never wider than the row.
+   NEW: 17.5rem = Figma's 280; the styleguide sets only the minimum. */
+.search { display: flex; flex: 0 1 auto; width: 17.5rem; max-width: 100%; } /* min width comes from the Search (240). */
+.search > * { flex: 1 1 auto; }
+
+/* Bell with count badge: the badge sits at the top, 4px right of the button's centre (Figma: left 22 of a 36 button).
+   In comfortable density the button is 44 and the badge moves with it. */
+.notifications {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.badge {
+  position: absolute;
+  top: 0;
+  left: calc(50% + var(--space-2xs));
+  pointer-events: none;
+}
+
+/* User: avatar, then name in control (text colour) with the role in caption text-muted under it, 8 apart.
+   With a User switcher the same row is a button with a 16px chevron-down after the text (Figma 52:174, User role and user button). */
+.user {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.userText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.userName,
+.userRole { min-width: 0; overflow-wrap: break-word; }
+
+/* User button. NEW: Figma gives no padding or radius for the hover area. A ghost button like Icon button: radius 6,
+   padding 4 8 so the hover fill does not touch the text. The negative margin of the same size keeps the avatar, text and
+   chevron exactly where Figma has them, and does not change the header height (89; 73 without a breadcrumb).
+   min-height control-h: at least 36, and 44 in comfortable density (WCAG 2.5.8). */
+.userButton {
+  min-height: var(--control-h);
+  margin: calc(-1 * var(--space-2xs)) calc(-1 * var(--space-xs));
+  padding: var(--space-2xs) var(--space-xs);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+/* Hover and pressed look the same (shared state model). No open-state fill: like the other menu triggers. */
+.userButton:hover,
+.userButton:active { background: var(--color-interaction-tint); } /* v2.3 spec rule: hover on anything clickable */
+.userButton:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Chevron-down 16, text-muted (Figma), 1px line like every Figma icon. */
+.chevron { flex: none; width: 16px; height: 16px; color: var(--color-text-muted); stroke-width: 1.5; }
+
+/* Phones: 16px side padding (styleguide Responsive block). The compact phone header is not yet designed in Figma. */
+@media (max-width: 639px) {
+  .header { padding-left: var(--space-md); padding-right: var(--space-md); }
+}
+
+/* States: the header itself is not interactive. Its search, bell, breadcrumb links and user button keep their own states.
+   User button: hover and pressed = interaction-tint, focus = 2px ring with 2px offset. Selected, disabled, error and loading
+   do not apply. Without a User switcher the user is plain text with no states. */

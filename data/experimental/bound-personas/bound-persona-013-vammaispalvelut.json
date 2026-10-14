@@ -1,0 +1,102 @@
+{
+  "persona_id": "bound-persona-013-vammaispalvelut",
+  "label": "Juho Nieminen — Vammaispalvelut, palvelutarpeen arviointi",
+  "source_person_id": "bound-source-013",
+  "records": [
+    {
+      "record_id": "bound-demo-013",
+      "source": "vammaispalvelut",
+      "record_type": "perustieto",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-02T09:00:00+03:00",
+      "topic": "demografia",
+      "sensitivity_tag": "none",
+      "consent_scope": "social_care",
+      "payload": {
+        "sukupuoli": "mies",
+        "syntymävuosi": 1994,
+        "äidinkieli": "suomi",
+        "kotikunta": "Tampere",
+        "asumismuoto": "itsenäisesti, tukipalvelujen turvin"
+      },
+      "source_person_id": "bound-source-013",
+      "erikoisala": "Vammaispalvelut",
+      "suorituspaikka": "Synteettinen vammaispalveluyksikkö 013",
+      "encounter_id": "bound-encounter-013-vammaispalvelut-sosiaalityontekija"
+    },
+    {
+      "record_id": "bound-esitieto-013",
+      "source": "vammaispalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-16T11:20:00+03:00",
+      "topic": "vammaispalvelut",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Palvelutarpeen arvioinnin esitiedot",
+        "teksti": "Esitiedot on täytetty yhdessä asiakkaan kanssa. Arjen toiminnot sujuvat osin tuettuna: asiakas kuvaa tuen tarvetta liikkumisessa ja asioinnissa. Palvelutarpeen arviointi jatkuu kotikäynnillä.",
+        "kirjaaja": "sosiaalityöntekijä"
+      },
+      "form": {
+        "form_type": "Vammaispalvelujen palvelutarpeen arvioinnin esitiedot",
+        "service": "vammaispalvelut",
+        "version": "demo-v1"
+      },
+      "source_person_id": "bound-source-013",
+      "erikoisala": "Vammaispalvelut",
+      "suorituspaikka": "Synteettinen vammaispalveluyksikkö 013",
+      "encounter_id": "bound-encounter-013-vammaispalvelut-sosiaalityontekija"
+    },
+    {
+      "record_id": "bound-note-022",
+      "source": "vammaispalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-22T14:05:00+03:00",
+      "topic": "vammaispalvelut",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Kotikäynti",
+        "teksti": "Arki sujuu itsenäisesti, mutta siivous ja asiointi vaativat tukea. Asiakas toivoo apuvälinearvion aloittamista.",
+        "kirjaaja": "sosiaalityöntekijä"
+      },
+      "source_person_id": "bound-source-013",
+      "erikoisala": "Vammaispalvelut",
+      "suorituspaikka": "Synteettinen vammaispalveluyksikkö 013",
+      "encounter_id": "bound-encounter-013-vammaispalvelut-sosiaalityontekija"
+    },
+    {
+      "record_id": "bound-note-023",
+      "source": "vammaispalvelut",
+      "record_type": "vapaateksti",
+      "authored_by_role": "sosiaalityöntekijä",
+      "recorded_at": "2026-09-26T15:40:00+03:00",
+      "topic": "vammaispalvelut",
+      "sensitivity_tag": "sensitive",
+      "consent_scope": "social_care",
+      "payload": {
+        "otsikko": "Palvelutarpeen seuranta",
+        "teksti": "Synteettinen kirjaus: palvelutarpeen seurannassa arki sujuu tutuin tukitoimin. Asiakas toivoo apuvälinearvion tarkistusta ja asiointituen jatkoa.",
+        "kirjaaja": "sosiaalityöntekijä"
+      },
+      "heading": {
+        "local": "Hoidon tarpeen arviointi",
+        "national": "Suunnitelma"
+      },
+      "käyntiaika": "2026-09-26T14:00:00+03:00",
+      "vastaanottajat": [
+        "Juho Nieminen",
+        "Omaohjaaja"
+      ],
+      "erikoisala": "Vammaispalvelut",
+      "suorituspaikka": "Synteettinen vammaispalveluyksikkö 013",
+      "case_id": "bound-case-013-2026",
+      "encounter_id": "bound-encounter-013-vammaispalvelut-sosiaalityontekija",
+      "state": "approved",
+      "responsible_approver": "sosiaalityontekija",
+      "source_person_id": "bound-source-013"
+    }
+  ]
+}

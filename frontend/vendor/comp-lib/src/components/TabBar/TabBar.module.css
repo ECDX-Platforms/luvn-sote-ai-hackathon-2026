@@ -1,0 +1,41 @@
+/* Tab bar. Figma: App shell / Tab bar (52:203). Styleguide: Tabs, Screen anatomy, Layout (phones), Overview rule 8 (one primary). */
+.tabBar {
+  display: flex;
+  flex-wrap: wrap; /* Narrow screens: the button moves below the tabs instead of squeezing them (WCAG 1.4.10). */
+  align-items: center; /* The primary button is vertically centred. */
+  column-gap: var(--space-lg);
+  row-gap: 0; /* A wrapped button row sits directly under the tabs. */
+  padding: 0 var(--space-lg);
+  /* Bottom hairline drawn inside the bar, so the selected tab's 2px bar lies on top of it and covers it.
+     Styleguide over Figma: the starter CSS pulls the tabs 1px down so the bar covers the hairline; Figma draws the bar above
+     the hairline (53 high). Here the bar is 52 high (the tabs) and the selection bar covers the line. */
+  box-shadow: inset 0 -1px 0 var(--color-line);
+  background: var(--color-surface);
+}
+
+/* Forced colours drop box shadows: keep the hairline as a real border there. */
+@media (forced-colors: active) {
+  .tabBar { box-shadow: none; border-bottom: 1px solid CanvasText; }
+}
+
+/* Tabs take the free space and wrap to a second row when there is not enough room (TabList). */
+.tabs { flex: 1 1 auto; min-width: 0; }
+
+/* Action: one primary Button at the right (margin-left auto keeps it right when it wraps to its own row).
+   The row is as tall as a tab (16 + line height + 16: 52, 56 on phones), so a wrapped button is centred in a tab-high row
+   instead of touching the hairline; beside the tabs this changes nothing. */
+.action {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--space-md) * 2 + var(--lh-body));
+  margin-left: auto;
+}
+
+/* Phones: 16px side padding (styleguide Responsive block). The starter CSS scrolls the tabs sideways here
+   (overflow-x: auto); the TabList wraps instead, so every tab stays visible and nothing scrolls (WCAG 1.4.10). */
+@media (max-width: 639px) {
+  .tabBar { padding-left: var(--space-md); padding-right: var(--space-md); }
+}
+
+/* States: the bar itself is not interactive. Its tabs and button keep their own states. */

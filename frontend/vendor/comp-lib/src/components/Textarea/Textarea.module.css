@@ -1,0 +1,59 @@
+/* Textarea. Figma: Form controls / Textarea (34:29). Styleguide: Components → Text input, textarea, select; Shared state model; Accessibility (1.4.12, 3.3.1). */
+.textarea {
+  display: block;
+  width: 100%; /* fills its Field or column, as in the styleguide starter CSS. Figma shows a 320px example. */
+  min-width: 0;
+  /* 3 lines plus padding: 76 compact, 88 comfortable (styleguide). */
+  min-height: calc(3 * var(--lh-body) + 2 * var(--space-xs));
+  margin: 0;
+  /* Padding 8 12. The block padding gives back the 1px border, so 3 full lines fit inside 76 without a
+     scrollbar and the text sits 8px from the outer edge, as in Figma (Figma strokes take no space). */
+  padding: calc(var(--space-xs) - 1px) var(--space-sm);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  resize: vertical; /* vertical only (styleguide) */
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+.textarea::placeholder { color: var(--color-text-muted); opacity: 1; } /* Firefox lowers placeholder opacity by default */
+
+/* Hover: not used, as on Input. The styleguide and Figma define no hover. */
+
+/* Focus ring: 2px focus colour, 2px offset. The outline follows the 6px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.textarea:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Error: 2px critical border. Styleguide over Figma: the second pixel is an inset shadow, so the
+   text does not move by 1px (Figma uses a real 2px border). */
+.textarea[aria-invalid='true'] {
+  border-color: var(--color-critical-fg);
+  box-shadow: inset 0 0 0 1px var(--color-critical-fg);
+}
+
+/* Disabled: line border, muted text, surface background, no resize handle. Never lower opacity. */
+.textarea[aria-disabled='true'] {
+  border-color: var(--color-line);
+  box-shadow: none;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  resize: none;
+}
+
+/* Read-only: no border, value in body, no padding (same rule as Input). No 3-line minimum: it shrinks to fit
+   its text (field-sizing; Textarea.tsx sets the height where a browser lacks it). */
+.textarea.readOnly,
+.textarea.readOnly[aria-invalid='true'] {
+  min-height: 0;
+  field-sizing: content;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  box-shadow: none; /* a read-only value shows no error border */
+  background: transparent;
+  resize: none;
+}

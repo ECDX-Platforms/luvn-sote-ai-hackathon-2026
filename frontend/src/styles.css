@@ -1,0 +1,644 @@
+/* LUVN application stylesheet.
+   One sheet, replacing the former ChallengeDemo.css + styles.css pair and index.css.
+
+   Cascade order is load-bearing and preserved: the former ChallengeDemo.css rules first (they lose every
+   conflict), then the former styles.css rules (scoped to .brief-app, so they win), then the former
+   index.css base rules, which loaded last.
+
+   The merge removed only rules whose selectors reference classes nothing renders, and only the matching
+   selector parts from grouped rules. Every surviving rule is byte-identical to its original, in the
+   original order; only the 21 grouped rules that lost a selector part were re-joined. See
+   .scratch/design-system-migration/issues/03-consolidate-and-adopt-colour.md. */
+
+.brief-app {
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-height: 100dvh;
+}
+.brief-app h1, .brief-app h2, .brief-app h3 { color: var(--color-text); margin: 0; }
+.brief-app p { margin: var(--space-xs) 0; }
+/* `improve-text-layout-and-legibility` (and `typography`): "For short text blocks like headings, use
+   `text-wrap: balance`… Use `text-wrap: pretty` for long-form body text (paragraphs, blockquotes, etc.)",
+   and "DO NOT apply it on `*`". Both are progressive: an engine without the value wraps greedily, which is
+   exactly what the sheet did before this rule. The headings are the short blocks this app actually has —
+   the card titles, the person group headings and the briefing's three record headings — and the table
+   headers are headline-like labels in a narrow column (`th` is named by the guide itself). No heading here
+   carries a visible box, which the guide warns against for `balance`. The body copy is the long blocks:
+   the alert and narrative paragraphs, the decision outcomes, and the `dd` values of the record metadata. */
+.brief-app h1, .brief-app h2, .brief-app h3, .brief-app th { text-wrap: balance; }
+.brief-app p, .brief-app li, .brief-app dd { text-wrap: pretty; }
+
+/* The case-picker's selection rows are the app's own `<button>`s and need their own box. This MUST NOT be
+   written as a bare `.brief-app button` — that selector is (0,1,1) against the Button's CSS-module class at
+   (0,1,0), so it silently out-ranks the component and rewrites its padding, background and radius, and the
+   primary variant loses its fill entirely. No check in the gate can see a cascade loss like that; it was
+   found by adversarial review of the end state.
+
+   The mobile bottom bar used to be in this selector too, on the stated grounds that its elements were "not
+   the library's NavItem". They are: `destinationNavItem(..., "bottom")` renders the vendored `NavItem` with
+   `layout="bottom"`, so the rule was doing to that component exactly what this comment warns about, at (0,2,1)
+   against its (0,1,0). Measured at 375px, every item came out 78px tall with a 1px border, a 6px radius and a
+   white fill, where the library declares no box, `border-radius: 0`, `min-height: 56` and marks the current
+   item with `inset 0 2px 0`. It is out of the selector, and the library's own idiom is what renders. */
+.brief-app .brief-case-group button { background: var(--color-surface); cursor: pointer; }
+
+/* The rule that used to restyle the phone bottom bar's links is deleted: they are the vendored NavItem
+   (bottom-bar layout), so an app `a:hover` was doing to that component what the comment above warns
+   about, at (0,2,1) against its (0,1,0). The library's own `:hover` is the one that renders. */
+.brief-app .brief-case-group button:hover { background: var(--color-surface-hover); border-color: var(--color-link); }
+/* Announced to assistive tech only; never a visual restyle. */
+.brief-skip { position: absolute; top: -100px; left: var(--space-sm); padding: var(--space-sm); background: var(--color-surface); z-index: 10; transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-skip:focus { top: var(--space-xs); }
+
+/* `.brief-app .brief-main`'s box is declared once, at the live rule near the end of this file; the three
+   earlier copies of it here and the two superseded copies of `.brief-proposal`'s border were shadowed
+   declaration-for-declaration and are deleted (see frontend/scripts/find-shadowed-css.mjs). */
+.brief-heading { margin: 0 0 24px; }
+.brief-heading p { color: var(--color-text-muted); margin: var(--space-2xs) 0 0; }
+.brief-app select, .brief-app textarea { color: var(--color-text); border: 1px solid var(--color-line-strong); border-radius: var(--radius-md); background: var(--color-surface); padding: var(--space-xs) var(--space-sm); }
+.brief-app textarea { display: block; width: 100%; min-height: 100px; margin: var(--space-xs) 0; }
+
+.brief-proposal { padding: var(--space-md) 0; }
+.brief-proposal h2 { margin-bottom: 8px; }
+
+.brief-app summary { display: flex; align-items: center; padding: 0 var(--space-2xs); }
+
+.brief-button-row { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: var(--space-sm) 0; }
+.brief-proposal form label { display: block; }
+/* Make the provenance legible before asking the reader to trust the prose. */
+.brief-heading { padding-bottom: 24px; border-bottom: 1px solid var(--color-line); }
+.brief-heading .brief-eyebrow { margin: 0 0 var(--space-xs); color: var(--color-text-muted); }
+
+.brief-source-more { margin: var(--space-xs) 0 var(--space-sm); }
+.brief-source-more > summary { color: var(--color-link); cursor: pointer; transition: color var(--duration-slow) var(--ease); }
+
+/* The briefing's last line: the boundary sentence and the link to the technical page (B2). */
+.brief-footer { margin: var(--space-lg) 0 0; padding: var(--space-xs) 0; border-top: 1px solid var(--color-line); color: var(--color-text-muted); }
+/* D6: the one caption that says the view is scoped; the same line on every briefing, no count. */
+.brief-lens-scope { margin: 0 0 var(--space-sm); color: var(--color-text-muted); }
+
+/* Briefing hierarchy: decision first, traceability on demand. */
+
+.brief-provenance { margin-top: 8px; }
+.brief-app .brief-provenance summary { width: fit-content; min-height: var(--space-xl); }
+.brief-provenance p { color: var(--color-text-muted); overflow-wrap: anywhere; }
+
+/* The briefing is a document, not a dashboard. `.brief-app`'s colour/background pair, the
+   `.brief-proposal` border, `.brief-main`'s box, `.brief-app :target`'s scroll margin and the capture-mode
+   `min-width` are each declared once, at their live rule below; the earlier copies that used to sit here
+   were shadowed declaration-for-declaration (frontend/scripts/find-shadowed-css.mjs lists them). */
+
+.brief-heading { border: 0; padding: 0; margin-bottom: 24px; }
+
+.brief-app .brief-case-group button:active { transform: translateY(1px); }
+.brief-app .brief-provenance summary { text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 4px; transition: color var(--duration-slow) var(--ease); }
+
+/* One encounter picker: the synthetic case is explicit, the service purpose is one click. */
+
+/* Presenter tools (Gate 3). One labelled surface for the demo's comparison instruments: the mode switch, the
+   three-way recomputation and the sibling-lens comparison. It is on the technical page (B2), after the coverage
+   and impact cards and before the trace, so it is off the professional's reading path without being hidden. */
+.brief-app .brief-presenter { display: grid; gap: var(--space-md); margin: var(--space-xl) 0 0; padding: var(--space-md); border: 1px solid var(--color-line); background: var(--color-surface); }
+.brief-app .brief-presenter > .t-overline { margin: 0; }
+.brief-app .brief-mode-switch { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-md); margin: 0; padding: 0; border: 0; }
+.brief-app .brief-mode-switch > legend { padding: 0; }
+/* The library's own control height, so the switch's targets match every other control on the page and grow
+   on a coarse pointer the way the library's tokens already do. Measured before this: a 24px-tall label around
+   a 13px radio, which is the bare WCAG 2.2 minimum and half of what the design system uses everywhere else. */
+.brief-app .brief-mode-switch > label { display: flex; align-items: center; gap: var(--space-2xs); min-height: var(--control-h); }
+/* The supplied answers sit directly under their assessment row, so they get no top padding of their own —
+   the row above already carries it. Neutral by design: this is a source fact, not a finding. */
+.brief-app .brief-assessment-items > td { padding-top: 0; }
+/* Gate 8: the comparison's invariant, set apart from the three cards because it is the opposite kind of
+   statement — they say what each layer adds, this says what none of them may change. */
+.brief-app .brief-comparison-invariant { margin-top: var(--space-sm); padding: var(--space-sm); border: 1px solid var(--color-line); }
+.brief-app .brief-comparison-invariant > .t-body-strong { margin: 0 0 var(--space-2xs); }
+.brief-failure-demo { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-line); }
+.brief-lens-demo { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--color-line); }
+
+.brief-ai-evidence { margin: 24px 0; padding: var(--space-md) 0; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+.brief-ai-evidence h2 { margin-bottom: 12px; }
+.brief-decision-outcomes { padding-left: 24px; }
+.brief-decision-outcomes li { margin: var(--space-xs) 0; overflow-wrap: anywhere; }
+.brief-ai-evidence details { margin-top: 12px; }
+.brief-ai-evidence details ol { overflow-wrap: anywhere; }
+.brief-stage-trace { margin: var(--space-sm) 0; padding: var(--space-sm) var(--space-sm); border-top: 1px solid var(--color-line); }
+
+.brief-stage-trace ol { padding-left: 16px; margin: var(--space-2xs) 0; }
+.brief-stage-trace li { margin: var(--space-2xs) 0; overflow-wrap: anywhere; }
+/* The per-sentence withholding record. It is machinery, so it sits with the stage trace on the technical
+   page and never in the professional's panel; it is styled like the trace block it follows. */
+.brief-withheld-sentences { margin: var(--space-sm) 0; padding: var(--space-sm) var(--space-sm); border-top: 1px solid var(--color-line); }
+.brief-withheld-sentences ul { padding-left: 16px; margin: var(--space-2xs) 0; }
+.brief-withheld-sentences li { margin: var(--space-2xs) 0; overflow-wrap: anywhere; }
+.brief-comparison-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-sm); margin-top: 16px; }
+/* A person has a variable number of sibling lenses, so this grid adapts rather than leaving an
+   empty third column when there are only two. */
+.brief-lens-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.brief-comparison-card { min-width: 0; padding: var(--space-sm); border: 1px solid var(--color-line); overflow-wrap: anywhere; }
+.brief-comparison-card h3 { margin-bottom: 8px; }
+@media (max-width: 900px) { .brief-comparison-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Capture mode (?capture=1, set only by the capture URL, never by the app): the layout keeps the
+   desktop content box instead of collapsing into the mobile variant, and transient status chrome is
+   hidden so two captures of the same state differ only by the change under review. Pair it with a
+   1440x1000 viewport. The `min-width` and the narrow hide rule are declared once, at the live copies
+   near `.brief-transient-status`; the over-broad `[role="status"], [role="alert"]` copy that used to sit
+   here is deleted, because it also matched the library's Alert and silently removed the alerts panel
+   from capture mode. */
+
+.brief-app .brief-main { color: var(--color-text); background: var(--color-bg); }
+
+.brief-app .brief-proposal textarea { width: 100%; min-width: 0; min-height: 40px; padding: var(--space-xs) var(--space-sm); border: 1px solid var(--color-line-strong); border-radius: var(--radius-md); color: var(--color-text); background: var(--color-surface); transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+/* `form-fields-automatically-fit-contents`: "Setting `field-sizing: content` on… textareas allows them to
+   resize dynamically as the user types", and "To prevent layout issues… it is recommended to set both
+   `min-inline-size`… and `max-inline-size`", with "For textareas, allowing horizontal auto-sizing can cause
+   a jarring UX… apply an explicit width (like `width: 100%`) to the textarea. This forces the textarea to
+   maintain a stable horizontal width while still auto-sizing vertically as content wraps."
+   The `width: 100%` above is that explicit width and stays; `max-inline-size: 100%` is the guide's
+   maximum applied in inline-size terms, which is what keeps a long line of the professional's note from
+   widening the card. The growth stops at eight lines of the row's own line-height and then scrolls — the
+   guide's `max-block-size` advice — and never starts below the two lines the declaration above already
+   allowed. The extension is `field-sizing: content` only: an engine without it ignores this rule and the
+   fixed 40px floor plus the browser's own scrollbar is exactly today's behaviour. */
+.brief-app .brief-proposal textarea { field-sizing: content; max-inline-size: 100%; min-block-size: 2lh; max-block-size: 8lh; }
+
+.brief-app .brief-main { min-width: 0; }
+.brief-app .brief-heading { margin: 0 0 var(--space-sm); padding: 0 0 var(--space-sm); border-bottom: 1px solid var(--color-line); }
+.brief-app .brief-heading .brief-eyebrow { margin: 0 0 var(--space-2xs); color: var(--color-text-muted); }
+.brief-app .brief-heading h1 { margin: 0; color: var(--color-text); }
+.brief-app .brief-heading > p:last-child { margin: var(--space-2xs) 0 0; color: var(--color-text-muted); }
+/* The record cards are the library `Block` now: it owns the surface, the padding, the hairline and the title
+   row (title left, the card's caption in the `actions` slot on the right), so the app keeps no card anatomy.
+   The two app-side cards that are not a Block — the proposal and the chat rail — keep the one box below. */
+.brief-app .brief-card,
+.brief-app .brief-proposal { min-width: 0; padding: var(--space-md); border: 1px solid var(--color-line); background: var(--color-surface); }
+.brief-app .brief-proposal h2 { margin: 0 0 var(--space-xs); color: var(--color-text); }
+/* A data section is a grid child: it must be allowed to shrink below its content, or a wide table widens the column. */
+.brief-app .brief-data-section { min-width: 0; }
+/* The definition grid's `dl`/`dt`/`dd` rules lived here and are deleted, not moved.
+   `.brief-app .brief-definition dl` was (0,2,1) against the vendored `KeyValueList`'s `.list` at (0,1,0), and
+   it re-declared the same three properties the component declares for itself — so the library's responsive
+   6/3/2 grid was dead while every gate stayed green, and the app's own 6/3/2 at different breakpoints looked
+   the same in a screenshot.
+   Neither gate can see this class of bug, and both reasons are structural rather than fixable here:
+     * The design-system gate only knows a vendored component's root element from a hand-kept list (`button`),
+       and its ancestor test treats any real class as sufficient constraint — so a component nested inside an
+       app class (here `.brief-definition`, its host) is outside the model entirely. The guard is not extended,
+       because a derived one needs the host-to-element map from the JSX and a hand-kept one is the same rubber
+       stamp in a new place. What replaces it is a real assertion: the a11y gate now requires
+       `KeyValueList.module.css` to reach the audit, which it could not do while that fixture rendered the
+       empty panel — an adopted component whose stylesheet is unaudited is how this went unseen.
+     * axe judges the DOM, not which of two stylesheets won, and jsdom cannot paint. Nothing here is a visual
+       check; it was found by reading the cascade and confirmed in a browser.
+   The general fix is upstream: a documented class contract, or the `columns` prop this vendored revision does
+   not have (`.scratch/ui-ux-upgrade/issues/01-vendor-the-reference.md`) — never an edit to
+   `frontend/vendor/comp-lib/` (ADR-0016). */
+/* One card, stacked severity rows: same width, same anatomy — icon, severity word, fact, action. */
+.brief-app .brief-alert-stack { display: grid; gap: var(--space-xs); }
+.brief-app .brief-alert-stack:empty { display: none; }
+.brief-app .brief-alert-group { display: grid; gap: var(--space-xs); }
+.brief-app .brief-risk,
+.brief-app .brief-severity { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: start; gap: var(--space-xs); min-width: 0; padding: var(--space-xs) var(--space-sm); border: 1px solid transparent; }
+.brief-app .brief-risk { margin: 0; }
+.brief-app .brief-alert-row { grid-auto-flow: row; align-content: start; }
+/* A neutral risk row carries no icon — colour is only ever meaning in this panel — so it has one child and
+   must not reserve the 16px icon track. Without this the copy is placed in the icon column and wraps at
+   every character, which is what a mid-tone ("keskitaso") risk renders as. */
+.brief-app .brief-risk:not(.brief-critical):not(.brief-warning) { grid-template-columns: minmax(0, 1fr); color: var(--color-text-muted); background: var(--color-surface); border-color: var(--color-line); }
+.brief-app .brief-alert-copy { min-width: 0; overflow-wrap: anywhere; }
+/* The severity rows stay app-side, and `Alert` is deliberately NOT adopted (issue 03 allows "or do not
+   adopt it"). Its keyword is fixed English per level (`Alert.tsx`), and hiding it is not available: the
+   keyword element carries a build-output class hash (`_keyword_17qlb_17`), so no app selector can reach it
+   without hard-coding a hash this gate already rejects, and the keyword is real text that lands in the
+   accessibility tree however it is painted. Two severity words in one Finnish row, one of them English, is
+   worse than the tone the component would add. The row already carries what the component supplies — the
+   level icon, the tint, the border and the live-region role. */
+.brief-app .brief-alert-copy p { margin: 0; }
+.brief-app .brief-alert-copy .brief-alert-act { margin-top: 4px; }
+.brief-app .brief-alert-neutral { padding: var(--space-xs) var(--space-sm); border: 1px solid var(--color-line); color: var(--color-text); background: var(--color-surface); }
+.brief-app .brief-critical { color: var(--color-critical-fg); background: var(--color-critical-bg); border-color: var(--color-critical-border); }
+.brief-app .brief-warning { color: var(--color-warning-fg); background: var(--color-warning-bg); border-color: var(--color-warning-border); }
+.brief-app .brief-success { color: var(--color-success-fg); background: var(--color-success-bg); border-color: var(--color-success-border); }
+.brief-app .brief-info { color: var(--color-info-fg); background: var(--color-info-bg); border-color: var(--color-info-border); }
+.brief-app .brief-narrative { margin: 0 0 var(--space-md); }
+/* Two parts main to one part rail, with a real gutter. The main column is the reading column: the metric tiles,
+   the six-column lab table and the other record cards. The side column (`brief-record-side`, the rail here)
+   carries the attention items, the medications table and the rule-based assessment card, so its 360px floor is
+   set by the medications table (see the note below the media query). Above 1280px the split is proportional and the floor applies when 1fr would take the rail
+   below it. */
+.brief-app .brief-record-columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr); gap: var(--space-lg); align-items: start; }
+.brief-app .brief-record-main,
+.brief-app .brief-record-side { min-width: 0; }
+.brief-app .brief-record-main { display: grid; gap: var(--space-md); align-content: start; }
+.brief-app .brief-record-side { display: grid; gap: var(--space-md); align-content: start; }
+/* The two columns own the rhythm: one gap step between cards, so every gap is the same and no card adds
+   a margin of its own on top of it. */
+.brief-app .brief-record-main > *,
+.brief-app .brief-record-side > * { margin: 0; }
+/* The record tables are the library `Table`: it owns the width, the hairlines, the header style, the numeric
+   columns and the scroll box. The one cell it has no component for is the row header — the drug, the record,
+   the instrument, the test — which stays a raw `th scope="row"` (the a11y and anchor assertions read it), so
+   that cell gets the body cell's own box here: the same height, padding, top alignment and inset hairline,
+   and no hairline on the last row. */
+.brief-app .brief-data-section th[scope="row"] { height: var(--row-h); padding: var(--space-xs) var(--space-md) var(--space-xs) 0; text-align: left; vertical-align: top; box-shadow: inset 0 -1px 0 var(--color-line); overflow-wrap: break-word; }
+.brief-app .brief-data-section tr:last-child > th[scope="row"] { box-shadow: none; }
+.brief-app .brief-medication-doses { margin: var(--space-2xs) 0 0; color: var(--color-text-muted); }
+/* Metric tiles: the reading leads, its label sits under it, and the tile is a plain bordered surface inside
+   the card — no tint inside a white card, and no left accent rule, which was a second, weaker way of
+   saying what the border already says. */
+.brief-app .brief-measurements { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-sm); }
+.brief-app .brief-measurements article { min-width: 0; padding: var(--space-md); border: 1px solid var(--color-line); }
+.brief-app .brief-measurements h3 { margin: 0; color: var(--color-text-muted); }
+.brief-app .brief-measurements p { margin: var(--space-2xs) 0; }
+.brief-app .brief-measurements strong { font-variant-numeric: tabular-nums; }
+.brief-app .brief-measurements p span { color: var(--color-text-muted); }
+.brief-app .brief-measurement-value + .brief-measurement-value { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--color-line); }
+.brief-app .brief-measurement-value .brief-small a { display: inline-block; margin-right: 8px; }
+/* The briefing's own context: person, role and purpose, in the reading column, above the patient pills. */
+.brief-app .brief-context-strip { margin: 0 0 var(--space-sm); padding: 0 0 var(--space-xs); border-bottom: 1px solid var(--color-line); }
+.brief-app .brief-context-strip dl { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); margin: 0; }
+.brief-app .brief-context-strip dl > div { display: flex; flex-direction: column; gap: var(--space-2xs); min-width: 0; }
+.brief-app .brief-context-strip dt { color: var(--color-text-muted); }
+.brief-app .brief-context-strip dd { margin: 0; overflow-wrap: break-word; }
+.brief-app .brief-empty-panel { margin: 0; padding: var(--space-xs) 0; color: var(--color-text-muted); }
+/* `break-word`, not `anywhere`: the card's text is inherited by the record title inside the flex
+   `.brief-record-heading`, whose sibling `time` is `flex: none` and `nowrap` at phone width. `anywhere`
+   zeroes the title's min-content contribution, so it is the column that can be squeezed mid-word beside
+   an unshrinkable sibling — the same mechanism as the medications collapse, found by looking for the
+   shape rather than waiting for it to show. `break-word` keeps the longest word as the minimum. */
+.brief-app .brief-selected-record { padding: var(--space-xs) 0; border-top: 1px solid var(--color-line); overflow-wrap: break-word; min-height: var(--row-h); }
+.brief-app .brief-selected-record h3 { display: inline; margin: 0 var(--space-xs) 0 0; }
+.brief-app .brief-selected-record time,
+.brief-app .brief-data-section time { color: var(--color-text-muted); }
+.brief-app .brief-selected-record p { margin: var(--space-2xs) 0 0; }
+.brief-app .brief-data-section ul { margin: var(--space-2xs) 0 0; padding-left: 16px; }
+.brief-app .brief-data-section li { margin: var(--space-2xs) 0; }
+.brief-app .brief-proposal-item { padding-top: 8px; border-top: 1px solid var(--color-line); }
+.brief-app .brief-proposal-item > p:first-child { margin: 0 0 var(--space-xs); }
+.brief-app .brief-button-row { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: var(--space-xs) 0 0; }
+/* Tekniset tiedot: a page of its own, one library Block holding the audit cards, the presenter tools and the
+   trace. Its paragraphs carry machine identifiers (record ids, deployments), so they wrap anywhere. */
+.brief-app .brief-technical-page p { overflow-wrap: anywhere; }
+.brief-app .brief-technical-status { margin: var(--space-sm) 0 0; }
+.brief-app summary { min-height: var(--control-sm); color: var(--color-link); cursor: pointer; transition: color var(--duration-slow) var(--ease); }
+.brief-app .brief-ai-evidence { margin: var(--space-xs) 0; padding: var(--space-sm) 0; border-top: 1px solid var(--color-line); }
+.brief-app .brief-ai-evidence p,
+.brief-app .brief-ai-evidence li { overflow-wrap: anywhere; }
+.brief-app .brief-selection-state { padding: var(--space-xs) var(--space-xs); border-left: 2px solid; }
+.brief-app .brief-selection-info { border-color: var(--color-info-border); }
+.brief-app .brief-selection-success { border-color: var(--color-success-border); }
+.brief-app .brief-decision-outcome { overflow-wrap: anywhere; }
+.brief-app .brief-decision-outcome.brief-warning { display: block; margin: var(--space-2xs) 0; padding: var(--space-xs) var(--space-xs); border-left: 2px solid; }
+.brief-app .brief-decision-outcome .icon { vertical-align: -3px; margin-right: 4px; }
+.brief-app .brief-selected-record .brief-out-generation { display: flex; align-items: baseline; gap: var(--space-xs); margin: var(--space-xs) 0; padding: var(--space-2xs) var(--space-xs); border-left: 2px solid var(--color-warning-border); }
+.brief-app .brief-out-generation .icon { flex: none; align-self: center; }
+.brief-app .brief-inline-status { color: var(--color-text-muted); }
+.brief-app .brief-skip { position: absolute; top: -100px; left: var(--space-sm); z-index: 5; padding: var(--space-xs); color: var(--color-link); background: var(--color-surface); transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-app .brief-skip:focus { top: var(--space-xs); }
+/* Only the app's OWN transient status lines are hidden, and they are hidden by their own class rather than
+   by `role`. The broad `[role="status"]`/`[role="alert"]` selector also matched the library's Alert, whose
+   level roles are exactly those two, so in capture mode every captured briefing lost its alerts panel and
+   axe skipped the hidden nodes — a disclosure silently disappearing from the evidence (issue 03/07). */
+.brief-app[data-capture] .brief-transient-status { visibility: hidden; }
+/* The rail is 360px at minimum. It carries the attention items, the medications table and the rule-based
+   assessment card, so the floor is the narrowest width at which the medications table keeps its three columns.
+   It is not measured in a browser here.
+   The split is 2:1 above 1280px. A 1280px viewport leaves the main track 616px, and the six-column lab table
+   needs 531px of content box — at a 560px card (526px of content) it overflows by 5px, at 600px it fits — so
+   the main column keeps about 50px of slack. Below about 1240px the main column would fall under that minimum
+   and the lab table would scroll horizontally inside its card, so the workspace becomes one column instead.
+   The reading column is first in that one column, at every width: its record cards come first in the purpose's
+   order, then the side column (attention, medications, the rule-based assessment), and the rail follows. No
+   breakpoint reorders them. */
+@media (max-width: 1280px) {
+  .brief-app .brief-record-columns { grid-template-columns: minmax(0, 1fr); }
+  .brief-app .brief-record-side { grid-row: auto; }
+}
+
+/* Record workspace: compact, source-forward. One palette now (ADR-0016), light and dark. */
+/* The library's AppShell owns the sidebar column (its width, the surface fill, the hairline, hiding it on
+   phones), and its Sidebar paints the logo row and the navigation landmark. This wrapper only stacks the
+   Sidebar, the utility landmark, the Rooli selector and the theme toggle inside that column. */
+.brief-app .brief-sidebar { display: flex; flex-direction: column; gap: var(--space-lg); padding-bottom: var(--space-md); }
+.brief-app .brief-utility-nav { display: grid; gap: var(--space-2xs); padding: 0 var(--space-sm); }
+/* The sidebar is hidden on phones, so the lens, the theme and the presenter link are repeated above the
+   content there (the bottom bar holds the two primary destinations only). Hidden wherever the sidebar shows. */
+.brief-app .brief-phone-tools { display: none; }
+/* The status lines sit outside `<main>` and were aligned by a hard-coded 32px, while `.brief-main`
+   uses `clamp(16px, 2.5vw, 32px)`. They agree at 1440 and at or below 850, and diverge in between:
+   measured at 1000px the main content started at x=25 and the status line at x=32. The same clamp,
+   so they line up at every width. */
+.brief-app-status { margin: var(--space-sm) clamp(16px, 2.5vw, 32px) 0; }
+.brief-app .brief-main { padding: 24px clamp(16px, 2.5vw, 32px) 48px; }
+/* The phone gutter is 16px, not the 19px that 2.5vw of a 760px viewport resolves to, so the clamp is
+   overridden below 760. This block has to sit AFTER the base rule above: the earlier copy that used to sit
+   near `.brief-heading` was in the file before it, so the base rule won at every width and the phone
+   gutter never applied at all. */
+@media (max-width: 760px) {
+  .brief-app .brief-main { padding: 24px var(--space-md) 48px; }
+}
+.brief-app .brief-case-picker { max-width: 940px; }
+.brief-app .brief-case-picker > header { margin-bottom: 24px; }
+.brief-app .brief-case-picker > header > p:last-child { color: var(--color-text-muted); }
+.brief-app .brief-case-group { margin: var(--space-md) 0; padding-top: 12px; border-top: 1px solid var(--color-line); }
+.brief-app .brief-case-group h2 { margin-bottom: 8px; }
+.brief-app .brief-case-group > div { display: grid; }
+.brief-app .brief-case-group button { display: grid; gap: var(--space-2xs); width: 100%; min-height: 52px; padding: var(--space-sm) var(--space-sm); border: 0; border-top: 1px solid var(--color-line); border-radius: var(--radius-none); text-align: left; transition: background-color var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease); }
+.brief-app .brief-case-group button[aria-pressed="true"] { box-shadow: inset 2px 0 0 var(--color-primary); background: var(--color-primary-tint); transition: background-color var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease); }
+/* `interactions-in-complex-layouts`: "Apply `content-visibility: auto` to self-contained layout regions…
+   a mutation inside a container with containment applied cannot affect the geometry or styles of elements
+   outside that container. The page reflow is isolated, preventing a global layout recalculation."
+   The guide's fallback advice is `contain: layout style paint`, and we take its layout half deliberately:
+   `paint` clips descendants to the box and `style` scopes counters and quotes, so neither is safe on a row
+   that carries a 2px inset selection mark and a 16px focus ring. `content-visibility: auto` is also not
+   taken — at ten encounters and 25 worklist rows per page there is nothing off-screen to skip, the guide's
+   other half is about devirtualisation not isolation, and it would add `contain-intrinsic-size` estimates
+   to rows whose height the list depends on. Rows are the app's real mutation sites: the chat rail replaces
+   a decision row's buttons with its saved status under the pointer, and the worklist repaints its rows when
+   the lens, search or page changes. `contain: layout` makes each of those a contained unit, so the rest of
+   a 2,500px briefing is not laid out again. Engines without it simply reflow as they do today. */
+.brief-app .brief-decision-outcomes,
+.brief-app .brief-proposal,
+.brief-app .brief-day-row,
+.brief-app .brief-case-group button { contain: layout; }
+.brief-app .brief-case-group button span { color: var(--color-text-muted); transition: background-color var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease); }
+.brief-app .brief-patient-pills { margin: 0 0 var(--space-sm); }
+.brief-app .brief-patient-pills > div { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+.brief-app .brief-diagnosis-tag,
+.brief-app .brief-professional-chip,
+.brief-app .brief-professional-chip span { color: var(--color-text-muted); }
+/* The worklist's metric row. The library MetricRow fixes four columns and clears the right border on
+   `:last-child` only, so two or three metrics would leave empty tracks and a dangling hairline. Flex
+   replaces the grid here: the cells share the width, the last one loses the divider it would otherwise
+   draw against the row's edge, and the row closes with its own hairline. Measured at 500px: three cells,
+   dividers between all three, no empty track. */
+.brief-app .brief-worklist-metrics { display: flex; margin: var(--space-md) 0; border-bottom: 1px solid var(--color-line); }
+.brief-app .brief-worklist-metrics > * { flex: 1 1 0; min-width: 0; }
+/* Three cells cannot each hold their label on a phone. Measured at 375px: the page scrolled sideways
+   (document scrollWidth 401 against a 375 viewport) and the labels overprinted one another, because a cell
+   was 109px wide with a 61px content box while the label needs 132-169px. Stacked, each label gets the full
+   measure and the row stops widening the page. The cells keep the library's own dividers between them. */
+@media (max-width: 639px) {
+  .brief-app .brief-worklist-metrics { flex-wrap: wrap; }
+  .brief-app .brief-worklist-metrics > * { flex: 1 1 100%; }
+}
+
+/* The briefing's body is one column. It was two — the reading column beside a 360px rail that carried the
+   proposal and the assistant — until the assistant became the shell's side pane (below); a rail with one
+   optional card left a 360px column standing empty beside the sections, so the proposal now leads the body
+   at full width and the sections take the whole measure. */
+.brief-app .brief-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); align-items: start; }
+.brief-app .brief-rail-section { min-width: 0; }
+.brief-app .brief-rail-section:empty { display: none; }
+
+/* The assistant pane (night plan N1): a Copilot-style side pane docked to the right edge of the shell, on
+   every destination, opened and closed by the toggle beside the header search (and in the phone tools row).
+   It is a sibling of the library AppShell inside `.brief-app`, never a child of `main`, so it is a top-level
+   complementary landmark; the app root becomes a two-track grid when the pane is open, which is what makes
+   the shell give up the 400px rather than the pane covering it. The pane itself is sticky to the viewport
+   and exactly one viewport tall, so its own log scrolls while the page scrolls behind it. Closed, it carries
+   the `hidden` attribute, and the rule for it has to be here because the `display` below would otherwise
+   beat the user agent's `display: none` for `[hidden]`. Below the library's 1024px shell breakpoint it is a
+   full-height sheet over the content, under the phone bottom bar (the bar is z-index 3 and the pane stops
+   above the bar's own fallback height, the library's unmeasured value), so the bar stays in reach. */
+.brief-app .brief-assistant-pane { display: flex; flex-direction: column; min-width: 0; border-left: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-text); }
+.brief-app .brief-assistant-pane[hidden] { display: none; }
+.brief-app .brief-assistant-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-line); }
+.brief-app .brief-assistant-title { margin: 0; }
+.brief-app .brief-assistant-chip { flex: 1 1 auto; min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.brief-app .brief-assistant-close { display: inline-flex; flex: none; margin-left: auto; }
+.brief-app .brief-assistant-empty { margin: 0; padding: var(--space-md); color: var(--color-text-muted); }
+/* The panel inside the pane is `ChatPanel` unchanged; these rules only turn its card into the pane body: no
+   border of its own, a flex column so the tab bar stays put, the open tab's panel is the one scroll box, and
+   the composer sticks to the foot of that box (`margin-top: auto` sends it there when the log is short). */
+.brief-app .brief-assistant-pane .brief-chat { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; border: 0; }
+.brief-app .brief-assistant-pane .brief-chat-tabs { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; margin: 0; }
+.brief-app .brief-assistant-pane .brief-chat-tabpanel { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; gap: var(--space-sm); overflow-y: auto; }
+.brief-app .brief-assistant-pane .brief-chat-ask { position: sticky; bottom: 0; margin-top: auto; padding-top: var(--space-sm); background: var(--color-surface); }
+@media (min-width: 1024px) {
+  .brief-app.brief-assistant-open { display: grid; grid-template-columns: minmax(0, 1fr) 400px; }
+  .brief-app.brief-assistant-open .brief-assistant-pane { position: sticky; top: 0; align-self: start; height: 100dvh; }
+}
+@media (max-width: 1023px) {
+  .brief-app .brief-assistant-pane { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 2; }
+}
+@media (max-width: 639px) {
+  .brief-app .brief-assistant-pane { bottom: calc(var(--control-lg) + var(--space-sm) + env(safe-area-inset-bottom, 0px)); }
+}
+/* The header's search slot holds the search landmark and the assistant toggle on one row: the slot is the
+   library's 280px, which is the Search's own 240px minimum, a 4px gap and the 36px button. */
+.brief-app .brief-header-tools { display: flex; align-items: center; gap: var(--space-2xs); min-width: 0; }
+.brief-app .brief-header-tools > [role="search"] { display: flex; flex: 1 1 auto; min-width: 0; }
+.brief-app .brief-header-tools > [role="search"] > * { flex: 1 1 auto; }
+
+/* The reading column is stacked and always visible (the owner dropped the tab strip: a picker of content
+   against a brief whose promise is "valmiina ilman turhaa klikkailua"). These rules are only the separation
+   between the two blocks that remain here — the definition grid and the record columns. The coverage and
+   source-count cards moved to the technical page (`TechnicalView`), which is their only wrapper. The previous version
+   switched visibility here, which is what put the alerts panel and the rule-based assessment one click away.
+   The `#section-*` ids live on the cards inside these wrappers, so deep links and `:target` behave as before. */
+.brief-app .brief-sections { display: block; }
+.brief-app .brief-section { display: block; margin: 0 0 var(--space-md); }
+.brief-app .brief-record-heading { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); }
+.brief-app .brief-record-heading time { flex: none; }
+.brief-app .brief-selected-record .brief-local-heading { margin: 0 0 var(--space-2xs); color: var(--color-text-muted); }
+.brief-app .brief-record-group-heading { margin: var(--space-xs) 0 var(--space-2xs); padding-top: 8px; border-top: 1px solid var(--color-line); }
+.brief-app .brief-record-state { display: inline-flex; margin-left: 8px; padding: var(--space-2xs) var(--space-xs); border: 1px solid var(--color-line); color: var(--color-text-muted); vertical-align: 1px; }
+.brief-app .brief-selected-record.brief-record-draft { margin-left: -8px; padding-left: 8px; border-left: 2px solid var(--color-line); color: var(--color-text-muted); font-style: italic; }
+.brief-app .brief-record-state.brief-state-draft { border-style: dashed; font-style: italic; }
+.brief-app .brief-entry-metadata { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-md); margin: var(--space-xs) 0 0; }
+.brief-app .brief-entry-metadata > div { display: flex; gap: var(--space-2xs); min-width: 0; overflow-wrap: anywhere; }
+.brief-app .brief-entry-metadata dt { color: var(--color-text-muted); }
+.brief-app .brief-entry-metadata dd { margin: 0; }
+.brief-app .brief-source-metadata .brief-entry-metadata { margin-top: 4px; }
+.brief-app .brief-selection-evidence { margin: var(--space-2xs) 0 0; padding-top: 4px; border-top: 1px dotted var(--color-line); color: var(--color-text-muted); }
+.brief-app .brief-selection-evidence p { margin: var(--space-2xs) 0; overflow-wrap: anywhere; }
+.brief-app .brief-measurement-source { margin-top: 4px; }
+.brief-app .brief-coverage ul { margin-top: 8px; }
+.brief-app .brief-impact { border-top: 2px solid var(--color-line); }
+.brief-app .brief-impact .brief-small { margin-top: 4px; }
+.brief-app :target { scroll-margin-top: var(--space-2xl); }
+@media (max-width: 850px) {
+  .brief-app .brief-main { padding: var(--space-md); }
+}
+/* The library's phone breakpoint: AppShell hides the sidebar and shows the bottom bar, and keeps the end of
+   the page clear of it. The app only shows its phone tools row here. */
+@media (max-width: 639px) {
+  .brief-app .brief-phone-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); }
+}
+@media (max-width: 540px) {
+  .brief-app .brief-record-heading { align-items: flex-start; }
+  .brief-app .brief-record-heading time { white-space: nowrap; }
+}
+
+/* Re-homed from index.css, which loaded last and is now deleted. Both rules are kept here because the
+   library's base.css does not arrive until phase 03 commit 2; commit 2 drops the box-sizing duplicate,
+   since base.css supplies it, and keeps min-height, which base.css does not. */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+/* The one weight literal in the app sheet. base.css resets margins and form controls but not
+   emphasis elements, and the design system has exactly three weights: 400, 500, 600. */
+
+strong, b { font-weight: 600; }
+
+/* Rooli as a first-class axis, and the worklist it scopes. The library's component batches do not reach
+   Navigation or Data display yet (docs/EVENT-RUNBOOK.md §3), so this surface is hand-built to the same
+   rules: tokens only, the .t-* roles, 4px-grid spacing, radius none/sm/md/full, and status nowhere near
+   it — an authored synthetic time is neutral text, never a status tint. */
+.brief-app .brief-role-picker { display: grid; gap: var(--space-xs); padding: var(--space-xs) var(--space-sm); }
+.brief-app .brief-role-picker label { display: grid; gap: var(--space-2xs); color: var(--color-text); }
+.brief-app .brief-role-picker select { width: 100%; min-width: 0; min-height: var(--control-h); padding: var(--space-xs) var(--space-xs); border: 1px solid var(--color-line-strong); border-radius: var(--radius-md); color: var(--color-text); background: var(--color-surface); transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-app .brief-role-note { margin: var(--space-2xs) 0 0; color: var(--color-text-muted); }
+/* The sidebar is hidden on phones, so the Rooli control exists in the phone tools row too — otherwise a
+   phone is stuck on whatever lens the URL or the first catalogue role loaded, and the role scopes the whole
+   server-side worklist. The inline copy drops the sidebar padding. */
+.brief-app .brief-role-picker.brief-role-picker-inline { padding: 0; }
+
+/* The assistant panel, restructured to the reference panel's anatomy: identity, a tab row, a context chip,
+   a greeting card, suggestion cards, and the reply. The whole thing stays inside the rail's card
+   (`.brief-card`), so these rules carry the layout the card does not.
+
+   Two decisions worth recording, because both are places the reference does not transfer:
+     * `Tabs` is the vendored component, and it owns the tab semantics and the keyboard contract. The app
+       styles nothing in it: the bar's padding, the active tab's 600 weight and its 2px underline are the
+       library's own, and out-specifying them from here is the cascade bug the design-system gate exists to
+       prevent (`.brief-app` + one class beats a CSS-module class).
+     * The reference's context row has a chevron because it can be changed. Ours cannot — the role and the
+       encounter are chosen once in the page sidebar — so the chip is a read-only statement of scope, and it
+       carries no control, no `aria-haspopup` and no affordance that suggests a picker. */
+.brief-app .brief-chat { display: grid; gap: 0; padding: 0; overflow: hidden; }
+.brief-app .brief-chat-identity { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-md) var(--space-md) var(--space-xs); }
+.brief-app .brief-chat-mark { flex: none; }
+.brief-app .brief-chat-wordmark { margin: 0; }
+/* The vendored `Tabs` brings its own bar padding (`0 24px` at every width above 640px), which is the right
+   inset for a full-bleed tab bar but one step wider than this card's own 16px. Pulling the component's root
+   back by that step lets the bar's hairline run to the card's edge — as the reference's does — while the
+   open panel's content lands exactly on the card's inset. It is the component's ROOT that is moved, through
+   a class the app owns and passes in; nothing inside the component is addressed from here. */
+.brief-app .brief-chat-tabs { margin: 0 calc(-1 * var(--space-md)); }
+.brief-app .brief-chat-tabpanel { display: grid; gap: var(--space-sm); padding: var(--space-md); }
+.brief-app .brief-chat-context { display: flex; align-items: center; gap: var(--space-2xs); margin: 0; }
+.brief-app .brief-chat-context .brief-chat-icon { width: 16px; height: 16px; flex: none; }
+.brief-app .brief-chat-context-value { min-width: 0; overflow-wrap: break-word; }
+/* The suggestion cards: one stacked column, each card a full-width button — mark, then the question itself. `text-align: left` and `width: 100%` are what make a `<button>` read as a
+   card; the border, radius and surface are the app's own because this is not a vendored component. */
+.brief-app .brief-chat-suggestions { display: grid; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
+.brief-app .brief-chat-suggestion { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: var(--space-xs); row-gap: var(--space-2xs); width: 100%; padding: var(--space-sm); border: 1px solid var(--color-line-strong); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); text-align: left; cursor: pointer; transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-app .brief-chat-suggestion:hover { background: var(--color-surface-hover); border-color: var(--color-primary); }
+.brief-app .brief-chat-suggestion:disabled { cursor: default; }
+.brief-app .brief-chat-icon { grid-row: 1; align-self: start; color: var(--color-primary); }
+/* The question is the card's visible text; its subject is the accessible name the component gives the button. */
+.brief-app .brief-chat-suggestion-body { display: block; min-width: 0; }
+.brief-app .brief-chat-suggestion-question { display: block; min-width: 0; color: var(--color-text); }
+.brief-app .brief-chat-suggestion-why { margin: var(--space-2xs) 0 0; }
+/* The reply: the deterministic lead as the opening paragraph, then the findings as a list. There is no
+   separate question header — the lead already names the question it answers, and the owner rejected printing
+   the same question twice. The review states and their captions are the rows' own and stay untouched. */
+.brief-app .brief-chat-reply { display: grid; gap: var(--space-xs); padding: var(--space-md); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface-hover); }
+.brief-app .brief-chat-reply-body { display: grid; gap: var(--space-xs); }
+.brief-app .brief-chat-reply-body > * { margin: 0; }
+.brief-app .brief-chat-notice { order: -1; }
+.brief-app .brief-chat-lead { color: var(--color-text); }
+.brief-app .brief-chat-findings { padding-left: 0; list-style: none; }
+.brief-app .brief-chat-findings > .brief-proposal { padding: var(--space-sm) 0 0; border-top: 1px solid var(--color-line); }
+.brief-app .brief-chat-findings > .brief-proposal:first-child { padding-top: 0; border-top: 0; }
+/* The three review buttons, deliberately stacked rather than left to wrap. At the rail's width
+   `Hyväksy tarkistettavaksi` wraps and leaves `Ei tarvetta nyt` orphaned on a row of its own, which reads as
+   an accident. The labels are shipped wording the tests and the recorded `decision.label` depend on, so the
+   layout gives way instead: the primary action takes the full width and the two secondary actions sit under
+   it, side by side, which also survives a translated or longer label. Same rhythm for the edit form's save
+   and cancel pair. */
+.brief-app .brief-chat-findings .brief-button-row { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.brief-app .brief-chat-findings .brief-button-row > * { flex: 1 1 0; }
+/* `Ohjeet`: the encounter's guideline references, which the rail already received and which used to sit
+   under the answer. Titles, publisher and publication date are the publisher's own citation metadata. */
+.brief-app .brief-chat-guidelines-heading { margin: 0; }
+.brief-app .brief-chat-guidelines { display: grid; gap: var(--space-sm); margin: 0; padding: 0; list-style: none; }
+.brief-app .brief-chat-guidelines li { overflow-wrap: anywhere; }
+/* The publication date is one unit beside the link: left as bare inline text it breaks after "julkaistu" and
+   leaves the year orphaned on its own line in the narrow rail. */
+.brief-app .brief-chat-guidelines li > .t-caption { display: inline-block; }
+.brief-app .brief-chat-guidelines-empty { margin: 0; }
+/* The question field closes the panel. The library's field carries its own box; this is only the space
+   above it, because the grid above already spaces its children. */
+.brief-app .brief-chat-ask { margin: 0; }
+
+/* Työpäivä: the professional's day. The date strip is a row of equal cells; a row is one full-width button whose
+   main column carries the person, the purpose and the Decision-1 lead, and whose side column carries the tags.
+   Tokens, the type roles and the 4px grid only; a tag's colour is the rule output's own status and nothing else. */
+.brief-app .brief-day { max-width: 1120px; }
+.brief-app .brief-day > header { margin-bottom: var(--space-md); }
+.brief-app .brief-day > header > p:last-child { color: var(--color-text-muted); }
+.brief-app .brief-day-strip { display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: var(--space-2xs); margin: 0 0 var(--space-md); }
+.brief-app .brief-day-pick { display: grid; gap: var(--space-2xs); min-height: var(--control-h); padding: var(--space-xs) var(--space-2xs); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); text-align: center; cursor: pointer; transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-app .brief-day-pick span:first-child,
+.brief-app .brief-day-pick span:last-child { color: var(--color-text-muted); }
+.brief-app .brief-day-pick[aria-pressed="true"] { border-color: var(--color-primary); background: var(--color-primary-tint); }
+.brief-app .brief-day-rows { display: grid; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
+.brief-app .brief-day-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-sm); width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); text-align: left; cursor: pointer; transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease); }
+.brief-app .brief-day-row:hover { background: var(--color-surface-hover); border-color: var(--color-primary); }
+.brief-app .brief-day-row[aria-pressed="true"] { box-shadow: inset 2px 0 0 var(--color-primary); background: var(--color-primary-tint); }
+.brief-app .brief-day-row-main { display: grid; gap: var(--space-2xs); min-width: 0; }
+.brief-app .brief-day-row-main > .t-caption,
+.brief-app .brief-day-row-side { display: flex; flex-wrap: wrap; justify-content: flex-end; align-content: start; gap: var(--space-2xs); }
+.brief-app .brief-day-note { margin: var(--space-md) 0 0; color: var(--color-text-muted); }
+.brief-app .brief-day-warmup { margin: 0 0 var(--space-md); color: var(--color-text-muted); }
+.brief-app .brief-day-search { margin-top: var(--space-md); }
+@media (max-width: 760px) {
+  .brief-app .brief-day-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .brief-app .brief-day-row { grid-template-columns: minmax(0, 1fr); }
+  .brief-app .brief-day-row-side { justify-content: flex-start; }
+}
+
+/* The lens switch: the same person through another role, as buttons the shell opens. */
+.brief-app .brief-lens-switch { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); margin: 0 0 var(--space-sm); }
+.brief-app .brief-lens-switch > p { margin: 0; color: var(--color-text-muted); }
+.brief-app .brief-lens-switch > button { max-width: 100%; min-width: 0; white-space: normal; text-align: start; }
+
+/* Esitiedot: the county's heading structure as a definition list, each heading over its items; then the official
+   forms, each an article with its answered questions grouped by the form's own categories. */
+.brief-app .brief-esitieto-sections { display: grid; gap: var(--space-sm); margin: 0; }
+.brief-app .brief-esitieto-section { padding-top: var(--space-xs); border-top: 1px solid var(--color-line); }
+.brief-app .brief-esitieto-section dt { margin: 0 0 var(--space-2xs); }
+.brief-app .brief-esitieto-section dd { margin: 0; }
+.brief-app .brief-esitieto-section ul { margin: 0; padding-left: 16px; }
+.brief-app .brief-esitieto-section li { margin: var(--space-2xs) 0; overflow-wrap: break-word; }
+.brief-app .brief-esitieto-open { margin: 0; color: var(--color-text-muted); }
+.brief-app .brief-esitieto-sources { color: var(--color-text-muted); }
+/* A pre-filled form is a nested Block (level 3) inside Esitiedot; the padding is the Block's own, the rule above it is the app's. */
+.brief-app .brief-prefilled-form { margin-top: var(--space-md); border-top: 2px solid var(--color-line); }
+.brief-app .brief-prefilled-form h3 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+.brief-app .brief-prefilled-group { margin-top: var(--space-sm); }
+.brief-app .brief-prefilled-group h4 { margin: 0 0 var(--space-2xs); color: var(--color-text-muted); }
+.brief-app .brief-prefilled-group dl { display: grid; gap: var(--space-xs); margin: 0; }
+.brief-app .brief-prefilled-item dt { color: var(--color-text-muted); }
+.brief-app .brief-prefilled-item dd { margin: 0; overflow-wrap: break-word; }
+.brief-app .brief-prefilled-review { margin-top: var(--space-2xs); }
+.brief-app .brief-prefilled-review form { display: grid; gap: var(--space-xs); margin-top: var(--space-xs); }
+.brief-app .brief-prefilled-score { margin: var(--space-sm) 0 0; }
+.brief-app .brief-prefilled-open { margin-top: var(--space-xs); }
+.brief-app .brief-prefilled-open ul { margin: var(--space-2xs) 0 0; padding-left: 16px; }
+.brief-app .brief-why { margin: 0 0 var(--space-2xs); }
+.brief-app .brief-ready { color: var(--color-text); }
+.brief-app .brief-pending { color: var(--color-text-muted); }
+
+.brief-app .brief-esitiedot { border-top: 2px solid var(--color-line); }
+.brief-app .brief-day-lead { display: block; }
+.brief-app .brief-role-chip { color: var(--color-text); }
+
+.brief-app .brief-chat-live { margin: 0; padding-left: 16px; }
+.brief-app .brief-decision-outcome .brief-small { white-space: normal; overflow-wrap: anywhere; }
+/* Phone width: nothing may widen the document past the viewport. The row buttons are bounded to their row,
+   and a small button inside a wrapping row may shrink below its label's width. */
+.brief-app .brief-day-row,
+.brief-app .brief-day-pick,
+.brief-app .brief-button-row > * { max-width: 100%; min-width: 0; }

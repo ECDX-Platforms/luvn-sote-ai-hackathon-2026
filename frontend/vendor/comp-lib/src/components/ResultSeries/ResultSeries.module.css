@@ -1,0 +1,105 @@
+/* Result series. Figma: Data display / Result series (177:962), option A (13 Oct 2026). NEW: the styleguide has no
+   Result series rules yet (v2.3 changelog). Styleguide: Charts (v2.3), Metric (vitals), Typography (metric, body-strong,
+   caption), Content (numbers, dates), Icons, Accessibility.
+   No flags, no reference range, no range or decision lines (styleguide Charts, Figma description). */
+.series {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2xs); /* Figma: 4 between every part */
+  min-width: 0;
+  color: var(--color-text);
+}
+
+.test { min-width: 0; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+
+/* One line of parts on a shared baseline: latest value + unit 8 apart; age + date and change + gap 4 apart (Figma).
+   Figma clips each row on one line; code wraps when there is no room (brief: text wraps). */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-xs);
+  min-width: 0;
+  margin: 0;
+}
+.tight { column-gap: var(--space-2xs); }
+.latestValue { color: var(--color-text); white-space: nowrap; } /* The value never changes colour. Numbers never break. */
+.unit { min-width: 0; overflow-wrap: break-word; }
+.strong { min-width: 0; color: var(--color-text); overflow-wrap: break-word; } /* Numbers and their units are joined by non-breaking spaces. */
+.meta { min-width: 0; overflow-wrap: break-word; } /* Colour text-muted from .t-caption. */
+.meta time { white-space: nowrap; }
+
+/* Chart: 64 high (Figma), full width. Figma draws it 320 wide in a 352 frame, so its today line sits 39px left of the
+   "Today" caption; code stretches it to the width of the component so the line and the caption share the right edge.
+   One-line chrome (a picture), not a text block, so a fixed height is allowed. */
+.chart {
+  position: relative;
+  height: var(--space-3xl); /* 64 */
+}
+
+/* Two gridlines, 1px line colour: the scale max at 8 from the top, the scale min at 48 (Figma). */
+.gridline { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid var(--color-line); }
+.gridTop { top: var(--space-xs); }
+.gridBottom { top: var(--space-2xl); }
+
+/* Today line: 2px text colour, 48 high from 4 (4 past each gridline), centred 8 in from the right (Figma: x 311–313 of 320).
+   Drawn as a border so it stays visible in forced colours. */
+.today {
+  position: absolute;
+  top: var(--space-2xs);
+  right: calc(var(--space-xs) - 1px); /* 7: centres the 2px line on the plot's right edge */
+  width: 0;
+  height: var(--space-2xl);
+  border-left: 2px solid var(--color-text);
+}
+
+/* Plot: from the first result (8 in from the left) to today (8 in from the right), between the two gridlines. */
+.plot {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  right: var(--space-xs);
+  height: calc(var(--space-2xl) - var(--space-xs)); /* 48 − 8 = 40: scale max at the top gridline, scale min at the bottom one */
+}
+
+/* One series: 2px data line (styleguide v2.3: data colour, never purple). The SVG stretches with the plot; the stroke stays 2px. */
+.line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.line polyline {
+  fill: none;
+  stroke: var(--color-data);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+/* Points: 6px squares in data colour, placed by date (Figma). Drawn as a border so they stay visible in forced colours. */
+.point {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 3px solid var(--color-data);
+  transform: translate(-50%, -50%);
+}
+
+/* "fixed scale lo–hi · first month" left, "Today" right, caption (Figma: Scale row). */
+.scaleRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: var(--space-xs);
+  min-width: 0;
+  margin: 0;
+}
+.todayLabel { margin-left: auto; white-space: nowrap; }
+
+.text { min-width: 0; margin: 0; overflow-wrap: break-word; }
+
+/* "No newer results on record": 16px info icon + caption, 4 apart, centred (Figma). Icon colour follows the text. */
+.noNewer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-width: 0;
+  margin: 0;
+}
+.noNewer > svg { flex: none; width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */

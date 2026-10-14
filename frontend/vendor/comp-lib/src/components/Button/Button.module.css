@@ -1,0 +1,56 @@
+/* Button. Figma: Buttons / Button (33:137). Styleguide: Components → Button, Shared state model. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: var(--control-h); /* min-height, not height: text spacing can grow (WCAG 1.4.12) */
+  padding: 0 var(--btn-pad);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+.sm { min-height: var(--control-sm); padding: 0 var(--btn-pad-sm); }
+.md { min-height: var(--control-h); padding: 0 var(--btn-pad); }
+.lg { min-height: var(--control-lg); padding: 0 var(--space-lg); }
+
+.primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+/* v2.3: the secondary label and icon carry the interaction colour (link). Icons follow currentColor. */
+.secondary { background: var(--color-surface); border-color: var(--color-line-strong); color: var(--color-link); }
+.danger { background: var(--color-surface); border-color: var(--color-line-strong); color: var(--color-critical-fg); }
+
+/* Hover and pressed look the same. */
+.primary:hover, .primary:active { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+.secondary:hover, .secondary:active { background: var(--color-interaction-tint); } /* v2.3 */
+.danger:hover, .danger:active { background: var(--color-interaction-tint); } /* v2.3 round 2; the label stays critical */
+
+/* Focus ring: 2px focus colour, 2px offset (styleguide). The outline follows the 6px radius. */
+.button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: same look for every variant. Never lower opacity.
+   Loading is also aria-disabled but keeps its variant colours (aria-busy). */
+.button[aria-disabled='true']:not([aria-busy='true']),
+.button[aria-disabled='true']:not([aria-busy='true']):hover,
+.button[aria-disabled='true']:not([aria-busy='true']):active {
+  background: var(--color-surface);
+  border-color: var(--color-line);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.button[aria-busy='true'] { cursor: progress; }
+
+.icon { display: inline-flex; flex: none; width: 16px; height: 16px; }
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* The one looping motion the styleguide allows. Static under reduced motion (base.css). */
+.spinner { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,60 @@
+/* Tabs. Figma: Navigation / Tab (38:36). Styleguide: Components → Tabs, Overview rule 9 (selection bar), Shared state model, Motion. */
+
+/* Tab list: tabs 24px apart. Wraps to a second row when there is not enough room.
+   Padding 0 24, the bottom hairline and the primary button belong to the Tab bar (App shell), not here. */
+.tabList {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-lg);
+}
+
+/* Tab: padding 16 0, control role, text-muted. Square: tabs are navigation (Radius → none). */
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border: 0;
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-text-muted);
+  text-align: start;
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease), background-color var(--duration-fast) var(--ease); /* Motion: tab or selection change; hover fill. */
+}
+
+/* Selected: text colour, weight 600, 2px bottom bar in text colour, no fill. */
+.tab[aria-selected='true'] { color: var(--color-text); font-weight: 600; }
+.tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-text);
+}
+
+/* Hover and pressed (v2.3, Figma Tab State = Hover): interaction-tint fill, the label stays text-muted. Figma draws the fill with
+   no side padding, so it hugs the text (padding 16 0). Not on the selected tab: its bar and weight already mark it. */
+.tab:hover:not([aria-selected='true']),
+.tab:active:not([aria-selected='true']) { background: var(--color-interaction-tint); }
+
+/* Focus ring: 2px focus colour, 2px offset. Square, like the tab.
+   Styleguide wins over Figma: Figma draws this ring with a 2px radius. */
+.tab:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Width of the 600 weight is reserved by a hidden copy of the label, so tabs do not shift when the selection moves. */
+.label { display: inline-grid; }
+.label::after {
+  content: attr(data-label);
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Panel: no own look. Its focus ring is the base one (2px, 2px offset). */
+.tabPanel:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }

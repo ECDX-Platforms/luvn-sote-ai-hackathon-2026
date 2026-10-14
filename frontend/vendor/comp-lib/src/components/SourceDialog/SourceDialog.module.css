@@ -1,0 +1,96 @@
+/* Source dialog. Figma: Overlays / Source dialog (220:492), built on Dialog md (51:207); Hidden item row (195:1631).
+   NEW (redesign v2.3). Styleguide: Source reference and dialog, Dialog and typed confirmation, Typography (caption, overline,
+   body, running text at most 75 characters), Status flag and tag (Tag), Shapes (hairline), Icons, Accessibility. */
+
+/* Dialog chrome (640 width, padding 24, title-md title, Close bottom right 24 below the content) comes from Dialog.
+   The record: subtitle, then the sections, 8 apart (Figma: Source frame). */
+.record {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Subtitle: "Source record · <client>" in caption, text-muted (from .t-caption), and the Draft tag 8 to the right. */
+.subtitle {
+  display: flex;
+  flex-wrap: wrap; /* a long client name pushes the tag onto the next line */
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+/* Styleguide over Figma: Figma's subtitle is one line (auto width). Code wraps; words stay whole. */
+.subtitleText { min-width: 0; overflow-wrap: break-word; }
+.draftTag { flex: none; }
+
+/* Section: 1px line rule above, 8 below it, overline heading, 4 gap, body. 8 padding below (Figma). */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding-bottom: var(--space-xs);
+}
+/* Divider (1px line). 4 margin + 4 gap = Figma's 8 between the rule and the heading. */
+.rule { margin-bottom: var(--space-2xs); }
+
+/* Overline heading (12/16 600, uppercase, text-muted from .t-overline). Styleguide over Figma: Figma's heading is one
+   line (auto width). Code wraps; words stay whole. */
+.heading { min-width: 0; overflow-wrap: break-word; }
+
+/* Body text as written in the record, text colour, at most 75 characters wide (.prose). Long words break inside the dialog. */
+.body {
+  min-width: 0;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+/* ===== Hidden item row (Figma: Content = With hidden) ===== */
+/* Always last in its section. The row carries its own 1px rule below, so the section has no padding under it. */
+.withHidden { padding-bottom: 0; }
+
+/* Lock icon + "Sensitive information hidden" on the left, "Ask to see" (secondary sm) on the right. Row min height 36
+   (44 comfortable) with 4 top and bottom padding; min-height, not height, so text spacing can grow (WCAG 1.4.12). */
+.hiddenRow {
+  display: flex;
+  flex-wrap: wrap; /* narrow screens: the button moves under the message */
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+  min-height: var(--row-h);
+  /* 12 + the section's 4 gap = Figma's 16 between the last body line and the row (8 section padding + 8 gap). */
+  margin-top: var(--space-sm);
+  padding: var(--space-2xs) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+/* Nothing visible in the section: the row follows the heading directly. */
+.heading + .hiddenRow { margin-top: 0; }
+/* Another section follows: its rule above is the line between them, so this row drops its own (one hairline, not two). */
+.section:not(:last-child) .hiddenRow { border-bottom: 0; }
+
+.hiddenMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 0;
+  color: var(--color-text-muted);
+}
+
+/* 16px lock icon, centred on the first body line (20 compact, 24 comfortable). Colour follows the text. */
+.hiddenIcon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.hiddenIcon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* Styleguide over Figma: Figma's text is one line (auto width). Code wraps; words stay whole. */
+.hiddenText { min-width: 0; overflow-wrap: break-word; }
+
+.askButton { flex: none; }
+
+/* States: the dialog and the row are not interactive. Close and Ask to see have the Button states (hover interaction-tint,
+   focus ring). Selected, disabled, error and loading do not apply. */

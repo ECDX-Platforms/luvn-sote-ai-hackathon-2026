@@ -1,0 +1,123 @@
+/* AI summary block. Figma: Data display / AI summary block (180:1229; states 180:1107, 180:1163, 180:1211, 180:1219,
+   234:2326, 234:2409, 234:2477). NEW as a component.
+   Styleguide: Overview rule 13, Suggestion (system output), Empty, loading and error states (Loading), Typography
+   (title-sm, body, caption, max 75ch), Content, Accessibility (4.1.3 status messages). */
+/* No fill, no border, no radius: it sits in a page or a Block like any other content (styleguide Blocks rule 2). */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md); /* Figma: 16 between head, question, sentences and footer */
+  min-width: 0;
+  color: var(--color-text);
+}
+
+/* Head: Suggestion tag and method line, 8 apart, centred. Wraps when there is no room. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.method { min-width: 0; margin: 0; overflow-wrap: break-word; } /* Colour text-muted from .t-caption. */
+
+/* The question: title-sm, text colour. Wraps (Figma: fills the width). */
+.question { min-width: 0; max-width: 75ch; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+
+/* Sentences: a numbered list, 8 apart. */
+.sentences {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Number, then the sentence and its source, 8 apart (Figma: gap 4 8).
+   Code decision: the number is its own column, so a wrapped sentence or source lines up with the sentence text
+   (hanging indent). Figma's row wraps the source to under the number because its text is one line (known Figma gap). */
+.sentence {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-xs);
+  align-items: baseline;
+  min-width: 0;
+}
+.number { color: var(--color-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* The sentence, then its source; the source moves under the sentence when there is no room. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+}
+/* Sentences wrap (Figma's one-line text is a known Figma gap); at most 75 characters wide (styleguide Typography). */
+.text { min-width: 0; max-width: 75ch; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+.source { display: inline-flex; min-width: 0; max-width: 100%; }
+
+.withheld { min-width: 0; max-width: 75ch; margin: 0; overflow-wrap: break-word; } /* Withheld: body, text-muted. */
+
+/* Footer: the "Based on" line, then the actions row, 8 apart. */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.basedOn { min-width: 0; margin: 0; overflow-wrap: break-word; } /* caption, text-muted */
+
+/* Actions row: Keep and Not useful (equal weight, secondary sm) + caption; or the status line + Undo;
+   or the reason question + reasons. 8 apart, centred, wraps on narrow screens. */
+.actions {
+  position: relative; /* anchors the empty status line below */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+  max-width: 100%;
+}
+.caption { min-width: 0; margin: 0; overflow-wrap: break-word; } /* "Keep adds it …": caption, text-muted */
+
+/* Status line (Kept, Hidden for this visit): check icon 16 + text in body, 4 apart. */
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  margin: 0;
+  color: var(--color-text);
+}
+/* Empty live region: out of the row's flow (no gap before Keep), still in the accessibility tree. */
+.status:empty { position: absolute; }
+.statusIcon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2); /* centred on the first text line */
+}
+.statusIcon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+.statusText { min-width: 0; overflow-wrap: break-word; }
+
+/* Not useful: the question on its own line (body + caption, 4 apart, on one baseline), the reasons under it. */
+.ask {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  align-items: baseline;
+  gap: 0 var(--space-2xs);
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+/* Four reasons in one row, 8 apart. Code over Figma: Figma's row is a fixed 474 wide; here it wraps when narrow. */
+.reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  min-width: 0;
+  max-width: 100%;
+}

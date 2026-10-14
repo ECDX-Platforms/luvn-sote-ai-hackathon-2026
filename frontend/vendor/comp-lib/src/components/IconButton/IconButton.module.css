@@ -1,0 +1,37 @@
+/* Icon button. Figma: Buttons / Icon button (33:174). Styleguide: Components → Button (Ghost), Shared state model. */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+/* Always square, also inside a stretching grid or flex row. */
+.sm { width: var(--control-sm); height: var(--control-sm); }
+.md { width: var(--control-h); height: var(--control-h); }
+.lg { width: var(--control-lg); height: var(--control-lg); }
+
+/* Hover and pressed look the same. */
+.iconButton:hover, .iconButton:active { background: var(--color-interaction-tint); } /* v2.3 */
+
+/* Focus ring: 2px focus colour, 2px offset. The outline follows the 6px radius. */
+.iconButton:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: muted icon, no hover fill. Never lower opacity. */
+.iconButton[aria-disabled='true'],
+.iconButton[aria-disabled='true']:hover,
+.iconButton[aria-disabled='true']:active {
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.icon { display: inline-flex; width: 16px; height: 16px; }
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */

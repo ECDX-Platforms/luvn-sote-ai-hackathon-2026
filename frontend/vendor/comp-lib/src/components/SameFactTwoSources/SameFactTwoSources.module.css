@@ -1,0 +1,176 @@
+/* Same fact, two sources. Figma: Data display / Same fact, two sources (178:1046). NEW: composed from Source reference
+   and the styleguide's rules (v2.3 has no rules for this component yet). Styleguide: Components → Shared state model,
+   Data table (clickable rows: one button, › in link, interaction-tint), Source reference and dialog; Typography → Roles
+   (body-strong, body, caption); Shapes → Shape inventory (hairline), Icons; Layout → Breakpoints (< 640px one column);
+   Accessibility (1.4.12, 2.5.8); Motion. */
+
+/* ===== Item (all kinds) ===== */
+/* A 1px line rule on top (Figma: top stroke). Drawn inside (inset shadow), as Figma's stroke adds no height, so a
+   closed Agrees row is exactly 44. position + z-index (below) only lift a focused item above its neighbours. */
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0; /* inside a flex or grid parent, long text must not widen the parent */
+  color: var(--color-text);
+  box-shadow: inset 0 1px 0 var(--color-line);
+}
+.item:focus-within { z-index: 1; } /* the next item's hover fill never covers the focus ring */
+
+/* Text that can be long: wraps, words stay whole (styleguide over Figma: Figma's texts are auto-width, one line).
+   max-width 100%: in a column a long word then breaks inside the box instead of sticking out. */
+.wrap {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* ===== Kind = Agrees ===== */
+.agrees { align-items: stretch; }
+
+/* The whole row is one button (Figma: Row, min height 44, padding 8 0, gap 8, topic left, meta right, wrapping).
+   min-height 44 in both densities, as in Figma; min-height, not height (WCAG 1.4.12). */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-lg);
+  margin: 0;
+  padding: var(--space-xs) 0;
+  border: 0;
+  border-radius: var(--radius-none); /* square: rows are structure, so the focus ring stays square too */
+  background: transparent;
+  box-shadow: inset 0 1px 0 var(--color-line); /* the item's top rule, drawn again over the row's hover fill */
+  color: var(--color-text);
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+/* Hover and pressed look the same: interaction-tint behind the row (shared state model v2.3; Figma State = Hover).
+   When the row is open, only the row is filled, not the two sources under it. */
+.row:hover,
+.row:active { background-color: var(--color-interaction-tint); }
+
+/* Focus ring: 2px focus colour, 2px offset, square (styleguide). */
+.row:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Topic (body-strong) and the optional count (caption), 8 apart, on one baseline (Figma). */
+.topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Alert icon, meta (caption) and arrow, 4 apart (Figma). When the row is narrow, this group moves under the topic and
+   stays at the right edge (margin auto). The icons sit on the first caption line when the meta wraps. */
+.meta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  margin-inline-start: auto;
+}
+
+.alertIcon,
+.arrow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: var(--lh-small); /* one caption line: 16 compact, 20 comfortable */
+}
+.alertIcon { color: var(--color-text-muted); } /* Figma: alert-circle in text-muted, the colour of the meta it sits with */
+.arrow { color: var(--color-link); } /* v2.3: the arrow of anything clickable is in link colour; › closed, ⌄ open (icon swap) */
+.alertIcon > svg,
+.arrow > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 at 16px = Figma's 1px line */
+
+/* Open (Figma State = Open): the two sources straight under the row, 12 below them. */
+.openSources { padding-bottom: var(--space-sm); }
+
+/* ===== Two sources (Agrees open, Described differently) ===== */
+/* Two equal columns, newest on the left. Divider: 1px line on the left edge of the second column (Figma). */
+.sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sources[hidden] { display: none; } /* display: grid would override the hidden attribute */
+
+/* Each column: Source reference, then the text word for word, then the optional classification caption, 8 apart. */
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.newer { padding-inline-end: var(--space-md); }
+.older { padding-inline-start: var(--space-md); border-inline-start: 1px solid var(--color-line); }
+
+/* The text as written: body, wraps, words stay whole; at most 75 characters wide (styleguide text measure). */
+.text {
+  min-width: 0;
+  max-width: min(75ch, 100%);
+  overflow-wrap: break-word;
+}
+.note { min-width: 0; max-width: 100%; overflow-wrap: break-word; }
+
+/* Below 640px the columns stack, newest on top. The divider becomes a 1px line above the second source, with 12 on
+   each side of it. Code choice: Figma has no phone frame for this set. */
+@media (max-width: 639px) {
+  .sources { grid-template-columns: minmax(0, 1fr); }
+  .newer { padding-inline-end: 0; padding-bottom: var(--space-sm); }
+  .older { padding-inline-start: 0; padding-top: var(--space-sm); border-inline-start: 0; border-top: 1px solid var(--color-line); }
+}
+
+/* ===== Kind = Only in one source ===== */
+/* Value line, what the other source has, the quote, its Source reference: 4 apart, padding 8 top, 12 bottom (Figma). */
+.onlyInOne {
+  gap: var(--space-2xs);
+  padding: var(--space-xs) 0 var(--space-sm);
+}
+
+/* Value (body-strong) and "· value only in …" (caption), 4 apart, on one baseline (Figma). */
+.valueHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-2xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ===== Kind = Described differently ===== */
+/* Head (subject, then the fixed caption), then the two sources: 8 apart, padding 8 top, 12 bottom (Figma). */
+.differently {
+  align-items: stretch;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0 var(--space-sm);
+}
+.subjectHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* Forced colours drop box shadows: keep the top rule as a real border there. */
+@media (forced-colors: active) {
+  .item { box-shadow: none; border-top: 1px solid CanvasText; }
+  .row { box-shadow: none; }
+}
+
+/* States. Agrees: the row is a button: Default, Hover (interaction-tint), Pressed (= hover), Focus-visible, and Open
+   (aria-expanded). Only in one source and Described differently are not interactive except their Source references
+   (states from Source reference). Selected, Disabled, Error and Loading do not apply to any kind. */

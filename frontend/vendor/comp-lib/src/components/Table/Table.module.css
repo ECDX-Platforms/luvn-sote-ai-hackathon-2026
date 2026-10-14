@@ -1,0 +1,221 @@
+/* Table. Figma: Data display / Table header cell (50:201), Table header (50:202), Table row (50:262),
+   Table empty row (50:263). Styleguide: Components → Data table,
+   Overview rule 9, Shared state model, Icons, Accessibility (1.3.1, 1.4.10), Implementation → Table. */
+
+/* ===== Container ===== */
+/* While the table fits, the box is plain: no overflow clipping, no padding, so focus rings at the edges are never cut
+   and the box is never wider than its parent. */
+.scroll { min-width: 0; max-width: 100%; }
+
+/* Too wide for its container (Table.tsx measures it): the table scrolls here and the page never scrolls sideways
+   (styleguide Data table; WCAG 1.4.10). The box keeps 4px of room inside its clip edge on every side, so 2px + 2px
+   focus rings are not cut:
+   - top and bottom: 4px padding cancelled by a -4px margin, so the rows do not move;
+   - sides: 4px padding inside a 1px edge line. No negative side margin, so the box never outgrows its parent; the
+     table sits 5px in from the box edges while it scrolls.
+   The sides that have more to scroll to show the edge line in line-strong (static, no fade, no shadow). */
+.scrollable {
+  overflow-x: auto;
+  margin-block: calc(-1 * var(--space-2xs));
+  padding: var(--space-2xs);
+  border-inline: 1px solid transparent;
+}
+.scrollable[data-more-before] { border-inline-start-color: var(--color-line-strong); }
+.scrollable[data-more-after] { border-inline-end-color: var(--color-line-strong); }
+
+/* Columns fill the container. Styleguide over Figma: Figma's header is a fixed 984px row with fixed column widths. */
+.table {
+  width: 100%;
+  /* Separate borders with no spacing: each hairline is a whole 1px inside its own cell. Collapsed borders split it
+     and make rows 36.5–37 high (runbook, Known traps). */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ===== Header cell ===== */
+/* Overline type (12/16 600, +0.06em, uppercase, text-muted) comes from .t-overline; comfortable density makes it 14/20. */
+.th {
+  padding: 0 var(--space-md) var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+  vertical-align: bottom;
+  /* Header labels stay on one line (styleguide starter CSS; overline is at most four words). A long label widens its
+     column and the table scrolls in its container. */
+  white-space: nowrap;
+}
+
+/* Styleguide over Figma: the last column has no right padding (starter CSS), so the table ends flush with its
+   container. Figma keeps 16px on every cell. */
+.th:last-child { padding-right: 0; }
+
+.right { text-align: right; }
+
+/* Label and chevron, 4px apart. Top, not baseline: an inline-flex box would otherwise add a descender gap below it. */
+.thContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  vertical-align: top;
+}
+
+/* 12px chevron, centred on the 16px line. stroke 2 at 12px = Figma's 1px line. Colour follows the text. */
+.chevron { display: inline-flex; flex: none; width: 12px; height: 12px; }
+.chevron > svg { width: 12px; height: 12px; stroke-width: 2; }
+
+/* ===== Sortable header ===== */
+/* The button fills the whole cell, so the cell padding moves into the button: the whole cell is the target. */
+.sortable,
+.sortable:last-child { padding: 0; }
+
+.sortButton {
+  display: flex;
+  align-items: flex-end; /* label stays 8px above the hairline, like the plain header cells, when the button grows */
+  width: 100%;
+  margin: 0;
+  padding: 0 var(--space-md) var(--space-xs) 0;
+  border: 0;
+  border-radius: var(--radius-none); /* Square: tables are structure. The focus ring stays square too. */
+  background: transparent;
+  /* Buttons do not inherit these from the browser's own styles. */
+  letter-spacing: inherit;
+  text-transform: inherit;
+  white-space: inherit;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+.sortable:last-child .sortButton { padding-right: 0; }
+.right .sortButton { justify-content: flex-end; }
+
+/* Comfortable density and phones: every target is 44 high (styleguide Accessibility 2.5.8, Density). Compact keeps
+   Figma's 24 (16 line + 8), which meets the 24px desktop minimum. */
+[data-density='comfortable'] .sortButton { min-height: var(--control-lg); }
+@media (max-width: 639px) {
+  .sortButton { min-height: var(--control-lg); }
+}
+
+/* Hover and pressed look the same: interaction-tint behind the whole cell (shared state model; v2.3: hover on anything clickable). */
+.sortButton:hover,
+.sortButton:active { background: var(--color-interaction-tint); }
+
+/* Focus ring: 2px focus colour, 2px offset (styleguide). */
+.sortButton:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* The scroll area is a Tab stop only while it scrolls (see Table.tsx). Same ring. */
+.scroll:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* ===== Body cell ===== */
+/* Body text 14/20 (17/24 comfortable) from .t-body or .t-body-strong. */
+.td {
+  height: var(--row-h); /* 36 compact, 44 comfortable; a table cell's height is a minimum, long text grows the row */
+  padding: var(--space-xs) var(--space-md) var(--space-xs) 0;
+  vertical-align: top;
+  /* The hairline is drawn inside the cell, as in Figma (a 1px rule inside the 36px row). A real border would add 1px. */
+  box-shadow: inset 0 -1px 0 var(--color-line);
+  overflow-wrap: break-word; /* long text wraps, words stay whole */
+}
+/* Styleguide over Figma: no right padding on the last column (starter CSS); Figma keeps 16. */
+.td:last-child { padding-right: 0; }
+/* Last row: no hairline. */
+.row:last-child > .td { box-shadow: none; }
+
+/* Numbers: right-aligned (.right), tabular figures, never broken inside their digits. */
+.numeric { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ===== Selected row ===== */
+/* 2px selection bar in text colour on the left edge (Overview rule 9), first cell padding 8 (Figma and starter CSS).
+   The bar is drawn first, so it sits over the hairline. */
+.row[aria-current='true'] > .td:first-child {
+  padding-left: var(--space-xs);
+  box-shadow: inset 2px 0 0 var(--color-text), inset 0 -1px 0 var(--color-line);
+}
+.row[aria-current='true']:last-child > .td:first-child { box-shadow: inset 2px 0 0 var(--color-text); }
+
+/* Forced colours (Windows High Contrast) drop box-shadow, which would hide the hairlines and the selection bar.
+   Draw them as real borders there. The selected cell gives up 2px of padding, so its text does not move. */
+@media (forced-colors: active) {
+  .td { border-bottom: 1px solid CanvasText; }
+  .row:last-child > .td { border-bottom: 0; }
+  .row[aria-current='true'] > .td:first-child {
+    padding-left: calc(var(--space-xs) - 2px);
+    border-left: 2px solid CanvasText;
+  }
+}
+
+/* ===== Clickable row ===== */
+/* A row with a TableRowAction is one target: the action's ::after stretches over the row. Every row is positioned, so
+   the ::after never stretches over some other positioned ancestor and swallows clicks there. Selected rows draw their
+   bar with box-shadow, so this changes nothing else. */
+.row { position: relative; }
+
+/* Hover and pressed look the same: interaction-tint behind the whole row (v2.3; shared state model). :has() finds clickable
+   rows (runbook: check in Firefox and Safari at the event). Without :has() the row keeps the pointer and the ring,
+   only the hover fill is missing. */
+.row:has(.rowAction) { transition: background-color var(--duration-fast) var(--ease); }
+.row:has(.rowAction):hover,
+.row:has(.rowAction:active) { background: var(--color-interaction-tint); }
+
+/* Show arrow (Figma 235:2397/235:2401): a 16px › in link colour at the row end, only in a clickable row. The cell is
+   absolute, so it leaves the table layout: no extra column. The last real cell keeps 16 of its own right padding and
+   gains 16 more, which is the room the arrow takes. First text line is 8 + (line - 16) / 2 from the top. */
+.arrowCell { display: none; }
+.row.hasArrow:has(.rowAction) > .arrowCell {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: var(--space-md);
+  padding: calc(var(--space-xs) + (var(--lh-body) - 16px) / 2) 0 0;
+  color: var(--color-link);
+  line-height: 0;
+  pointer-events: none; /* clicks reach the stretched row action */
+}
+.arrowCell > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 at 16px = Figma's 1px line */
+.row.hasArrow:has(.rowAction) > .td:nth-last-child(2) { padding-right: calc(var(--space-md) + var(--space-md)); }
+.row.hasArrow:not(:has(.rowAction)) > .td:nth-last-child(2) { padding-right: 0; } /* not clickable: no arrow, so the last cell is as without the prop */
+
+/* Figma over styleguide: row actions are not underlined (Figma). The styleguide underlines links in text; a whole-row
+   target is marked by hover and the pointer instead. Open decision for Theo. The action keeps the cell's text style. */
+.rowAction {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  overflow-wrap: inherit;
+}
+/* The stretched target. It inherits the action's pointer cursor, so the whole row shows the pointer. */
+.rowAction::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.rowButton {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+/* Focus ring around the whole row: 2px focus colour, 2px offset (styleguide), square. It is drawn on the stretched
+   ::after, which covers the row, so it needs no :has() and no outline on the tr. The action's own ring is hidden
+   because the row ring replaces it. z-index lifts the ring above the next row, so that row's hover fill cannot cover it. */
+.rowAction:focus-visible { outline: none; }
+.rowAction:focus-visible::after {
+  z-index: 1;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ===== Empty row ===== */
+/* One cell across all columns: padding 8 0 (Figma), at least one row high. As the only row it has no hairline. */
+.emptyCell,
+.emptyCell:last-child { padding: var(--space-xs) 0; }
+
+/* Message and link 8px apart (Figma gap). They wrap onto two lines when the table is narrow. */
+.emptyContent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-xs);
+}
+.emptyMessage { min-width: 0; color: var(--color-text-muted); }

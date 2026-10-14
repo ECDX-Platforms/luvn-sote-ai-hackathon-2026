@@ -1,0 +1,135 @@
+{
+  "space-2xs": {
+    "$type": "dimension",
+    "$value": {
+      "value": 4,
+      "unit": "px"
+    }
+  },
+  "space-xs": {
+    "$type": "dimension",
+    "$value": {
+      "value": 8,
+      "unit": "px"
+    }
+  },
+  "space-sm": {
+    "$type": "dimension",
+    "$value": {
+      "value": 12,
+      "unit": "px"
+    }
+  },
+  "space-md": {
+    "$type": "dimension",
+    "$value": {
+      "value": 16,
+      "unit": "px"
+    }
+  },
+  "space-lg": {
+    "$type": "dimension",
+    "$value": {
+      "value": 24,
+      "unit": "px"
+    }
+  },
+  "space-xl": {
+    "$type": "dimension",
+    "$value": {
+      "value": 32,
+      "unit": "px"
+    }
+  },
+  "space-2xl": {
+    "$type": "dimension",
+    "$value": {
+      "value": 48,
+      "unit": "px"
+    }
+  },
+  "space-3xl": {
+    "$type": "dimension",
+    "$value": {
+      "value": 64,
+      "unit": "px"
+    }
+  },
+  "radius-none": {
+    "$type": "dimension",
+    "$value": {
+      "value": 0,
+      "unit": "px"
+    }
+  },
+  "radius-sm": {
+    "$type": "dimension",
+    "$value": {
+      "value": 4,
+      "unit": "px"
+    }
+  },
+  "radius-md": {
+    "$type": "dimension",
+    "$value": {
+      "value": 6,
+      "unit": "px"
+    }
+  },
+  "radius-full": {
+    "$type": "dimension",
+    "$value": {
+      "value": 9999,
+      "unit": "px"
+    }
+  },
+  "control-sm": {
+    "$type": "dimension",
+    "$value": {
+      "value": 28,
+      "unit": "px"
+    }
+  },
+  "control-h": {
+    "$type": "dimension",
+    "$value": {
+      "value": 36,
+      "unit": "px"
+    }
+  },
+  "control-lg": {
+    "$type": "dimension",
+    "$value": {
+      "value": 44,
+      "unit": "px"
+    }
+  },
+  "row-h": {
+    "$type": "dimension",
+    "$value": {
+      "value": 36,
+      "unit": "px"
+    }
+  },
+  "sidebar-w": {
+    "$type": "dimension",
+    "$value": {
+      "value": 216,
+      "unit": "px"
+    }
+  },
+  "logo-row": {
+    "$type": "dimension",
+    "$value": {
+      "value": 56,
+      "unit": "px"
+    }
+  },
+  "identity-h": {
+    "$type": "dimension",
+    "$value": {
+      "value": 44,
+      "unit": "px"
+    }
+  }
+}

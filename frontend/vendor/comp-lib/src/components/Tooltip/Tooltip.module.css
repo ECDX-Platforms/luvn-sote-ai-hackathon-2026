@@ -1,0 +1,32 @@
+/* Tooltip. Figma: Overlays / Tooltip (51:131). Styleguide: Elevation & Depth (overlays), Shapes (radius none), Typography (caption), Motion, Accessibility (1.4.13, 2.4.11).
+   NEW: the styleguide does not detail a tooltip; composed from its overlay rules (Figma description says the same). */
+.tooltip {
+  /* Space between trigger and tooltip. 8, not 4: the 2px focus ring sits 2px out, and the tooltip must not cover it (WCAG 2.4.11). */
+  --tooltip-gap: var(--space-xs);
+  position: fixed; /* placed from the trigger in JS, so scroll areas (wide tables) cannot clip it */
+  top: 0;
+  left: 0;
+  z-index: 10; /* NEW: no z-index tokens. Above the styleguide's fixed app chrome (identity strip 3, phone nav 4). */
+  display: block;
+  box-sizing: border-box;
+  /* Max width 240 (Figma). In rem, so it grows with the user's font size; never wider than the screen minus the gaps. */
+  max-width: min(15rem, calc(100vw - 2 * var(--tooltip-gap)));
+  width: max-content;
+  padding: var(--space-2xs) var(--space-xs);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-overlay);
+  /* Styleguide over Figma: Figma's text is auto-width, so its 240 max width never made it wrap. Code wraps, words stay whole. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: start;
+  pointer-events: auto; /* hoverable: the pointer can rest on the tooltip (WCAG 1.4.13) */
+}
+
+/* Caption size in text colour, not muted: the tooltip is the only visible label (Figma description).
+   The attribute raises specificity over the global .t-caption colour, whatever the stylesheet order. */
+.tooltip[role='tooltip'] { color: var(--color-text); }
+
+/* display: block above would otherwise override the hidden attribute. */
+.tooltip[hidden] { display: none; }

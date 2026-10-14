@@ -1,0 +1,66 @@
+/* Toggle. NEW: not in the styleguide. Figma: Form controls / Toggle (47:171).
+   Composed from: Checkbox and task item (label, target), Shapes (radius md on bordered controls, sm on small parts; no pills), Shared state model. */
+.toggle {
+  /* Target height: 24 compact (WCAG 2.5.8, Figma min height 24), 44 in comfortable density (styleguide). */
+  --target: var(--space-lg);
+  display: inline-flex;
+  max-width: 100%; /* never wider than its container, so one long word wraps */
+  align-items: flex-start;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: calc((var(--target) - var(--lh-body)) / 2) 0; /* centres one line of text in the target */
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+}
+/* Same density switch in Checkbox and Radio: change all three together (no token goes 24 → 44). */
+:global([data-density='comfortable']) .toggle { --target: var(--control-lg); }
+@media (max-width: 639px) { .toggle { --target: var(--control-lg); } }
+
+/* The track sits centred on the first text line. */
+.slot { display: flex; flex: none; align-items: center; height: var(--lh-body); }
+
+/* Track 36 × 20, radius 6, padding 4 (Figma). The padding gives back the 1px border so the thumb sits 4px
+   from the outer edge, as in Figma (Figma strokes take no space). */
+.track {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* Fixed 36 × 20 in every density, like the 16px checkbox box (one-line chrome). Built from spacing tokens
+     because no size token is 36 or 20 in both densities. */
+  width: calc(var(--space-lg) + var(--space-sm));
+  height: calc(var(--space-md) + var(--space-2xs));
+  padding: 0 calc(var(--space-2xs) - 1px);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+/* Thumb 12, radius 4. It snaps from side to side: the styleguide allows no movement on controls. */
+.thumb {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-text-muted);
+  transition: background-color var(--duration-fast) var(--ease);
+}
+
+/* On: primary fill and border, on-primary thumb at the right. */
+.toggle[aria-checked='true'] .track { justify-content: flex-end; border-color: var(--color-primary); background: var(--color-primary); }
+.toggle[aria-checked='true'] .thumb { background: var(--color-on-primary); }
+
+.label { min-width: 0; overflow-wrap: break-word; }
+
+/* Hover: not used. Figma has no hover state and the styleguide defines none for this kind of control. */
+
+/* Focus ring on the track only (as in Figma): 2px focus colour, 2px offset, follows the 6px radius.
+   Styleguide over Figma: Figma draws the ring 3px out. */
+.toggle:focus-visible { outline: none; }
+.toggle:focus-visible .track { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Disabled: surface, line border, line thumb, muted label. Never lower opacity. */
+.toggle[aria-disabled='true'] { color: var(--color-text-muted); cursor: not-allowed; }
+.toggle[aria-disabled='true'] .track { border-color: var(--color-line); background: var(--color-surface); }
+.toggle[aria-disabled='true'] .thumb { background: var(--color-line); }

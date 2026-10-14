@@ -1,0 +1,60 @@
+/* Nav item. Figma: Navigation / Nav item (38:28). Styleguide: Side navigation, Overview rule 9 (selection bar), Shared state model, Radius (none). */
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-none); /* Square: navigation is structure. */
+  background: transparent;
+  color: var(--color-text-muted);
+  text-decoration: none; /* A nav item is marked by its place in the nav landmark, not an underline. */
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+/* Sidebar: height 36, padding 0 12, gap 8, control role. Fills the nav column (Figma: 192 = 216 sidebar - 2 x 12 nav padding). */
+.sidebar {
+  width: 100%; /* Fills the nav column, also inside a flex row. */
+  gap: var(--space-xs);
+  min-height: var(--control-h); /* min-height, not height: long labels wrap (WCAG 1.4.12). 44 in comfortable density. */
+  padding: 0 var(--space-sm);
+}
+
+/* Bottom bar (phones): icon above label, padding 4, gap 4, at least 56 high, shares the bar width equally.
+   Styleguide wins over Figma: the styleguide sets the tag role here (14/20 on phones); Figma uses control 14/20, so they match on phones
+   and differ only when a bottom bar is shown at desktop density. */
+.bottomBar {
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-width: 0;
+  min-height: calc(var(--control-lg) + var(--space-sm)); /* NEW: Figma's 56px; no token, composed as 44 + 12. */
+  padding: var(--space-2xs);
+  text-align: center;
+}
+
+/* Hover and pressed look the same: interaction-tint fill (v2.3). The label stays text-muted (Figma). */
+.navItem:hover, .navItem:active { background: var(--color-interaction-tint); }
+
+/* Selected: text colour, weight 600, 2px selection bar in text colour, no fill. Findable in greyscale (bar + weight). */
+.navItem[aria-current='page'] { color: var(--color-text); font-weight: 600; }
+.navItem[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  background: var(--color-text);
+}
+.sidebar[aria-current='page']::before { top: 0; bottom: 0; left: 0; width: 2px; }
+.bottomBar[aria-current='page']::before { top: 0; left: 0; right: 0; height: 2px; }
+
+/* Focus ring: 2px focus colour, 2px offset. Square, like the item.
+   Styleguide wins over Figma: Figma draws this ring with a 4px radius. */
+.navItem:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.icon { display: inline-flex; flex: none; width: 16px; height: 16px; }
+.icon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px. Colour follows the label. */
+
+/* Words stay whole where they fit. A word longer than its slot (bottom bar on a small phone) is hyphenated
+   where the language allows it, and only then broken. Keep bottom-bar labels short (see docs). */
+.label { min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+
+/* Disabled, Error and Loading do not apply: a page the user cannot open is left out of the navigation. */

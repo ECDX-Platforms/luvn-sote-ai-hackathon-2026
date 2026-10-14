@@ -1,0 +1,94 @@
+{
+  "_meta": "ILLUSTRATIVE -- synthetic demo policy, pending clinical/legal sign-off. Not law, not LUVN guidance.",
+  "_basis_note": "`output.basis = \"illustrative_threshold\"` marks a rule whose reason is a numeric cut-off applied to a measured value. These cut-offs are inherited and are NOT calibrated on real Finnish data (docs/architecture-as-built.md, 'Standing limitations'), so the qualification has to travel with the output to the sentence the professional reads instead of living only in this _meta string. A rule that restates a source fact (a conflict, an acute flag) or reports absence carries no `basis` key: marking those too would spread the caveat past the claim it is about. `basis` is presentation data, not a decision input -- no rule in any table keys on it, and nothing derived from it changes a cut-off value.",
+  "table": "risk",
+  "rules": [
+    {
+      "rule_id": "risk-arvioimaton",
+      "priority": 201,
+      "when": [{ "field": "visible_record_count", "op": "<=", "value": 0 }],
+      "output": { "risk_level": "arvioimaton", "reason": "Roolille ei kerry arvioitavaa aineistoa; arviointia ei voi tehdä" }
+    },
+    {
+      "rule_id": "risk-ei-ajantasaista",
+      "priority": 200,
+      "when": [{ "field": "current_record_count", "op": "<=", "value": 0 }],
+      "output": { "risk_level": "arvioimaton", "reason": "Näkyvät kirjaukset eivät ole ajantasaisia; arviointia ei voi tehdä" }
+    },
+    {
+      "rule_id": "risk-laakitysristiriita",
+      "priority": 100,
+      "when": [{ "field": "conflicts", "op": "non_empty" }],
+      "output": { "risk_level": "ristiriita", "reason": "Lähteiden ristiriita lääkityksessä — tarkista, kumpi lähde on ajantasainen" }
+    },
+    {
+      "rule_id": "risk-phq9-vaikea",
+      "priority": 95,
+      "when": [{ "field": "phq9_total", "op": ">=", "value": 15 }],
+      "output": { "risk_level": "korkea", "reason": "PHQ-9-kokonaispistemäärä 15 tai yli (havainnollistava raja)", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-iadl-merkittava",
+      "priority": 95,
+      "when": [{ "field": "iadl_total", "op": "<=", "value": 2 }],
+      "output": { "risk_level": "korkea", "reason": "IADL-kokonaispistemäärä 2 tai alle (havainnollistava raja)", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-akuutti-vitaalit",
+      "priority": 90,
+      "when": [{ "field": "max_temp_c", "op": ">=", "value": 39 }],
+      "output": { "risk_level": "korkea", "reason": "Korkea kuume", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-happikyllasteisyys",
+      "priority": 88,
+      "when": [{ "field": "min_spo2", "op": "<", "value": 94 }],
+      "output": { "risk_level": "korkea", "reason": "Alentunut happikyllästeisyys", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-hoitamattomuus",
+      "priority": 80,
+      "when": [{ "field": "missed_doses_total", "op": ">=", "value": 7 }],
+      "output": { "risk_level": "korkea", "reason": "Merkittävä hoitamattomuus", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-verenpaine-korkea",
+      "priority": 79,
+      "when": [
+        { "field": "systolic_max", "op": ">=", "value": 140 },
+        { "field": "diastolic_max", "op": ">=", "value": 90 }
+      ],
+      "output": { "risk_level": "korkea", "reason": "Verenpaine 140/90 tai yli (havainnollistava raja)", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-phq9-keskivaikea",
+      "priority": 72,
+      "when": [{ "field": "phq9_total", "op": ">=", "value": 10 }],
+      "output": { "risk_level": "kohtalainen", "reason": "PHQ-9-kokonaispistemäärä 10 tai yli (havainnollistava raja)", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-iadl-kohtalainen",
+      "priority": 72,
+      "when": [{ "field": "iadl_total", "op": "<=", "value": 4 }],
+      "output": { "risk_level": "kohtalainen", "reason": "IADL-kokonaispistemäärä 4 tai alle (havainnollistava raja)", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-akuutti",
+      "priority": 70,
+      "when": [{ "field": "flags.acute", "op": "is_true" }],
+      "output": { "risk_level": "kohtalainen", "reason": "Akuutti tilanne" }
+    },
+    {
+      "rule_id": "risk-puuttuneet-annokset",
+      "priority": 60,
+      "when": [{ "field": "missed_doses_total", "op": ">=", "value": 3 }],
+      "output": { "risk_level": "kohtalainen", "reason": "Puuttuvat lääkeannokset", "basis": "illustrative_threshold" }
+    },
+    {
+      "rule_id": "risk-yleinen-matala",
+      "priority": 0,
+      "when": [],
+      "output": { "risk_level": "matala", "reason": "Ei kohonneen riskin tunnusmerkkejä" }
+    }
+  ]
+}

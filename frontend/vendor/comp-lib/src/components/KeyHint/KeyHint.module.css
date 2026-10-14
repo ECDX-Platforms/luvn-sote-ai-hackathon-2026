@@ -1,0 +1,11 @@
+/* Key hint. Figma: Form controls / Key hint (34:2). Styleguide: Components → Header (search: ⌘K hint), Shapes → Radius. */
+.keyHint {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  padding: 0 var(--space-2xs);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  font-family: inherit; /* <kbd> defaults to a mono font; the styleguide has one family only */
+  white-space: nowrap; /* one key combination never breaks */
+}

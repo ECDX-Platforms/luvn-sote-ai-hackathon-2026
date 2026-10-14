@@ -1,0 +1,162 @@
+/* Today briefing. Figma: Data display / Today briefing (245:4789; Role=Doctor 245:4525, Home-care worker 245:4621,
+   Social worker 245:4703). NEW (styleguide v2.3).
+   Styleguide: Components → Today briefing, Block (section), Colors → Emphasis states (inverse), Typography → Roles
+   (caption, title-lg, title-sm, body, body-strong) and Density, Layout → Spacing, Block padding, Breakpoints (< 640px),
+   Shapes → Hairline, Icons, Content. */
+
+/* Fills its container (Figma: 1096 wide). No fill, no radius, no shadow on the block itself. */
+.briefing {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--color-text);
+  /* Styleguide over Figma: a block ends with a 1px line rule, so the next block (the AI summary) touches it with only
+     the hairline between (Block (section)). Figma's frame has no rule at the bottom. */
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* ===== Band: the inverse emphasis state ===== */
+/* What is today (2 parts) and the values (1 part), 24 apart, padding 24. Holds summary values only: no actions, tags or
+   flags (Emphasis states). */
+.band {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--color-inverse);
+  color: var(--color-on-inverse);
+}
+.today {
+  display: flex;
+  flex: 2 1 0;
+  flex-direction: column;
+  gap: var(--space-xs); /* Figma: 8 */
+  min-width: 0;
+}
+/* .band prefix: beats the text-muted colour that .t-caption sets. Secondary text on inverse = on-inverse-muted (7.79 / 6.03). */
+.band .caption,
+.band .detail,
+.band .valueLabel { color: var(--color-on-inverse-muted); }
+/* Sentence case caption, not an overline (Figma). Text wraps; words stay whole. */
+.caption,
+.headline,
+.detail { min-width: 0; max-width: 75ch; margin: 0; overflow-wrap: break-word; }
+.headline { color: var(--color-on-inverse); }
+
+/* Values: caption key over a body-strong value, 4 apart; 16 between rows, 24 between values; they wrap.
+   Styleguide over Figma: Figma's values are one line (auto width). Code wraps long values; words stay whole. */
+.values {
+  display: flex;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--space-md) var(--space-lg);
+  min-width: 0;
+  margin: 0;
+}
+.value {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: min(100%, calc(2 * var(--space-2xl))); /* Figma: min width 96 */
+}
+.valueLabel,
+.valueText { min-width: 0; margin: 0; overflow-wrap: break-word; }
+.valueText { color: var(--color-on-inverse); font-variant-numeric: tabular-nums; }
+
+/* ===== Columns: Watch · Since the last contact · Not on record yet ===== */
+/* Three equal columns that fill, all as tall as the tallest, so the 1px line rules on the left of columns 2 and 3 run to
+   the bottom. On surface: the inverse state ends with the band. */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+/* Heading, then the list, 8 apart. Padding 16 top, 8 bottom, 24 at the sides.
+   Styleguide over Figma: Figma's Watch column has no left padding (its text starts at the frame edge, 24 left of the
+   band's text). Code gives it 24 like the other columns and like every Block, so the columns line up with the band. */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding: var(--space-md) var(--space-lg) var(--space-xs);
+}
+.column + .column { border-left: 1px solid var(--color-line); }
+.columnHeading { min-width: 0; margin: 0; color: var(--color-text); overflow-wrap: break-word; }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Item: lines 4 apart, padding 8 0, a 1px line rule above every item but the first. */
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-xs) 0;
+}
+.item + .item { border-top: 1px solid var(--color-line); }
+/* The Hidden item row slot (proposal) brings its own rules (Figma: a rule below it, none above). */
+.slot { min-width: 0; }
+
+.line {
+  min-width: 0;
+  max-width: 75ch;
+  margin: 0;
+  /* `anywhere`, not `break-word`: the line sits in a flex-start parent, so its width comes from its own
+     min-content. `break-word` leaves an unbreakable word in that calculation and the column overflows;
+     `anywhere` is the only value that also shrinks min-content. */
+  overflow-wrap: anywhere;
+}
+.date { white-space: nowrap; } /* dates never break inside */
+
+/* Side effect: Status tag + name, 8 apart, centred; the name moves under the tag when there is no room. */
+.tagLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+  max-width: 100%;
+}
+.name { min-width: 0; overflow-wrap: break-word; }
+
+.source { display: flex; min-width: 0; max-width: 100%; }
+
+/* Nothing new: check icon 16 (1px line look) + body text, 4 apart, the icon centred on the first text line. */
+.nothingNew {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  margin: 0;
+}
+.checkIcon {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--lh-body) - 16px) / 2);
+}
+.checkIcon > svg { width: 16px; height: 16px; stroke-width: 1.5; } /* lucide 1.5 on its 24px grid = Figma's 1px at 16px */
+
+/* ===== Phones (< 640px, styleguide breakpoint) ===== */
+/* Block padding on phones: 24 top and bottom, 16 at the sides. The band stacks (what is today, then the values, 24 apart as in Figma).
+   One column: the rules move from the left of columns 2 and 3 to their top. DOM order = visual order. */
+@media (max-width: 639px) {
+  .band {
+    flex-direction: column;
+    padding: var(--space-lg) var(--space-md);
+  }
+  .today,
+  .values { flex: none; width: 100%; }
+  .columns { grid-template-columns: minmax(0, 1fr); }
+  .column { padding: var(--space-md) var(--space-md) var(--space-xs); }
+  .column + .column { border-left: 0; border-top: 1px solid var(--color-line); }
+}

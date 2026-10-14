@@ -1,0 +1,679 @@
+{
+  "persona_id": "bound-persona-010-shortlist-scale",
+  "label": "Väinö Heikkinen — shortlistin mittaus",
+  "source_person_id": "bound-source-010",
+  "records": [
+    {
+      "record_id": "bound-note-scale-000",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-30T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. Lääkityksen seurantakirjauksen arkistointitieto. ",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-001",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-29T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-002",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-28T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-003",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-27T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-004",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-26T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-005",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-25T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-006",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-24T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-007",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-23T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-008",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-22T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-009",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-21T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-010",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-20T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-011",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-19T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-012",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-18T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-013",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-17T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-014",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-16T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-015",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-15T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-016",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-14T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-017",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-13T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-018",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-12T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-019",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-11T09:00:00+03:00",
+      "topic": "lääkitys",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Lääkityksen seurannan hallinnollinen kirjaus",
+        "teksti": "Lääkityksen toteutumista koskeva merkintä kirjattiin tämän synteettisen kuormituskokeen yhteydessä.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-020",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-10T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 020.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-021",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-09T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 021.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-022",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-08T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 022.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-023",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-07T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 023.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-024",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-06T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 024.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-025",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-05T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 025.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-026",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-04T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 026.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-027",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-03T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 027.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-028",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-02T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 028.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-029",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-01T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 029.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-030",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-31T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 030.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-031",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-30T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 031.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-032",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-29T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 032.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-033",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-28T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 033.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-034",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-27T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 034.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-035",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-26T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 035.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-036",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-25T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 036.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-037",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-24T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 037.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-038",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-23T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 038.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-039",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-22T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 039.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-040",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-08-21T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Yleinen kuuluminen",
+        "teksti": "Asiakas kertoi käyneensä kävelyllä ja jutelleensa naapurinsa kanssa; kuormitustapauksen merkintä 040.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    },
+    {
+      "record_id": "bound-note-scale-041",
+      "source": "kotihoidon kirjaus",
+      "record_type": "vapaateksti",
+      "authored_by_role": "lähihoitaja",
+      "recorded_at": "2026-09-01T09:00:00+03:00",
+      "topic": "hoito",
+      "sensitivity_tag": "none",
+      "consent_scope": "treatment",
+      "payload": {
+        "otsikko": "Omahoidon tuki ja tablettien toteutuminen",
+        "teksti": "Henkilö jätti illan tablettinsa ottamatta kahtena peräkkäisenä päivänä, koska huimaus ja väsymys voimistuivat iltaisin. Kotihoidon käynnillä sovittiin, että väliin jääneet kerrat kirjataan ja huimauksen syy selvitetään. Henkilö tarvitsee muistutusta säännöllisestä rytmistä ja toivoi, että naapuri auttaa tarvittaessa. Tilanne vaikuttaa tämän käynnin valmisteluun.",
+        "kirjaaja": "lähihoitaja"
+      },
+      "source_person_id": "bound-source-010"
+    }
+  ]
+}
