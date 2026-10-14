@@ -1,0 +1,180 @@
+{
+  "classes": [
+    "agreement",
+    "contradiction",
+    "absent",
+    "not-comparable"
+  ],
+  "counts": {
+    "absent": 4,
+    "agreement": 2,
+    "contradiction": 1,
+    "disagreement": 11,
+    "disagreement_denominator": 13,
+    "not-comparable": 6,
+    "pairs": 13
+  },
+  "entries": [
+    {
+      "as": "emphasis",
+      "classification": "not-comparable",
+      "persona_id": "bound-persona-013-vammaispalvelut",
+      "reason": "no authored pairing",
+      "record_id": "bound-esitieto-013"
+    },
+    {
+      "as": "emphasis",
+      "classification": "not-comparable",
+      "persona_id": "bound-persona-002-krooninen-ikääntynyt",
+      "reason": "no authored pairing",
+      "record_id": "bound-note-002"
+    },
+    {
+      "claim": "worsened sleep, mood and fatigue",
+      "classification": "agreement",
+      "evidence": {
+        "field": "vastaukset",
+        "items": {
+          "q2": 3,
+          "q3": 1,
+          "q4": 2
+        },
+        "record_id": "bound-arviointi-003"
+      },
+      "kind": "symptom_vs_instrument_items",
+      "paired_record_id": "bound-arviointi-003",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "reason": null,
+      "record_id": "bound-note-003"
+    },
+    {
+      "claim": "no self-harm thoughts",
+      "classification": "contradiction",
+      "evidence": {
+        "field": "vastaukset",
+        "items": {
+          "q9": 1
+        },
+        "record_id": "bound-arviointi-003"
+      },
+      "kind": "absence_claim_vs_instrument_item",
+      "paired_record_id": "bound-arviointi-003",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "reason": null,
+      "record_id": "bound-note-003"
+    },
+    {
+      "as": "emphasis",
+      "classification": "not-comparable",
+      "persona_id": "bound-persona-004-sosiaalipalvelut",
+      "reason": "no authored pairing",
+      "record_id": "bound-note-005"
+    },
+    {
+      "claim": "difficulty managing affairs and starting daily tasks",
+      "classification": "absent",
+      "evidence": null,
+      "kind": "functioning_vs_iadl",
+      "paired_record_id": null,
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "reason": "no structured record exists",
+      "record_id": "bound-note-010"
+    },
+    {
+      "claim": "difficulty managing affairs and starting daily tasks",
+      "classification": "not-comparable",
+      "evidence": {
+        "field": "instrumentti",
+        "record_id": "bound-arviointi-003",
+        "value": "PHQ-9"
+      },
+      "kind": "functioning_vs_iadl",
+      "paired_record_id": "bound-arviointi-003",
+      "persona_id": "bound-persona-003-mielenterveys-sosiaali",
+      "reason": "paired instrument is PHQ-9, a different construct",
+      "record_id": "bound-note-010"
+    },
+    {
+      "claim": "regular tablet missed on several days",
+      "classification": "agreement",
+      "evidence": {
+        "field": "puuttuneet_annokset_30d",
+        "record_id": "bound-med-005",
+        "value": 6
+      },
+      "kind": "adherence_vs_missed_doses",
+      "paired_record_id": "bound-med-005",
+      "persona_id": "bound-persona-005-omahoidon-tuki",
+      "reason": null,
+      "record_id": "bound-note-011"
+    },
+    {
+      "claim": "dizziness and fatigue",
+      "classification": "absent",
+      "evidence": null,
+      "kind": "symptom_vs_measurement",
+      "paired_record_id": null,
+      "persona_id": "bound-persona-005-omahoidon-tuki",
+      "reason": "no structured record exists",
+      "record_id": "bound-note-011"
+    },
+    {
+      "claim": "dizziness, tablet left untaken three times",
+      "classification": "absent",
+      "evidence": null,
+      "kind": "adherence_vs_missed_doses",
+      "paired_record_id": null,
+      "persona_id": "bound-persona-009-paraphrase-addition",
+      "reason": "no structured record exists",
+      "record_id": "bound-note-017"
+    },
+    {
+      "as": "emphasis",
+      "classification": "not-comparable",
+      "persona_id": "bound-persona-012-neuvola-lapsi",
+      "reason": "no authored pairing",
+      "record_id": "bound-note-020"
+    },
+    {
+      "as": "emphasis",
+      "classification": "not-comparable",
+      "persona_id": "bound-persona-013-vammaispalvelut",
+      "reason": "no authored pairing",
+      "record_id": "bound-note-022"
+    },
+    {
+      "claim": "evening tablet left untaken on two consecutive days",
+      "classification": "absent",
+      "evidence": null,
+      "kind": "adherence_vs_missed_doses",
+      "paired_record_id": null,
+      "persona_id": "bound-persona-010-shortlist-scale",
+      "reason": "no structured record exists",
+      "record_id": "bound-note-scale-041"
+    }
+  ],
+  "kind": "decision-structured-fact-disagreement",
+  "limits": [
+    "fixtures, notes and answer keys share an author, so this is authored-artefact agreement, NOT accuracy and NOT independent validation",
+    "synthetic fixtures only; no real source integration and no clinical validation",
+    "pairing is authored per claim; text or value similarity never creates a link",
+    "a claim with no authored pair is reported not-comparable rather than dropped, so the denominator always includes the whole produced population",
+    "disagreement is the published quantity; nothing here is an error rate for the note or the model"
+  ],
+  "population": {
+    "addition_or_emphasis_ids": [
+      "bound-esitieto-013",
+      "bound-note-002",
+      "bound-note-003",
+      "bound-note-005",
+      "bound-note-010",
+      "bound-note-011",
+      "bound-note-017",
+      "bound-note-020",
+      "bound-note-022",
+      "bound-note-scale-041"
+    ],
+    "pairs": 13
+  },
+  "source_artifact": "decision-value-eval-cap80-v1.json"
+}

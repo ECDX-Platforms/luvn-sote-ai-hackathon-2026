@@ -249,7 +249,7 @@ USEFUL_PAYLOAD_KEYS = {
     source.MEDICATION: {"lääke"}, source.FREE_TEXT: {"teksti"},
     # `mittaus` is the one type whose useful keys are read as an INTERSECTION rather than a subset
     # (see the call sites): a measurement row is useful when it carries ANY of the four things the tiles
-    # render, because one row is one measurement. Before 2026-10-09 the useful set was
+    # render, because one row is one measurement. The useful set was once
     # `{"verenpaine", "syke"}` while the render set was `{"paino_kg", "pituus_cm"}` — disjoint, so no
     # measurement row could ever reconcile clean, and a delivery containing measurements could never reach
     # `status: ready`. The fix is that all four are now rendered; the useful set is therefore the render

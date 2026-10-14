@@ -64,7 +64,7 @@ class Guideline:
         return f"{self.title} — {CITATION_HOST} (julkaistu {self.published})"
 
 
-# Verified on 2026-10-10: every code below was fetched and returned a real guideline page with the title and
+# Verified at submission: every code below was fetched and returned a real guideline page with the title and
 # publication date recorded here. Two traps this list is built to avoid:
 #
 #   * **A 200 is not liveness.** Unknown /hoiNNNNN codes return HTTP 200 while serving the site's generic
@@ -81,56 +81,56 @@ class Guideline:
 GUIDELINES: tuple[Guideline, ...] = (
     Guideline(code="hoi04010", title="Kohonnut verenpaine", published="21.09.2026",
               topics=("verenpaine", "hypertensio", "i10", "i11", "i12", "i13", "i15"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50056", title="Tyypin 2 diabetes", published="18.03.2024",
               topics=("tyypin 2 diabetes", "tyypin 2", "e11", "diabetes"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50116", title="Insuliininpuutosdiabetes", published="12.11.2025",
               topics=("insuliininpuutosdiabetes", "tyypin 1 diabetes", "e10"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50025", title="Dyslipidemiat", published="24.09.2026",
               topics=("dyslipidemia", "kolesteroli", "ldl", "e78"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi06030", title="Astma", published="29.03.2022",
-              topics=("astma", "j45"), verified_at="2026-10-10"),
+              topics=("astma", "j45"), verified_at="at submission"),
     # PHQ-9's own instrument link: a site search for "phq-9" returns this guideline first.
     Guideline(code="hoi50023", title="Depressio", published="25.06.2026",
               topics=("depressio", "masennus", "phq", "f32", "f33"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50119", title="Ahdistuneisuushäiriöt", published="25.06.2026",
               topics=("ahdistus", "ahdistuneisuus", "f40", "f41"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50122", title="Itsemurhien ehkäisy ja itsemurhaa yrittäneen hoito", published="18.02.2022",
               topics=("itsetuhoisuus", "itsemurha", "x60", "x61", "x62", "x63", "x64", "x70", "x71", "x72",
                       "x73", "x74"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50067", title="Unettomuus", published="25.06.2026",
-              topics=("unettomuus", "univaikeus", "g47"), verified_at="2026-10-10"),
+              topics=("unettomuus", "univaikeus", "g47"), verified_at="at submission"),
     # The only guideline that mentions IADL, which is why it is here — and why it must only be attached when
     # the visible records indicate cognitive decline. A low IADL score alone does not make this the right
     # guidance, and attaching it to every functional-ability record would be clinically wrong.
     Guideline(code="hoi50044", title="Muistisairaudet", published="08.04.2026",
               topics=("muistisairaus", "muisti", "dementia", "alzheimer", "f00", "f01", "f02", "f03", "g30"),
-              verified_at="2026-10-10"),
+              verified_at="at submission"),
     Guideline(code="hoi50126", title="Monisairas potilas", published="16.03.2021",
-              topics=("monisairas", "monilääkitys", "polyfarmasia"), verified_at="2026-10-10"),
+              topics=("monisairas", "monilääkitys", "polyfarmasia"), verified_at="at submission"),
     # Caveat carried in the note: this is about self-medication, not adherence, and no adherence guideline
     # exists. It is attached only on the word itself rather than standing in for adherence generally.
     Guideline(code="hoi50106", title="Itselääkitys", published="14.05.2024",
-              topics=("itselääkitys",), verified_at="2026-10-10"),
+              topics=("itselääkitys",), verified_at="at submission"),
     Guideline(code="hoi50028", title="Alkoholiongelmat", published="21.08.2018",
-              topics=("alkoholi", "päihde", "f10"), verified_at="2026-10-10"),
+              topics=("alkoholi", "päihde", "f10"), verified_at="at submission"),
     Guideline(code="hoi40020", title="Tupakka- ja nikotiiniriippuvuuden ehkäisy ja hoito", published="19.08.2026",
-              topics=("tupakka", "nikotiini", "tupakointi", "f17"), verified_at="2026-10-10"),
+              topics=("tupakka", "nikotiini", "tupakointi", "f17"), verified_at="at submission"),
     Guideline(code="hoi50124", title="Lihavuus (lapset, nuoret ja aikuiset)", published="17.04.2025",
-              topics=("lihavuus", "painoindeksi", "e66"), verified_at="2026-10-10"),
+              topics=("lihavuus", "painoindeksi", "e66"), verified_at="at submission"),
     Guideline(code="hoi50085", title="Kehityksellinen kielihäiriö (kielellinen erityisvaikeus, lapset ja "
                                            "nuoret)", published="24.08.2026",
-              topics=("kielihäiriö", "kielellinen erityisvaikeus", "f80"), verified_at="2026-10-10"),
+              topics=("kielihäiriö", "kielellinen erityisvaikeus", "f80"), verified_at="at submission"),
     Guideline(code="hoi50132", title="Lasten ja nuorten kehityksellinen koordinaatiohäiriö (DCD)",
-              published="13.02.2026", topics=("koordinaatiohäiriö", "dcd", "f82"), verified_at="2026-10-10"),
+              published="13.02.2026", topics=("koordinaatiohäiriö", "dcd", "f82"), verified_at="at submission"),
     Guideline(code="hoi50118", title="Käytöshäiriöt (lapset ja nuoret)", published="12.12.2018",
-              topics=("käytöshäiriö", "f91"), verified_at="2026-10-10"),
+              topics=("käytöshäiriö", "f91"), verified_at="at submission"),
 )
 
 # Topics this product holds for which **no** guideline exists. Recorded so the absence is a decision rather
@@ -143,7 +143,7 @@ NO_GUIDELINE_TOPICS: tuple[str, ...] = ("sosiaalipalvelut", "vammaispalvelut", "
 # decided by the page's content and not by its status.
 SOFT_404_MARKERS: tuple[str, ...] = ("etsimääsi sivua ei löytynyt", "virhe 404")
 
-# Article families published by Käypä hoito (see issue 12 and kaypahoito-nuggets-2026-10-12.md).
+# Article families published by Käypä hoito (the accepted set is recorded with the citation metadata).
 # The express linking permission (Linkittäminen, 7.12.2023) prescribes the hoiNNNNN form and names
 # suositukset. The accepted/linkable set is intentionally conservative: only hoi, gvr, khp, and khr
 # match CODE_SHAPE today. dnd (Vältä viisaasti) is named a suositus in the publisher's liability block

@@ -17,7 +17,7 @@ Run from `backend/`:
 
 Notes:
   * The tracked 50,000-profile measurement is
-    `.scratch/hackathon-readiness/results/delivery-scale-dry-run-v1.json` (2026-10-05; seed `20261013`).
+    the delivery-shape dry-run artifact recorded under `docs/evidence/` (seed `20261013`).
     **It predates the 2026-10-11 vocabulary fix**, which changed the deterministic stream: a fresh run at
     the same seed now produces 700,426 records rather than the artifact's 698,142, so re-run this command
     with `--result` and re-render the decision evidence before citing those timings. Disk is the binding

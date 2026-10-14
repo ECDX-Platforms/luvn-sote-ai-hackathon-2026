@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted, and implemented: `Picture` is the shipped contract at the seam. Carries owner-approved
-extensions dated 2026-10-06, 2026-10-07 and 2026-10-09.
+Accepted and implemented: `Picture` is the shipped contract at the seam, with
+owner-approved extensions.
 
 ## Context
 
@@ -13,7 +13,8 @@ that contract. FastAPI derives the OpenAPI schema from it, and
 `backend/tests/test_contract.py` pins the keys the UI reads. Feeding it, `decide` deliberately keeps exchanging plain
 dicts: the silent-break failure mode only exists where the contract crosses to
 another language, so typing the internal hops would add interface surface
-without adding depth. (`grounding` is the one exception -- see ADR-0002.)
+without adding depth. (`grounding` is the one exception: its validator returns
+a typed result rather than a plain dict.)
 
 ## Considered options
 
@@ -33,9 +34,9 @@ without adding depth. (`grounding` is the one exception -- see ADR-0002.)
   unavailable, failed, or timed-out generation, so a half-configured
   environment cannot silently masquerade as Foundry.
 
-## Challenge 1.1 synthetic form and duplicate projection
+## Synthetic form and duplicate projection
 
-**Owner-approved extension, 2026-10-06.** The source `Record` may carry optional
+**Owner-approved extension.** The source `Record` may carry optional
 `FormMetadata` (`form_type`, `version`, `service`, and an explicit source `due_at`) and an
 optional `concept_key` assigned by deterministic source mapping/fixtures. The key names the
 same measured observation, including its subject/window; similar text or values alone never
@@ -65,11 +66,11 @@ The selected-record projection adds:
 This extension does not disclose `Poissuljettu` identities/counts and introduces no authority
 precedence. It is an explicit wire change, covered by `test_contract.py`; tests pin that every
 record ID in duplicate/catalogue metadata is a subset of selected `Picture.records` IDs. RAI
-remains a supplied source result under ADR-0008, not a scoring engine.
+remains a supplied source result, consumed as given rather than as a scoring engine.
 
 ## Phase 3 illustrative consent-holder and life-stage vocabulary (source envelope only)
 
-**Owner-approved illustrative default, 2026-10-06; non-statutory.** Phase 3 adds vocabulary to the
+**Owner-approved illustrative default; non-statutory.** Phase 3 adds vocabulary to the
 *source envelope and the modelled lens*, and deliberately changes **no** `Picture` field:
 
 - `Record.consent_holder` (`self` | `guardian`, optional) declares which consent a source record
@@ -85,7 +86,7 @@ remains a supplied source result under ADR-0008, not a scoring engine.
   a `self` record. Represented-person verification, expiry and real consent rules remain unmodelled
   and are not claimed.
 
-## Owner-approved extension, 2026-10-07 — source heading and entry provenance
+## Owner-approved extension — source heading and entry provenance
 
 The owner explicitly approves this nested `RecordView` wire extension for the alignment follow-up:
 `heading` is a local/national pair, and optional `käyntiaika`, `vastaanottajat`, `erikoisala` and
@@ -95,7 +96,7 @@ no purpose rule gives it a meaning. Missing values are omitted, not rendered as 
 this entry only, never contact history. No top-level `Picture` field is added, and no fixture values are
 authorized by this wire decision.
 
-## Owner-approved extension, 2026-10-09 — the declared purpose of use crosses the seam
+## Owner-approved extension — the declared purpose of use crosses the seam
 
 The owner approves one top-level field, so that the demo's **purpose of use** is served rather than
 paraphrased in the UI:

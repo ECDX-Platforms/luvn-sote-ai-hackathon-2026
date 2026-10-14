@@ -4108,7 +4108,7 @@ assert(draftRule.includes('color: var(--color-text-muted)') && draftRule.include
 // The frozen mockup is no longer read. Its PRESETS comparison is replaced by design-system.test.mjs,
 // which pins the vendored library by checksum and bans raw values in the app stylesheets. The mockup's
 // generated images and its style-options.html were deleted on 2026-10-11 as redundant binaries; what is
-// still committed under .scratch/ui-remake/ is the written record (README, spec, the eight issues) of
+// is the written record (README, spec, the eight issues) of
 // what the remake was copying.
 
 // ---- Anchor integrity: every `#source-*` link points at exactly one element ----

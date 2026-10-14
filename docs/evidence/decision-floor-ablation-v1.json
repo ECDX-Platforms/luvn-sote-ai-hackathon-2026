@@ -1,0 +1,1699 @@
+{
+  "design": "both variants replay the same recorded candidate answers through app.decision_model.classify_status; only the three thresholds differ, so the comparison is paired",
+  "encounters": {
+    "bound-encounter-002-laakitys-sairaanhoitaja": {
+      "assessed_count": 3,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [],
+        "note": "no baseline-missed candidate is authored as relevant"
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-002"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ]
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-002"
+        ],
+        "actual_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-002"
+        ],
+        "unauthored_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-002"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ]
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-002"
+        ],
+        "actual_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-002"
+        ],
+        "unauthored_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-003-mielenterveys-sairaanhoitaja": {
+      "assessed_count": 3,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_emphasis": [
+          "bound-note-003"
+        ],
+        "expect_no_addition": [],
+        "note": "mood and sleep note; topic mielenterveys matches the mental-health purpose"
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-003"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ]
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-003"
+        ],
+        "actual_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-003"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-003"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-003"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ]
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-003"
+        ],
+        "actual_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-003"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-003"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-003-toimintakyky-fysioterapeutti": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-010"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-010"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-003-toimintakyky-sairaanhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_emphasis": [
+          "bound-note-010"
+        ],
+        "expect_no_addition": [],
+        "note": "daily-tasks note; topic toimintakyky matches the functioning purpose, and this is the same person as the mental-health encounter, which must emphasise a different note"
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-010"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-010"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-010"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-010"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": {
+      "assessed_count": 4,
+      "delta": {
+        "additions_added": [
+          "bound-note-009"
+        ],
+        "additions_removed": [],
+        "emphasis_added": [
+          "bound-note-009"
+        ],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 1,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": [
+          {
+            "candidate_group": "missed",
+            "choice": "relevant",
+            "record_id": "bound-note-009",
+            "recorded_status": "unclear",
+            "replayed_status": "relevant"
+          }
+        ]
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-005"
+        ],
+        "gate_refused_count": 1,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ]
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-005"
+        ],
+        "actual_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-005"
+        ],
+        "unauthored_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 1,
+      "zero_floor": {
+        "additional_record_ids": [
+          "bound-note-009"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-005",
+          "bound-note-009"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ]
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-009"
+        ],
+        "actual_emphasized": [
+          "bound-note-005",
+          "bound-note-009"
+        ],
+        "actual_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [
+          "bound-note-009"
+        ],
+        "unauthored_emphasis": [
+          "bound-note-005",
+          "bound-note-009"
+        ],
+        "unauthored_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-005-laakitys-sairaanhoitaja": {
+      "assessed_count": 3,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-011"
+        ],
+        "expect_emphasis": [
+          "bound-note-011"
+        ],
+        "expect_no_addition": [
+          "bound-note-012"
+        ],
+        "expect_omissions": [
+          "bound-note-013"
+        ],
+        "note": "note-011 is a missed relevant medication-follow-up fact and the clinical priority; note-012 is unrelated; note-013 is administrative and should be omitted from generation but remain visible",
+        "observe_candidates": [
+          "bound-note-013"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [
+          "bound-note-011"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-011"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-013"
+        ]
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-011"
+        ],
+        "actual_emphasized": [
+          "bound-note-011"
+        ],
+        "actual_omissions": [
+          "bound-note-013"
+        ],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-011"
+        ],
+        "correct_emphasis": [
+          "bound-note-011"
+        ],
+        "correct_omissions": [
+          "bound-note-013"
+        ],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-011"
+        ],
+        "expected_emphasis": [
+          "bound-note-011"
+        ],
+        "expected_omissions": [
+          "bound-note-013"
+        ],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [
+          "bound-note-011"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-011"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-013"
+        ]
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-011"
+        ],
+        "actual_emphasized": [
+          "bound-note-011"
+        ],
+        "actual_omissions": [
+          "bound-note-013"
+        ],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-011"
+        ],
+        "correct_emphasis": [
+          "bound-note-011"
+        ],
+        "correct_omissions": [
+          "bound-note-013"
+        ],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-011"
+        ],
+        "expected_emphasis": [
+          "bound-note-011"
+        ],
+        "expected_omissions": [
+          "bound-note-013"
+        ],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-006-laakitys-sairaanhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 1,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": [
+          {
+            "candidate_group": "missed",
+            "choice": "irrelevant",
+            "record_id": "bound-note-014",
+            "recorded_status": "unclear",
+            "replayed_status": "irrelevant"
+          }
+        ]
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-014"
+        ],
+        "note": "current note describes the spouse's medication, not the encounter person",
+        "observe_candidates": [
+          "bound-note-014"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 1,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 1,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-007-laakitys-sairaanhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-015"
+        ],
+        "note": "current office-room booking is not a patient situation fact",
+        "observe_candidates": [
+          "bound-note-015"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-008-laakitys-sairaanhoitaja": {
+      "assessed_count": 0,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-016"
+        ],
+        "note": "the medication note is older than the current-note window and must not be added",
+        "observe_candidates": [
+          "bound-note-016"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-009-laakitys-sairaanhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-017"
+        ],
+        "expect_no_addition": [],
+        "note": "the current adherence/side-effect note is relevant but shares no medication baseline term",
+        "observe_candidates": [
+          "bound-note-017"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [
+          "bound-note-017"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-017"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-017"
+        ],
+        "actual_emphasized": [
+          "bound-note-017"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-017"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-017"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-017"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [
+          "bound-note-017"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-017"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-017"
+        ],
+        "actual_emphasized": [
+          "bound-note-017"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-017"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-017"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-017"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-010-laakitys-sairaanhoitaja": {
+      "assessed_count": 41,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-scale-041"
+        ],
+        "expect_no_addition": [],
+        "expected_coverage": {
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 42,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 42,
+          "decision_too_long_count": 1
+        },
+        "note": "42 current free-text notes exercise the 80-note shortlist/call cap, byte cap and coverage accounting. bound-note-scale-041 remains the unchanged authored relevant keyless missed note. The one over-byte-cap note is not sent; the live run measures all other responses, including any throttling or timeout, rather than assuming all 41 concurrent requests succeed.",
+        "observe_candidates": [
+          "bound-note-scale-000",
+          "bound-note-scale-041"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-scale-041"
+        ],
+        "actual_emphasized": [
+          "bound-note-scale-041"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-scale-041"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-scale-041"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-scale-041"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "emphasized_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-scale-041"
+        ],
+        "actual_emphasized": [
+          "bound-note-scale-041"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-scale-041"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-scale-041"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-scale-041"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-011-laakitys-sairaanhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_abstentions": [
+          "bound-note-018"
+        ],
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-018"
+        ],
+        "note": "owner-authored ambiguous note: actor, date and tablet are unspecified; expected Decision-1 abstention",
+        "observe_candidates": [
+          "bound-note-018"
+        ]
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [
+          "bound-note-018"
+        ],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [
+          "bound-note-018"
+        ],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [
+          "bound-note-018"
+        ],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [
+          "bound-note-018"
+        ],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-012-neuvola-terveydenhoitaja": {
+      "assessed_count": 1,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-020"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-020"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-020"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-note-020"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-020"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-020"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-013-vammaispalvelut-sosiaalityontekija": {
+      "assessed_count": 2,
+      "delta": {
+        "additions_added": [],
+        "additions_removed": [],
+        "emphasis_added": [],
+        "emphasis_removed": [],
+        "gate_refused_dropped": 0,
+        "omissions_added": [],
+        "omissions_removed": [],
+        "status_changes": []
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "production": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "production_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      },
+      "unclear_with_choice_count": 0,
+      "zero_floor": {
+        "additional_record_ids": [],
+        "emphasized_record_ids": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "gate_refused_count": 0,
+        "selection_omitted_baseline_record_ids": []
+      },
+      "zero_floor_metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "unauthored_omissions": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    }
+  },
+  "kind": "decision-floor-ablation",
+  "limits": [
+    "one recorded candidate set replayed under two threshold sets; it cannot say how a fresh selector call behaves under zero floors",
+    "gate-refused is a subset of assessed, never a disjoint bucket",
+    "the fixtures and answer keys are synthetic, author-authored and unadjudicated: this is a sensitivity result, not accuracy",
+    "no production threshold, fixture or answer key is changed; the ablation passes its own floors"
+  ],
+  "replay_validation": "production floors reproduced the recorded additional/emphasized/omitted IDs and metrics for all 11 encounters, and the replayed assessed set matches the recorded coverage count (the floors are applied after a response, so they cannot gate assessment)",
+  "result": {
+    "pre_registered_expectations": {
+      "additions_unchanged": false,
+      "assessed_set_unchanged": true,
+      "emphasis_not_reduced": true,
+      "gate_refused_not_increased": true,
+      "omissions_unchanged": true
+    },
+    "status_changes_by_encounter": {
+      "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": [
+        {
+          "candidate_group": "missed",
+          "choice": "relevant",
+          "record_id": "bound-note-009",
+          "recorded_status": "unclear",
+          "replayed_status": "relevant"
+        }
+      ],
+      "bound-encounter-006-laakitys-sairaanhoitaja": [
+        {
+          "candidate_group": "missed",
+          "choice": "irrelevant",
+          "record_id": "bound-note-014",
+          "recorded_status": "unclear",
+          "replayed_status": "irrelevant"
+        }
+      ]
+    },
+    "totals": {
+      "additions": {
+        "production": [
+          "bound-note-011",
+          "bound-note-017",
+          "bound-note-scale-041"
+        ],
+        "zero_floor": [
+          "bound-note-009",
+          "bound-note-011",
+          "bound-note-017",
+          "bound-note-scale-041"
+        ]
+      },
+      "assessed_count": 63,
+      "emphasized_record_ids": {
+        "production": [
+          "bound-esitieto-013",
+          "bound-note-002",
+          "bound-note-003",
+          "bound-note-005",
+          "bound-note-010",
+          "bound-note-011",
+          "bound-note-017",
+          "bound-note-020",
+          "bound-note-022",
+          "bound-note-scale-041"
+        ],
+        "zero_floor": [
+          "bound-esitieto-013",
+          "bound-note-002",
+          "bound-note-003",
+          "bound-note-005",
+          "bound-note-009",
+          "bound-note-010",
+          "bound-note-011",
+          "bound-note-017",
+          "bound-note-020",
+          "bound-note-022",
+          "bound-note-scale-041"
+        ]
+      },
+      "gate_refused_count": {
+        "production": 2,
+        "zero_floor": 0
+      },
+      "selection_omitted_baseline_record_ids": {
+        "production": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft",
+          "bound-note-003-alignment",
+          "bound-note-003-draft",
+          "bound-note-004-alignment",
+          "bound-note-004-draft",
+          "bound-note-013"
+        ],
+        "zero_floor": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft",
+          "bound-note-003-alignment",
+          "bound-note-003-draft",
+          "bound-note-004-alignment",
+          "bound-note-004-draft",
+          "bound-note-013"
+        ]
+      },
+      "status_changes": 2,
+      "unclear_with_choice_count": 2,
+      "wrong_additions": {
+        "production": 0,
+        "zero_floor": 0
+      },
+      "wrong_omissions": {
+        "production": 0,
+        "zero_floor": 0
+      }
+    }
+  },
+  "source_artifact": "decision-value-eval-cap80-v1.json",
+  "variants": {
+    "production": {
+      "addition_floor": 0.6,
+      "decision_margin": 0.25,
+      "omission_floor": 0.7
+    },
+    "zero_floor": {
+      "addition_floor": 0.0,
+      "decision_margin": 0.0,
+      "omission_floor": 0.0
+    }
+  }
+}

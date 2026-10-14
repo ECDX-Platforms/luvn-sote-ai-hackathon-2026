@@ -1,6 +1,6 @@
 """Phase 3 neuvola/guardian lens: permission, life-stage catalogue and the live duplicate fact.
 
-Expectations were pre-registered in `.scratch/challenge-1-1-prioritized/issues/04-phase-3-guardian-and-life-stage.md`
+Expectations for these lenses were written down before the implementation
 before this file's first run. Everything here is offline: no model, no network.
 """
 from __future__ import annotations

@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "kind": "decision-value-eval",
+      "path": "docs/evidence/decision-value-eval-cap80-v1.json",
+      "summary": "Live selection scorecard under the current 80/80 caps: additions, omissions, abstentions, emphasis and per-encounter coverage."
+    },
+    {
+      "kind": "scrubbed-live-encounter-trial-summary",
+      "path": "docs/evidence/live-encounter-trial-v1-summary.json",
+      "summary": "Text-scrubbed narration trial: agent vs direct fallback, accepted narration, per-sentence citations and the grounding verifier totals."
+    },
+    {
+      "kind": "decision-value-eval-instability",
+      "path": "docs/evidence/decision-value-eval-instability/summary.json",
+      "summary": "Repeated runs of the borderline paraphrase case, aggregated; per-run rows sit beside it."
+    },
+    {
+      "kind": "decision-floor-ablation",
+      "path": "docs/evidence/decision-floor-ablation-v1.json",
+      "summary": "Paired floor/margin ablation replaying one recorded answer set under production thresholds and all three at zero."
+    },
+    {
+      "kind": "decision-structured-fact-disagreement",
+      "path": "docs/evidence/decision-structured-fact-disagreement-v1.json",
+      "summary": "Authored claim pairs classified as agreement, contradiction, absent or not-comparable between produced additions and structured records."
+    },
+    {
+      "kind": "content-safety-probe",
+      "path": "docs/evidence/content-safety-probe-v1.json",
+      "summary": "Synthetic, non-operational content-safety probe result; absence is also reported by the renderer."
+    },
+    {
+      "kind": "delivery-scale-dry-run",
+      "path": "docs/evidence/delivery-scale-dry-run-v1.json",
+      "summary": "Synthetic import/index dry run at the assumed 50,000-profile delivery shape: wall time, disk footprint, peak RSS, one-encounter resolution and full-record reconciliation."
+    }
+  ],
+  "description": "Index of every measurement artifact cited by the derived evidence document, by kind. The renderer and claim checker resolve artifact paths here rather than hardcoding artifact filenames.",
+  "kind": "evidence-manifest"
+}

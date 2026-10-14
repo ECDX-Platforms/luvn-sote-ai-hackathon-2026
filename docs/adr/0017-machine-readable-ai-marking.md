@@ -1,6 +1,6 @@
 # Machine-readable marking for model-drafted text: provenance now, watermark if the surface changes
 
-**Accepted and implemented, 2026-10-09.** Requested by the owner after validation of the AI Act
+**Accepted and implemented.** Requested by the owner after validation of the AI Act
 reading: the system's generated narration is synthetic text, Art. 50(2) requires a *provider* of such a
 system to ensure outputs are machine-readable and detectable as artificially generated, and a visible
 caption does not satisfy that. This record decides the technique and its limits.
@@ -14,7 +14,7 @@ the generation branch actually produced accepted prose:
 |---|---|---|
 | `AI-Generated-Content` | `true` | this payload contains model-drafted text |
 | `AI-Generated-Parts` | `narrative` | which part is model-drafted |
-| `AI-Generated-Model` | e.g. `proj-default / gpt-6.1-sol` | the generating model, when the branch reported one; collapses to a single value when the deployment and model names are identical (an environment that reports one name for both) |
+| `AI-Generated-Model` | e.g. `<deployment> / gpt-6.1-sol` | the generating model, when the branch reported one; collapses to a single value when the deployment and model names are identical (an environment that reports one name for both) |
 | `AI-Generated-Marking` | `luvn-ai-marking-v2` | the marking's version, so its shape can evolve audibly — **v2** because v1's `AI-Generated-Model` had a different value shape (see "Version bump" below) |
 
 The technique is **provenance marking**, which Recital 133 of Regulation (EU) 2024/1689 lists among
@@ -59,7 +59,7 @@ it cannot do is survive the text being copied out of its payload.
   `narration.py` sets `narration_generation_deployment` to `llm.FOUNDRY_MODEL` itself, and the provider
   echoes that same value back as `response.model`, so the pair is one name by construction. The field
   therefore carries the deployment name **whenever it differs** from the model, and only collapses when
-  the two are identical. Found live on `--0000040` (the header read `gpt-6.1-sol / gpt-6.1-sol`);
+  the two are identical. Found live in a deployed revision (the header read `gpt-6.1-sol / gpt-6.1-sol`);
   `marking_headers` is pinned by `tests/test_marking.py` for the same, distinct and absent cases.
 - **The model name is external input, and a control character drops it.** It comes from the provider's
   JSON body, and the only upstream check is a non-empty string. A CR or LF inside it would let a header
@@ -83,11 +83,11 @@ changes"* — and it is the only reason a consumer can tell which value shape it
   the payload it is marked on. At that point the marking must become a watermark, or the surface must change.
   An earlier revision of this record named **2.12.2026** here, calling it "the date by which generative
   systems already on the market must comply with Art. 50(2)". That framing was wrong for this system: 2.12.2026
-  is a **transitional** date for generative systems already on the market **before 2.8.2026**, and this app's
-  hosting first appears on **2026-10-01** (`1ab8d73`, `azure/hosting/main.bicep` added) with its earliest live
-  revision `--0000010` on **2026-10-02**. The duty therefore applied from its first hosting day, and 2.12.2026
-  is not this system's compliance deadline. It is a reasonable date to *revisit the decision* by, and it is now
-  recorded as exactly that rather than as a deadline we are answerable to.
+  is a **transitional** date for generative systems already on the market **before 2.8.2026**, whereas this
+  system's hosting post-dates that cut-off. The duty therefore applied from its first hosting day rather than
+  at the transitional date, and 2.12.2026 is not this system's compliance deadline. It remains a reasonable
+  date to *revisit the decision* by, and it is recorded as exactly that rather than as a deadline we are
+  answerable to.
 - The human-readable caption under the prose remains. It serves different readers: the marking serves
   machines, the caption the professional.
 

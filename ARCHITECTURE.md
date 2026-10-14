@@ -1,8 +1,8 @@
 # Decision-Guided Situation Picture
 
-## Architecture as built — LUVN Hackathon Challenge 1.1
+## Architecture as built — LUVN
 
-**For:** judges, solution architects, developers.
+**For:** reviewers, solution architects, developers.
 **Status:** describes the system that is **built and deployed**, not a proposal. Synthetic data, modelled
 integrations.
 
@@ -19,7 +19,7 @@ physicians, social workers, public health nurses — work across separate system
 lists, assessments, maternity-clinic forms, social-services decisions) that do not show each other's work.
 The same client history gets re-read and re-entered at every appointment.
 
-**Challenge 1.1** asks for the opposite: *esitietojen koonti — oikeat tiedot oikealle ammattilaiselle*, the
+**The requirement** asks for the opposite: *esitietojen koonti — oikeat tiedot oikealle ammattilaiselle*, the
 pre-visit information assembled automatically, showing only what is relevant **and** permitted for this
 professional in this situation. The point is zero-touch: no searching, no clicking, no re-entering.
 
@@ -83,7 +83,7 @@ something.
 | **`policy.cut`** | The permission rule, run **once per request, before any model**. Given a person and an encounter, it returns the records that role and purpose may see. |
 | **`Scoped`** | What `cut` returns: *a Henkilö already cut to one Rooli and, when supplied, Palvelukonteksti* — the permitted records plus the role, purpose and encounter they were cut for. `policy.cut` is its only constructor, so no downstream module can widen the set or invent a different permission basis. Before this existed, the cut ran independently in four modules; now it travels as one value. |
 | **`pipeline`** | The orchestrator. It calls the cut, drives the deterministic deciders and both model layers in order, and assembles the `Picture`. It is the sole author of the response object. |
-| **the seam** | The boundary between the application and its callers — the wire. `Picture` is typed *at* the seam; the internal deciders stay untyped so the wire can stay stable without freezing the decision internals ([ADR-0001](docs/adr/0001-picture-contract-at-the-seam.md), [ADR-0002](docs/adr/0002-grounding-returns-a-typed-result.md)). |
+| **the seam** | The boundary between the application and its callers — the wire. `Picture` is typed *at* the seam; the internal deciders stay untyped so the wire can stay stable without freezing the decision internals ([ADR-0001](docs/adr/0001-picture-contract-at-the-seam.md)). |
 | **Kohtaaminen** (encounter) | One modelled service occasion, binding a person, a role and a purpose. It is *not* a history of previous contacts. A record can carry an encounter or case id, but that is attribution provenance shown on that record — it does not build a timeline. |
 
 One more thing belongs here, because it is a common misreading: **the Finnish wording of every status and
@@ -253,10 +253,9 @@ a withheld denominator. Two of those names deserve care:
 Layer 2 is a **typed call**, not an agent: a `state` plus typed `questions`, each a `choice`, `score` or
 `noul`, answered with probabilities and usage. That is deliberate and it is recorded as
 [ADR-0021](docs/adr/0021-decision-1-stays-a-typed-call.md): an agent may write prose, and an agent never
-decides relevance or permission. The owner asked whether serving the decision model through a Foundry
-custom agent would make it more transparent; the answer was no, because it would put natural-language
-instructions and a free-text intermediate step in front of the per-record probabilities that this whole
-layer is audited through.
+decides relevance or permission. Serving the decision model through a Foundry custom agent was considered and
+rejected, because it would put natural-language instructions and a free-text intermediate step in front of the
+per-record probabilities that this whole layer is audited through.
 
 Transparency is instead bought two ways. `backend/app/decision_protocol.py` describes the protocol — roles,
 `state` fields, every question with its wire type and answer vocabulary, and the gates applied to the
@@ -273,7 +272,7 @@ the accepted next step rather than claiming it is done.
 
 ## Layer 3 — Foundry: narration (the platform)
 
-Azure AI Foundry, project `proj-default`, model `gpt-6.1-sol`, **Prompt Agent** `luvn-narration:8` — a
+Azure AI Foundry, model `gpt-6.1-sol`, **Prompt Agent** `luvn-narration:8` — a
 versioned agent definition in Foundry.
 
 - **One structured request** over post-cut evidence — no tool loop, no follow-up turns — with at most one
@@ -315,7 +314,7 @@ clicks — the zero-touch claim as a data path, not a slogan.
    that open a lens, and builds every briefing that has no fresh row, `--concurrency` at a time; a failed
    encounter is counted, never fatal, and nothing is ever deleted. It runs as the Container Apps job
    `luvn-warm-briefings` on the app's own image and identity, scheduled at 04:00 UTC (the schedule lives in
-   Azure, recorded in `HANDOFF.md`, not in this repository), and is started by hand after a corpus load — the
+   Azure, not in this repository), and is started by hand after a corpus load — the
    generation is in the key, so a reload empties the cache in effect. A request that misses builds the same
    picture once, through `briefings.build_and_cache`, and stores it.
 4. **The pre-fill stage** (`backend/app/prefill.py`, run by `pipeline` after the cut; the flagship). Two
@@ -384,7 +383,7 @@ flowchart TB
     end
 
     subgraph data["Data"]
-        UPM["Azure SQL luvn-stage<br/>Veil corpus, appointments, briefings cache"]
+        UPM["Azure SQL<br/>Veil corpus, appointments, briefings cache"]
         BLOB["Blob<br/>durable feedback"]
     end
 
@@ -518,11 +517,9 @@ deep link; and **Tekniset tiedot**, the run specifications and build revision, a
 the professional's path (being made a dedicated page reached with `?page=technical`). A bare address lands
 on the day.
 
-It is styled from a **vendored, checksum-pinned copy of the LUVN Component Library** — `@luvn/component-library`
-at commit `014b02a`, under `frontend/vendor/comp-lib/`, the UI authority per
-[ADR-0026](docs/adr/0026-the-luvn-component-library-is-the-ui-authority.md) as amended by
-[ADR-0028](docs/adr/0028-the-library-pin-moves-to-014b02a-and-the-rehearsal-copy-is-retired.md), which moved
-the pin and retired the rehearsal copy; ADR-0026 supersedes
+It is styled from a **vendored, checksum-pinned copy of the LUVN Component Library** — `@luvn/component-library`,
+under `frontend/vendor/comp-lib/` with the pin recorded in `PROVENANCE.md`, the UI authority per
+[ADR-0026](docs/adr/0026-the-luvn-component-library-is-the-ui-authority.md), which supersedes
 [ADR-0016](docs/adr/0016-swiss-1-foundations-is-the-ui-authority.md)'s vendor choice and retains its contract.
 The app takes the shell (`AppShell`, `Header`, `Sidebar`, `BottomNav`, `NavItem`), the tokens, the type roles
 and the adopted components from the pin, with its own components held to it by the gate.
@@ -588,7 +585,7 @@ carefully should be equally careful about what it claims.
 | Delivery importer | `backend/app/delivery.py` |
 | Wire contract | `backend/app/picture.py` |
 | UI | `frontend/src/App.jsx`, `frontend/src/DayView.jsx`, `frontend/src/ChallengeDemo.jsx`, `frontend/src/ChatPanel.jsx`, `frontend/src/styles.css` |
-| The vendored design library, pinned at `014b02a` | `frontend/vendor/comp-lib/` (`PROVENANCE.md`) |
+| The vendored design library, checksum-pinned | `frontend/vendor/comp-lib/` (`PROVENANCE.md`) |
 
 ---
 
@@ -599,14 +596,17 @@ document:
 
 | ADR | Decision |
 |---|---|
-| [0001](docs/adr/0001-picture-contract-at-the-seam.md), [0002](docs/adr/0002-grounding-returns-a-typed-result.md) | `Picture` is typed at the external seam; internal deciders stay untyped |
+| [0001](docs/adr/0001-picture-contract-at-the-seam.md) | `Picture` is typed at the external seam; internal deciders stay untyped |
 | [0003](docs/adr/0003-empty-evidence-is-unassessable.md) | Empty evidence is `arvioimaton`, and grounding needs a citation |
 | [0004](docs/adr/0004-silent-absence.md) | **Silent absence** — a withheld record is not disclosed in any form |
-| [0005](docs/adr/0005-residual-disclosure.md) | Cause-neutral absence wording |
-| [0008](docs/adr/0008-challenge-1-1-purpose-aware-briefing.md) | Purpose-aware pre-visit briefing |
-| [0009](docs/adr/0009-decision-purpose-relevance-selection.md) | Decision-1 as bounded reader and support verifier |
-| [0011](docs/adr/0011-ai-architecture-layers.md) | **The three-layer AI architecture** |
+| [0011](docs/adr/0011-ai-architecture-layers.md) | **The three-layer AI architecture**, with the deterministic core in authority |
+| [0016](docs/adr/0016-swiss-1-foundations-is-the-ui-authority.md) | The Swiss 1 foundations library is the UI authority |
+| [0017](docs/adr/0017-machine-readable-ai-marking.md) | **Machine-readable marking** — provenance now, watermark if the surface changes |
+| [0018](docs/adr/0018-microsoft-decision-1-replaces-the-vendor-classifier.md) | Microsoft-Decision-1 replaces the vendor classifier, for reading and verification |
+| [0020](docs/adr/0020-fhir-r4-is-the-mapping-target.md) | FHIR R4 is the mapping target |
 | [0021](docs/adr/0021-decision-1-stays-a-typed-call.md) | **Decision-1 stays a typed call** — no agent wrapper; the protocol is pinned and published instead |
-| [0013](docs/adr/0013-case-process-binding-and-inherited-restriction.md) | Case context and inherited restriction |
-| [0016](docs/adr/0016-swiss-1-foundations-is-the-ui-authority.md), [0026](docs/adr/0026-the-luvn-component-library-is-the-ui-authority.md), [0028](docs/adr/0028-the-library-pin-moves-to-014b02a-and-the-rehearsal-copy-is-retired.md) | The vendored library is the UI authority; **0026 supersedes 0016's vendor choice** and retains its contract; **0028 moves the pin to `014b02a`** |
+| [0023](docs/adr/0023-the-core-proposes-nothing.md) | The core proposes nothing; suggested actions are an optional module |
+| [0024](docs/adr/0024-the-urgency-legend-is-an-ordering-basis.md) | The urgency legend is an ordering basis, not a verdict |
+| [0025](docs/adr/0025-role-comes-from-the-principal.md) | The role comes from the signed-in user; the worklist is a scoped metadata projection |
+| [0026](docs/adr/0026-the-luvn-component-library-is-the-ui-authority.md) | The LUVN Component Library is the UI authority; **supersedes 0016's vendor choice** and retains its contract |
 | [0027](docs/adr/0027-the-tool-using-assistant-supersedes-the-deterministic-arm.md) | The tool-using assistant over the cached picture supersedes the deterministic arm |

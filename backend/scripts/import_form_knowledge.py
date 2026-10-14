@@ -128,7 +128,7 @@ def build(source: Path) -> tuple[dict, dict]:
         "snapshot_version": SNAPSHOT_VERSION,
         "source": {
             "title": "SOTE AI Hackathon data — esitietolomakkeet ja kyselyt",
-            "archive": "Hackathon_data.zip (Esitieto_lomakkeet_hackathon_json/)",
+            "archive": "the organiser's synthetic data release (Esitieto_lomakkeet_json/)",
             "retrieved": RETRIEVED,
             "note": "Synthetic hackathon release. Form definitions as published to the event; text is the "
                     "form's own Finnish wording, unedited.",

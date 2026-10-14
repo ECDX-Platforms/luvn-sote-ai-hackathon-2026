@@ -1,13 +1,13 @@
 # ADR-0020 — FHIR R4 is the mapping target; the archived Health Accelerator is rejected as a shape donor
 
-Status: accepted by the author, 2026-10-10, as a direction to record and **not** to migrate. No implementation
+Status: accepted by the author, as a direction to record and **not** to migrate. No implementation
 is authorised by this record. It settles what to cite and what to refuse, so that the question is not reopened
-during the delivery week.
+while the corpus work proceeds.
 
 ## Context
 
-The real corpus arrives 2026-10-13: 50,000 synthetic person profiles combining health and social services per
-person, as CSV or JSON, with the structure unknown until the day. An entity decomposition was proposed —
+The real corpus arrives as 50,000 synthetic person profiles combining health and social services per
+person, as CSV or JSON, with the structure unknown until it is delivered. An entity decomposition was proposed —
 adopting the data model of Microsoft's archived Dynamics 365 Health Accelerator, a FHIR R4 model on Dataverse —
 on the argument that the current three-table storage strands our own 25-field `Record` envelope in a JSON blob.
 
@@ -23,7 +23,7 @@ reach of any index, join, or constraint. The real defect is not invisibility but
 roughly 290 are FHIR *backbone element* tables named after FHIR element paths. Against that, the envelope spans
 about six entities — the comparison is 2%, not two-thirds. Its coding layer is four columns with **no
 code-system identifier at all**: the entire notion of which coding system a code belongs to is a 163-member
-numeric picklist. That is precisely the defect ADR-0015 already records in us, so adopting it would import the
+numeric picklist. That is precisely the defect already recorded in our own record envelope, so adopting it would import the
 bug we are trying to fix. It ships **no security roles** (`<Roles></Roles>`, zero `<RolePrivilege>`) and
 contains **no record-level access logic** (no `ownerid`, `grant`, `AssignRequest` or `PrincipalAccess` handling),
 so it cannot supply the permission machinery that is this product's core. Its resources are STU3/R4 drift
@@ -66,7 +66,7 @@ Dataverse model the remedy.
    `state` because no policy predicate reads it and `WHERE state = 'final'` would silently drop unset rows;
    `case_id` because it is free-form with no join target. `consent_holder` was rejected outright: it is an
    *encounter*-level axis, and promoting it onto `records` would create a second source of truth for a permission
-   axis — the inversion ADR-0013 exists to prevent.
+   axis — the inversion the case-binding decision exists to prevent.
 6. **The projection is deferred until its consumer exists.** `policy.cut` filters in Python and the SQL index
    reads `SELECT record_json WHERE source_person_id = ?`, so promoted columns would be write-only until the read
    path changes, and the schema change forces recreate, re-harden, re-grant and a full reload. Adding columns
@@ -80,6 +80,6 @@ Dataverse model the remedy.
   layer is built to be revised without a redeploy.
 - The unenforceability of the envelope's invariants remains an open defect. It is named here so it is not lost,
   and it is answerable with three columns when a reader exists for them.
-- Nothing in this record claims clinical adequacy. The organiser states that the corpus may not be used as
+- Nothing in this record claims clinical adequacy. The corpus terms state that it may not be used as
   evidence of clinical or professional performance, and the review's standing objection — that the production
   verifier has never been validated against clinician labels — is untouched by any storage decision.

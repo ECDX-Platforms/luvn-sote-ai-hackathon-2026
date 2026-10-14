@@ -4,7 +4,7 @@
      the artifacts below, and the pre-commit gate fails when this file and its sources disagree.
      Regenerate: cd backend && .venv/bin/python scripts/render_evidence.py -->
 
-**Evidence dates:** selection 2026-10-02; narration 2026-10-14; stability repeats 2026-10-10; delivery-shape dry run 2026-10-05. Decision-1 reads every permitted record in the encounter's scope -- free text and structured, current and historical -- after
+**Evidence:** a selection scorecard, a narration trial, stability repeats and a delivery-shape dry run, each recorded under `docs/evidence/`. Decision-1 reads every permitted record in the encounter's scope -- free text and structured, current and historical -- after
 the deterministic permission cut. It can add a missed source, emphasize a selected source, omit a
 baseline free-text note from generation on a confident `irrelevant` result, rank eligible sources
 by gate-checked urgency, or abstain. The source-wide negation question was dropped rather than paid
@@ -42,7 +42,7 @@ unadjudicated expectations. Mode: selection-only; Foundry disabled (narration is
 
 ## Delivery-shape dry run (synthetic, assumed schema)
 
-Measured once by `backend/scripts/generate_delivery_corpus.py` (`delivery-scale-dry-run-v1.json`, 2026-10-05; seed `20261013`, 4–24 records per profile): **50,000 synthetic profiles → 698,142 records** were generated in 3.6 s, then imported and indexed in **15.9 s** (whole pipeline to a resolved encounter 19.5 s), producing a **312 MB** index from 258 MB of source at **71 MB** peak RSS; one 19-record encounter resolved through that index in **8 ms**. Reconciliation after the import: **698,142 records on disk and 698,142 indexed, 50,000 persona files, 0 duplicate record IDs** (the separate re-read took 134.7 s and is not part of the timings above).
+Measured once by `backend/scripts/generate_delivery_corpus.py` (`delivery-scale-dry-run-v1.json`; seed `20261013`, 4–24 records per profile): **50,000 synthetic profiles → 698,142 records** were generated in 3.6 s, then imported and indexed in **15.9 s** (whole pipeline to a resolved encounter 19.5 s), producing a **312 MB** index from 258 MB of source at **71 MB** peak RSS; one 19-record encounter resolved through that index in **8 ms**. Reconciliation after the import: **698,142 records on disk and 698,142 indexed, 50,000 persona files, 0 duplicate record IDs** (the separate re-read took 134.7 s and is not part of the timings above).
 
 This is a **synthetic** deterministic corpus over the **assumed** delivery shape, on **one machine** — it is **not** the real 50,000-record delivery, whose schema is still unavailable, and it is **not** a load, concurrency or live-service throughput measurement. It establishes that the delivery importer, the per-person index and their reconciliation hold at delivery scale; it does **not** establish clinical validity, production readiness, or that the real schema imports unchanged.
 
@@ -82,7 +82,7 @@ This is a disagreement rate between authored artefacts, not an error rate for th
 - wrong_omissions counts baseline records excluded from the generation-eligible selection; it is a selection-layer omission, not an observed model-call omission.
 - the six evaluator-only encounters live in app.encounters.EVALUATION_ENCOUNTERS and are not part of the hosted product inventory.
 - the 42-note scale fixture's per-run candidate outcomes and Decision-1 elapsed time are recorded in the scale result; over-byte-cap notes are not sent.
-- Emphasis expectations were authored 2026-10-05 after the first live observation of the emphasised IDs. They measure author agreement with Decision-1's priority ranking, not pre-registered or adjudicated validation, and must not be quoted as accuracy.
+- Emphasis expectations were authored after the first live observation of the emphasised IDs. They measure author agreement with Decision-1's priority ranking, not pre-registered or adjudicated validation, and must not be quoted as accuracy.
 
 *From the narration trial*
 
@@ -118,12 +118,12 @@ This is a disagreement rate between authored artefacts, not an error rate for th
 
 ## Sources
 
-- `.scratch/hackathon-readiness/results/evidence-manifest.json` (kind → artifact index)
-- `.scratch/hackathon-readiness/results/decision-value-eval-cap80-v1.json`
-- `.scratch/hackathon-readiness/results/live-encounter-trial-v1-summary.json`
-- `.scratch/hackathon-readiness/results/decision-value-eval-instability/summary.json` (per-run rows beside it: `run1.json`–`run5.json`)
-- `.scratch/hackathon-readiness/results/decision-floor-ablation-v1.json` (paired floor/margin ablation)
-- `.scratch/hackathon-readiness/results/decision-structured-fact-disagreement-v1.json` (structured-fact disagreement)
-- `.scratch/hackathon-readiness/results/delivery-scale-dry-run-v1.json` (synthetic delivery-shape import/index dry run)
-- `.scratch/hackathon-readiness/results/content-safety-probe-v1.json`
+- `docs/evidence/evidence-manifest.json` (kind → artifact index)
+- `docs/evidence/decision-value-eval-cap80-v1.json`
+- `docs/evidence/live-encounter-trial-v1-summary.json`
+- `docs/evidence/decision-value-eval-instability/summary.json` (per-run rows beside it: `run1.json`–`run5.json`)
+- `docs/evidence/decision-floor-ablation-v1.json` (paired floor/margin ablation)
+- `docs/evidence/decision-structured-fact-disagreement-v1.json` (structured-fact disagreement)
+- `docs/evidence/delivery-scale-dry-run-v1.json` (synthetic delivery-shape import/index dry run)
+- `docs/evidence/content-safety-probe-v1.json`
 - Raw narration-bearing trial output stays gitignored; only the scrubbed summary above is tracked.

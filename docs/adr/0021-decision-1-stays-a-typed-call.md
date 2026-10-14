@@ -1,6 +1,6 @@
 # ADR-0021 — Decision-1 stays a typed call; transparency comes from a pinned protocol and a ledger, not an agent wrapper
 
-Status: accepted by the owner's delegate, 2026-10-11, on the recommendation of a `claude-opus-5.5` oracle
+Status: accepted by the owner's delegate on the recommendation of a `claude-opus-5.5` oracle
 review. Records a decision **not** to change the decision-model call path. It supersedes no ADR; it extends
 [ADR-0018](0018-microsoft-decision-1-replaces-the-vendor-classifier.md) (one model, both roles) and
 [ADR-0011](0011-ai-architecture-layers.md) (three layers, deterministic core in authority) by saying what
@@ -65,7 +65,7 @@ scrubbed app-side stage events, not Foundry service-side spans.
    keys and types; the verifier test checks its descriptor shape, not the verifier's assembled request. So
    this is a **partial structural pin**: it makes a change to the protocol's *shape* impossible to land
    silently, and it leaves the wording and the thresholds to review. An earlier revision of this ADR read as
-   though the effective behaviour were pinned; an oracle review on 2026-10-11 established that it is not, and
+   though the effective behaviour were pinned; a later oracle review established that it is not, and
    the distinction matters most in the comparison below — an independently editable agent prompt would put
    even the wording outside this pin, which is the argument's direction, not a claim that the wording is
    already inside it.
@@ -95,8 +95,8 @@ scrubbed app-side stage events, not Foundry service-side spans.
 - The auditable surface is the protocol and the probabilities, not a portal view. A reader can inspect
   `docs/decision-protocol.md` and the response, and reproduce the gates.
 - Changing a question is now a two-file change with a gate that refuses to let them disagree. That is
-  deliberate friction on the one interface whose silent drift would invalidate every measurement in
-  `.scratch/`.
+  deliberate friction on the one interface whose silent drift would invalidate every measurement behind
+  these records.
 - The transparency goal is met *partially and honestly*: the protocol is pinned and published; tracing is
   named as the remaining work rather than described as present.
 - No second identity, no second runtime and no second failure mode is introduced on the decision path.
@@ -112,7 +112,7 @@ scrubbed app-side stage events, not Foundry service-side spans.
 
 ## What would change this decision, and one capability fact that shapes it
 
-An oracle re-examined this decision on 2026-10-11 at the owner's request and **upheld it**, with one
+An oracle re-examined this decision at the owner's request and **upheld it**, with one
 capability fact worth recording because it is the thing that makes "just wrap it in an agent" unsound rather
 than merely unnecessary:
 

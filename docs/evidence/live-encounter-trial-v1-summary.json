@@ -1,0 +1,2075 @@
+{
+  "agent_reference_count": 29,
+  "direct_fallback_count": 0,
+  "direct_primary_count": 0,
+  "effective_budgets_s": {
+    "agent": 45,
+    "generation": 70,
+    "joint": 80
+  },
+  "encounters": 15,
+  "evaluator_only_encounters": 6,
+  "generation_enabled_modes": 30,
+  "generation_path_counts": {
+    "agent_reference": 29,
+    "direct_chat_completions": 0,
+    "direct_fallback": 0
+  },
+  "kind": "scrubbed-live-encounter-trial-summary",
+  "limits": [
+    "synthetic, author-authored, unadjudicated fixtures",
+    "local pipeline trial, not a hosted production deployment",
+    "this local path-instrumented run is inconclusive as general validation; verifier failures remain fail-closed, and foundry-off exercises the no-prose path",
+    "per-sentence citation IDs, priorities and statuses only; no sentence text, note text or identities"
+  ],
+  "per_encounter": {
+    "bound-encounter-002-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 17079,
+        "agent_call_status": "ok",
+        "agent_token_ms": 421,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 6,
+        "decision_supported": 6,
+        "decision_unknown": 0,
+        "direct_call_ms": 2576,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 17508,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-002",
+          "bound-med-003",
+          "bound-dx-002",
+          "bound-dx-003",
+          "bound-note-002"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-002",
+              "bound-med-003"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-002",
+              "bound-dx-003"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 27703
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 15031,
+        "agent_call_status": "ok",
+        "agent_token_ms": 291,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 2437,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": false,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 15915,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-002",
+          "bound-med-003",
+          "bound-med-002",
+          "bound-dx-002",
+          "bound-dx-003"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-003",
+              "bound-med-002"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-002",
+              "bound-dx-003"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-002"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 25921
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-002",
+          "bound-med-002",
+          "bound-med-003",
+          "bound-dx-002",
+          "bound-dx-003"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 456
+      }
+    },
+    "bound-encounter-003-mielenterveys-laakari": {
+      "decision-off": {
+        "agent_call_ms": 11504,
+        "agent_call_status": "ok",
+        "agent_token_ms": 408,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 7,
+        "decision_supported": 6,
+        "decision_unknown": 1,
+        "direct_call_ms": 6812,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 11920,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-dx-004",
+          "bound-arviointi-003",
+          "bound-note-003",
+          "bound-note-019"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-004"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-004"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-arviointi-003"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-019"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-019"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 33069
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 10303,
+        "agent_call_status": "ok",
+        "agent_token_ms": 353,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 7,
+        "decision_supported": 6,
+        "decision_unknown": 1,
+        "direct_call_ms": 6785,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 10666,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-dx-004",
+          "bound-arviointi-003",
+          "bound-note-003",
+          "bound-note-019"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-004"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-004"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-arviointi-003"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-019"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-019"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 32288
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-dx-004",
+          "bound-arviointi-003",
+          "bound-note-003",
+          "bound-note-019"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 460
+      }
+    },
+    "bound-encounter-003-mielenterveys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 13750,
+        "agent_call_status": "ok",
+        "agent_token_ms": 290,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 7,
+        "decision_supported": 6,
+        "decision_unknown": 1,
+        "direct_call_ms": 6619,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 14048,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-dx-004",
+          "bound-arviointi-003",
+          "bound-note-003"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-004"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-004"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-arviointi-003"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 35551
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 9956,
+        "agent_call_status": "ok",
+        "agent_token_ms": 460,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 6,
+        "decision_supported": 5,
+        "decision_unknown": 1,
+        "direct_call_ms": 6225,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 10425,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-arviointi-003",
+          "bound-dx-004",
+          "bound-note-003"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-004"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-004"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-arviointi-003"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-003"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 32749
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-med-004",
+          "bound-dx-004",
+          "bound-arviointi-003",
+          "bound-note-003"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 430
+      }
+    },
+    "bound-encounter-003-toimintakyky-fysioterapeutti": {
+      "decision-off": {
+        "agent_call_ms": 10196,
+        "agent_call_status": "ok",
+        "agent_token_ms": 446,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 3,
+        "decision_supported": 3,
+        "decision_unknown": 0,
+        "direct_call_ms": 4971,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 10651,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 3,
+        "sentences_dropped": 0,
+        "sentences_proposed": 3,
+        "versioned_agent_result": true,
+        "wall_ms": 23132
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 7634,
+        "agent_call_status": "ok",
+        "agent_token_ms": 520,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 2,
+        "decision_supported": 2,
+        "decision_unknown": 0,
+        "direct_call_ms": 5203,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 8162,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 2,
+        "sentences_dropped": 0,
+        "sentences_proposed": 2,
+        "versioned_agent_result": true,
+        "wall_ms": 21264
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 416
+      }
+    },
+    "bound-encounter-003-toimintakyky-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 19203,
+        "agent_call_status": "ok",
+        "agent_token_ms": 326,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 2,
+        "decision_supported": 2,
+        "decision_unknown": 0,
+        "direct_call_ms": 5433,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 19537,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 2,
+        "sentences_dropped": 0,
+        "sentences_proposed": 2,
+        "versioned_agent_result": true,
+        "wall_ms": 31948
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 10831,
+        "agent_call_status": "ok",
+        "agent_token_ms": 405,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 3,
+        "decision_supported": 3,
+        "decision_unknown": 0,
+        "direct_call_ms": 5206,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 11245,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-010"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 3,
+        "sentences_dropped": 0,
+        "sentences_proposed": 3,
+        "versioned_agent_result": true,
+        "wall_ms": 25496
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 352
+      }
+    },
+    "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": {
+      "decision-off": {
+        "agent_call_ms": 10894,
+        "agent_call_status": "ok",
+        "agent_token_ms": 467,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 4956,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 11370,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-arviointi-006",
+          "bound-note-005",
+          "bound-paatos-007",
+          "bound-paatos-005"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-arviointi-006"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-005"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-paatos-007"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-paatos-005"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-005"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 23661
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 11787,
+        "agent_call_status": "ok",
+        "agent_token_ms": 437,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 5497,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": false,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 12232,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-paatos-007",
+          "bound-paatos-005",
+          "bound-note-009",
+          "bound-arviointi-006",
+          "bound-arviointi-007",
+          "bound-note-005"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-arviointi-006"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-009"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-paatos-007"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-005"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-paatos-005"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 25907
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-paatos-007",
+          "bound-paatos-005",
+          "bound-arviointi-006",
+          "bound-note-009",
+          "bound-note-005",
+          "bound-arviointi-007"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 436
+      }
+    },
+    "bound-encounter-005-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 13115,
+        "agent_call_status": "ok",
+        "agent_token_ms": 323,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 2740,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 13446,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-med-005",
+          "bound-dx-005",
+          "bound-note-013"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-005"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-005"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-med-005"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-013"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-013"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 23653
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 12901,
+        "agent_call_status": "ok",
+        "agent_token_ms": 408,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 6,
+        "decision_supported": 6,
+        "decision_unknown": 0,
+        "direct_call_ms": 3191,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": false,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 13318,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-lab-005-alignment",
+          "bound-note-011",
+          "bound-med-005",
+          "bound-dx-005"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-med-005"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-dx-005"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-lab-005-alignment"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-011"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-011"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-011"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 23522
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-lab-005-alignment",
+          "bound-med-005",
+          "bound-dx-005"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 388
+      }
+    },
+    "bound-encounter-006-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 3425,
+        "agent_call_status": "ok",
+        "agent_token_ms": 498,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 3342,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 3931,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 14488
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 3386,
+        "agent_call_status": "ok",
+        "agent_token_ms": 503,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 3006,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 3898,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 13733
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 544
+      }
+    },
+    "bound-encounter-007-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 3752,
+        "agent_call_status": "ok",
+        "agent_token_ms": 366,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2807,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 4126,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 13369
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 3927,
+        "agent_call_status": "ok",
+        "agent_token_ms": 426,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 3193,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 4361,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 14299
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 375
+      }
+    },
+    "bound-encounter-008-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 44559,
+        "agent_call_status": "timeout",
+        "agent_token_ms": 436,
+        "agent_token_status": "ok",
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2861,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": 69753,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 78948
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 4025,
+        "agent_call_status": "ok",
+        "agent_token_ms": 495,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2742,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 4529,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 15293
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 359
+      }
+    },
+    "bound-encounter-009-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 3365,
+        "agent_call_status": "ok",
+        "agent_token_ms": 368,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2631,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 3742,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 12798
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 11602,
+        "agent_call_status": "ok",
+        "agent_token_ms": 511,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 4,
+        "decision_supported": 4,
+        "decision_unknown": 0,
+        "direct_call_ms": 2461,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 12122,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-017"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-017"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-017"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-017"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-017"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 4,
+        "sentences_dropped": 0,
+        "sentences_proposed": 4,
+        "versioned_agent_result": true,
+        "wall_ms": 21760
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-017"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 402
+      }
+    },
+    "bound-encounter-010-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 8339,
+        "agent_call_status": "ok",
+        "agent_token_ms": 423,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 2,
+        "decision_supported": 2,
+        "decision_unknown": 0,
+        "direct_call_ms": 2589,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 8770,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-scale-000",
+          "bound-note-scale-001"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-scale-000"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-scale-001"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 2,
+        "sentences_dropped": 0,
+        "sentences_proposed": 2,
+        "versioned_agent_result": true,
+        "wall_ms": 18958
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 10137,
+        "agent_call_status": "ok",
+        "agent_token_ms": 473,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 4125,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 10619,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-scale-041"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-scale-041"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-scale-041"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-scale-041"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-scale-041"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 23982
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 1386
+      }
+    },
+    "bound-encounter-011-laakitys-sairaanhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 4651,
+        "agent_call_status": "ok",
+        "agent_token_ms": 354,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2710,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 5016,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 15170
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 3424,
+        "agent_call_status": "ok",
+        "agent_token_ms": 271,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": 2898,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": null,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 3703,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": []
+          }
+        ],
+        "sentence_drop_reasons": [
+          "invalid_membership"
+        ],
+        "sentences_accepted": 0,
+        "sentences_dropped": 1,
+        "sentences_proposed": 1,
+        "versioned_agent_result": false,
+        "wall_ms": 13903
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 956
+      }
+    },
+    "bound-encounter-012-neuvola-terveydenhoitaja": {
+      "decision-off": {
+        "agent_call_ms": 15537,
+        "agent_call_status": "ok",
+        "agent_token_ms": 551,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 6,
+        "decision_supported": 5,
+        "decision_unknown": 1,
+        "direct_call_ms": 15216,
+        "direct_call_status": "timeout",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 16096,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-mittaus-013",
+          "bound-note-020"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-mittaus-013"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 51285
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 12877,
+        "agent_call_status": "ok",
+        "agent_token_ms": 367,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 8,
+        "decision_supported": 7,
+        "decision_unknown": 1,
+        "direct_call_ms": 16503,
+        "direct_call_status": "timeout",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 13252,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-mittaus-013"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-mittaus-013"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          },
+          {
+            "sentence_id": "s7",
+            "source_ids": [
+              "bound-note-020"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 7,
+        "sentences_dropped": 0,
+        "sentences_proposed": 7,
+        "versioned_agent_result": true,
+        "wall_ms": 48763
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-mittaus-013",
+          "bound-mittaus-012"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 651
+      }
+    },
+    "bound-encounter-013-vammaispalvelut-sosiaalityontekija": {
+      "decision-off": {
+        "agent_call_ms": 12536,
+        "agent_call_status": "ok",
+        "agent_token_ms": 513,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 5,
+        "decision_supported": 5,
+        "decision_unknown": 0,
+        "direct_call_ms": 5813,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": true,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 13059,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-023",
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-023"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-esitieto-013"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-esitieto-013"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-022"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-023"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 5,
+        "sentences_dropped": 0,
+        "sentences_proposed": 5,
+        "versioned_agent_result": true,
+        "wall_ms": 26660
+      },
+      "decision-on-foundry-on": {
+        "agent_call_ms": 13759,
+        "agent_call_status": "ok",
+        "agent_token_ms": 545,
+        "agent_token_status": "ok",
+        "configured_agent_version": "12",
+        "decision_sentences_checked": 6,
+        "decision_supported": 6,
+        "decision_unknown": 0,
+        "direct_call_ms": 5281,
+        "direct_call_status": "ok",
+        "first_sentence_cites_priority_source": false,
+        "generation_model": "gpt-6.1-sol",
+        "generation_ms": 14312,
+        "generation_path": "agent_reference",
+        "generation_source": "versioned_project_agent",
+        "narration_accepted": true,
+        "priority_record_ids": [
+          "bound-note-022",
+          "bound-note-023"
+        ],
+        "sentence_citations": [
+          {
+            "sentence_id": "s1",
+            "source_ids": [
+              "bound-note-023"
+            ]
+          },
+          {
+            "sentence_id": "s2",
+            "source_ids": [
+              "bound-esitieto-013"
+            ]
+          },
+          {
+            "sentence_id": "s3",
+            "source_ids": [
+              "bound-esitieto-013"
+            ]
+          },
+          {
+            "sentence_id": "s4",
+            "source_ids": [
+              "bound-note-022"
+            ]
+          },
+          {
+            "sentence_id": "s5",
+            "source_ids": [
+              "bound-note-022"
+            ]
+          },
+          {
+            "sentence_id": "s6",
+            "source_ids": [
+              "bound-note-023"
+            ]
+          }
+        ],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 6,
+        "sentences_dropped": 0,
+        "sentences_proposed": 6,
+        "versioned_agent_result": true,
+        "wall_ms": 27390
+      },
+      "foundry-off": {
+        "agent_call_ms": null,
+        "agent_call_status": null,
+        "agent_token_ms": null,
+        "agent_token_status": null,
+        "configured_agent_version": null,
+        "decision_sentences_checked": 0,
+        "decision_supported": 0,
+        "decision_unknown": 0,
+        "direct_call_ms": null,
+        "direct_call_status": null,
+        "first_sentence_cites_priority_source": null,
+        "generation_model": null,
+        "generation_ms": null,
+        "generation_path": null,
+        "generation_source": "no_generation",
+        "narration_accepted": false,
+        "priority_record_ids": [
+          "bound-note-022",
+          "bound-note-023"
+        ],
+        "sentence_citations": [],
+        "sentence_drop_reasons": [],
+        "sentences_accepted": 0,
+        "sentences_dropped": 0,
+        "sentences_proposed": 0,
+        "versioned_agent_result": false,
+        "wall_ms": 396
+      }
+    }
+  },
+  "preparation_window_s": 160.0,
+  "product_encounters": 9,
+  "scope": "Local synthetic pipeline rerun dated 2026-10-14. The previously committed live evidence predates this path-instrumented run. This trial is inconclusive as general validation and is not a hosted production deployment.",
+  "sentence1_priority_source": {
+    "eligible_encounters": 11,
+    "matches": 7,
+    "not_comparable": 4,
+    "per_encounter": {
+      "bound-encounter-002-laakitys-sairaanhoitaja": false,
+      "bound-encounter-003-mielenterveys-laakari": true,
+      "bound-encounter-003-mielenterveys-sairaanhoitaja": true,
+      "bound-encounter-003-toimintakyky-fysioterapeutti": true,
+      "bound-encounter-003-toimintakyky-sairaanhoitaja": true,
+      "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": false,
+      "bound-encounter-005-laakitys-sairaanhoitaja": false,
+      "bound-encounter-006-laakitys-sairaanhoitaja": null,
+      "bound-encounter-007-laakitys-sairaanhoitaja": null,
+      "bound-encounter-008-laakitys-sairaanhoitaja": null,
+      "bound-encounter-009-laakitys-sairaanhoitaja": true,
+      "bound-encounter-010-laakitys-sairaanhoitaja": true,
+      "bound-encounter-011-laakitys-sairaanhoitaja": null,
+      "bound-encounter-012-neuvola-terveydenhoitaja": true,
+      "bound-encounter-013-vammaispalvelut-sosiaalityontekija": false
+    },
+    "total_encounters": 15
+  },
+  "source_artifact": ".foundry/results/live-encounter-trial-v1.json (gitignored raw output; narration text omitted)",
+  "verifier": {
+    "mode": "decision-on-foundry-on",
+    "totals": {
+      "decision_sentences_checked": 57,
+      "decision_supported": 54,
+      "decision_unknown": 3,
+      "decision_verifier_supported_rate": [
+        54,
+        57
+      ],
+      "drop_reasons": {
+        "invalid_membership": 4
+      },
+      "end_to_end_acceptance": [
+        54,
+        58
+      ],
+      "sentences_accepted": 54,
+      "sentences_dropped": 4,
+      "sentences_proposed": 58
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # ADR-0025 — The role comes from the signed-in user, and the worklist is a scoped metadata projection
 
-Status: **accepted by the owner, 2026-10-13.** It is the
+Status: **accepted by the owner.** It is the
 step-0 decision the re-foundation from the database upward depends on: two independent oracles reviewing the
 full-release load found that the database, the API shape and the authorization model cannot be finished
 separately, because each encounter bakes a role in at build time while the UI lets the *viewer* choose one.
@@ -12,7 +12,7 @@ consume only `Scoped`), [ADR-0016](0016-swiss-1-foundations-is-the-ui-authority.
 
 ## Context
 
-The corpus is no longer a bounded demonstration. Measured on the built release (2026-10-13): **32,336 people
+The corpus is no longer a bounded demonstration. Measured on the built release: **32,336 people
 with at least one canonical record, 546,085 records and 38,469 encounters**, drawn from two cohorts — one
 where clinical and social people are the same 15,000, and one where they are **separate** sets (15,000
 clinical `SYN-ASI-0…`, 2,336 social `SYN-ASI-2…` with data). Of the 45,000 registered people, 12,664 are
@@ -94,7 +94,7 @@ live corpus and a 546k-row single transaction is forbidden.
   `GET /api/encounters?limit=50` and a single picture against the full corpus, plus an integrity readback.
   It is not deferred to the end-to-end layer.
 - The 14 statements listed by the architecture review (in `App.jsx`, `worklist.mjs`, `delivery.py`,
-  `store.py`, `README.md`, `docs/hosting-runbook.md`, `docs/architecture-as-built.md`, `HANDOFF.md`) become
+  `store.py`, `README.md`, `docs/hosting-runbook.md`, `docs/architecture-as-built.md`) become
   false when the full corpus is live, and must be corrected as part of the switch. `check_doc_claims` does
   not check corpus counts, so the gate will not catch them.
 - Nothing here authorizes normalising the record schema, adding Azure AI Search or Redis, or adding Foundry
@@ -113,9 +113,9 @@ live corpus and a 546k-row single transaction is forbidden.
 
 ---
 
-## Amendment, 2026-10-13 — the honest axis is the encounter, not the role
+## Amendment — the honest axis is the encounter, not the role
 
-**Status: accepted by the owner on 2026-10-13; reviewed and CLOSED, 2026-10-13.** An independent oracle
+**Status: accepted by the owner; reviewed and CLOSED.** An independent oracle
 reviewed this amendment against the code and the record and returned **accept as written**: it confirmed
 `EncounterScope` holds exactly the three encounter selectors (`access.py:147-180`), that `resolve_scope`
 keys on the principal alone and never on a role (`access.py:217-231`, `:479-502`), that no authorization
@@ -166,7 +166,7 @@ event (§5) and the staged load with a pointer switch (§6). The audit row names
 
 ---
 
-## Owner decision, 2026-10-13 — the role selector stays
+## Owner decision — the role selector stays
 
 **Status: owner decision, recorded here because it reverses a consequence of the amendment above.**
 

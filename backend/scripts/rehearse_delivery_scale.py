@@ -23,7 +23,7 @@ It also reports the stage that is NOT streaming, because that is the finding a s
 
     # both sizes, merged into the artifact the evidence document can cite
     .venv/bin/python scripts/rehearse_delivery_scale.py \\
-        --json ../.scratch/hackathon-readiness/results/delivery-scale-rehearsal-v1.json
+        --json ../delivery-scale-rehearsal.json
 
     # one size, in this process (what the unit test drives)
     .venv/bin/python scripts/rehearse_delivery_scale.py --single --records 2000 --profiles 100

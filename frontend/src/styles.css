@@ -8,7 +8,7 @@
    The merge removed only rules whose selectors reference classes nothing renders, and only the matching
    selector parts from grouped rules. Every surviving rule is byte-identical to its original, in the
    original order; only the 21 grouped rules that lost a selector part were re-joined. See
-   .scratch/design-system-migration/issues/03-consolidate-and-adopt-colour.md. */
+   the design-system contract. */
 
 .brief-app {
   color: var(--color-text);
@@ -192,7 +192,7 @@
      * axe judges the DOM, not which of two stylesheets won, and jsdom cannot paint. Nothing here is a visual
        check; it was found by reading the cascade and confirmed in a browser.
    The general fix is upstream: a documented class contract, or the `columns` prop this vendored revision does
-   not have (`.scratch/ui-ux-upgrade/issues/01-vendor-the-reference.md`) — never an edit to
+   not have — never an edit to
    `frontend/vendor/comp-lib/` (ADR-0016). */
 /* One card, stacked severity rows: same width, same anatomy — icon, severity word, fact, action. */
 .brief-app .brief-alert-stack { display: grid; gap: var(--space-xs); }

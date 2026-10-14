@@ -1,18 +1,18 @@
-# Regulatory position — LUVN Challenge 1.1
+# Regulatory position — LUVN
 
-**Status:** internal reading, written 2026-10-09 for the 13–14.10.2026 event.
+**Status:** internal reading for this repository.
 **Authority:** this document is **not** legal advice, **not** a conformity assessment and **not** a statement of
-compliance with any regulation. It records what the built system is, what the event material says about the rules
+compliance with any regulation. It records what the built system is, what the source material says about the rules
 around it, and which questions remain open. Dates and citations must be verified against the regulation text
 before they are repeated outside this repository.
 
 **Reference set.** The primary sources behind the dates and quotes below, with what each one does *not*
 establish and a marked unverified list, are in [`docs/references.md`](references.md). That file is the citation
 layer for this one; where the two disagree, the reference set is right and this document is stale.
-*Why this note exists: the citations here were previously carried from event material and secondary sources; the reference set names the primary source for each one.*
+*Why this note exists: the citations here were previously carried from secondary material; the reference set names the primary source for each one.*
 
-**Why it exists.** The pre-event material (Nelli Karhu, *Sote-AI -ideasta kokeiluun*, 6.10.2026; Jouni Meriluoto,
-*GDPR, EU AI Act ja EHDS SoTe AI:ssa*, 7.10.2026) states the developer's first move in its own words:
+**Why it exists.** The source material (Nelli Karhu, *Sote-AI -ideasta kokeiluun*; Jouni Meriluoto,
+*GDPR, EU AI Act ja EHDS SoTe AI:ssa*) states the developer's first move in its own words:
 
 > "Käytännön ensiaskel on kirjata kullekin tekoälyratkaisulle käyttötarkoitus, toimittaja, organisaation rooli,
 > mahdollinen laitestatus ja soveltuvat määräajat." — *"The practical first step is to record, for each AI
@@ -23,24 +23,22 @@ layer for this one; where the two disagree, the reference set is right and this 
 > ensin." — *"Purpose of use decides: it determines the role, the classification and the obligations — which is
 > why it should be defined first."*
 
-This document is that record for this repository. [`.scratch/challenge-1-1-alignment/spec.md`](../.scratch/challenge-1-1-alignment/spec.md)
-remains the boundary register for *source-schema* decisions; this file is the boundary register for the
-*regulatory* reading.
+This document is that record for this repository, and it is the boundary register for the *regulatory* reading.
 
 ---
 
 ## 1. System register
 
-One row per AI system this repository depends on, in the shape the event material asks for. "Our role" is the
+One row per AI system this repository depends on, in the shape the source material asks for. "Our role" is the
 role of the organisation running this demo, not of a vendor.
 
 | # | System | Purpose of use (käyttötarkoitus) | Vendor | Our role | Device status | Annex III relevance | Applicable deadline |
 |---|---|---|---|---|---|---|---|
-| A | **LUVN situation picture** (`policy.cut` → `decide` → Decision-1 → Foundry narration) | Assemble the *permitted and relevant* existing source facts for one professional in one service situation, with a citation for every claim; no diagnosis, no treatment recommendation. The system **orders already permitted and selected records by a validated scheduling-urgency score**; urgency **never** selects, withholds or omits a record, and inclusion and omission are decided before it runs. **Decided 2026-10-12 (ticket 11):** the system derives totals for two structured instruments (PHQ-9, IADL) deterministically from recorded item answers, and prints instrument facts rather than clinical severity characterisations. The computation is the system's own, on synthetic data, and nothing is certified. The publisher's own PHQ-9 page states that its printable PDF form does **not** calculate automatically, citing MDR 2017/745 — quoted with its URL and retrieval date in `.scratch/finnish-knowledge-sources/issues/11-phq9-scoring-and-mdr.md` | none — built in-house in this repository | **Provider** of the briefing (LUVN builds and offers it); also deployer of the two vendor layers inside it | **None claimed.** No medical purpose is declared; no device is placed on the market; nothing is CE-marked | **Reviewed and not relied upon:** the demo runs now, and no Annex III obligation attaches on 13.10.2026 (see §3) | none pending — the demo is in service as a synthetic tool |
+| A | **LUVN situation picture** (`policy.cut` → `decide` → Decision-1 → Foundry narration) | Assemble the *permitted and relevant* existing source facts for one professional in one service situation, with a citation for every claim; no diagnosis, no treatment recommendation. The system **orders already permitted and selected records by a validated scheduling-urgency score**; urgency **never** selects, withholds or omits a record, and inclusion and omission are decided before it runs. **Decided:** the system derives totals for two structured instruments (PHQ-9, IADL) deterministically from recorded item answers, and prints instrument facts rather than clinical severity characterisations. The computation is the system's own, on synthetic data, and nothing is certified. The publisher's own PHQ-9 page states that its printable PDF form does **not** calculate automatically, citing MDR 2017/745 — quoted with its URL and retrieval date in the repository's source notes | none — built in-house in this repository | **Provider** of the briefing (LUVN builds and offers it); also deployer of the two vendor layers inside it | **None claimed.** No medical purpose is declared; no device is placed on the market; nothing is CE-marked | **Reviewed and not relied upon:** the demo runs now, and no Annex III obligation attaches today (see §3) | none pending — the demo is in service as a synthetic tool |
 | B | **Microsoft-Decision-1** (a Foundry deployment, `<foundry-host>/providers/microsoft/v1/systemone`) | Classify one *already permitted* free-text note as relevant / irrelevant / unclear for a given role and service purpose, and judge whether a proposed sentence is supported by its cited sources | Microsoft (external processor, EU data zone) | **Deployer** of an external classifier | not applicable (a classifier, not a device) | not relied upon | classification itself is not a deferred obligation |
 | C | **Azure AI Foundry** (`gpt-6.1-sol`, Prompt Agent `luvn-narration`) | Turn already-selected, already-permitted evidence into ≤4 Finnish sentences, each citing its sources | Microsoft (external) | **Deployer** of an external generative model | not applicable (prose generation, not a device) | not relied upon | none pending |
 
-**Why provider, and what that costs.** The event material's rule: *"Itse kehittävä organisaatio on tarjoaja
+**Why provider, and what that costs.** The source material's rule: *"Itse kehittävä organisaatio on tarjoaja
 (provider), jolla on laajemmat velvoitteet: riskienhallinta, dokumentaatio, lokit ja vaatimustenmukaisuuden
 arviointi."* — an organisation that develops the system itself is a **provider** with the wider obligations
 (risk management, documentation, logs, conformity assessment; Arts. 8–17 and 43). This repository is an in-house
@@ -88,7 +86,7 @@ on the wire — it lives in this document, where it is labelled a non-authoritat
 
 ## 2. Where this system sits relative to the device question
 
-The event material's test is concrete, and it points directly at what this product does:
+The source material's test is concrete, and it points directly at what this product does:
 
 > "Potilas- tai laboratoriotietojärjestelmä, joka vain siirtää ja säilöö tietoa" is **not** classified as a
 > medical device — *"Huom. Jos järjestelmä esim. hälyttää riskitiedoista tai muokkaa tai tiivistää
@@ -99,8 +97,8 @@ So the honest answer has to address each trigger rather than wave at "synthetic"
 
 | Trigger named in the material | What this repository actually does | Where |
 |---|---|---|
-| Alerts on risk data | The risk level and suggested actions come from deterministic tables marked illustrative, not law; the only *severity* wording rendered on a lab row is **source-supplied** (`tulkinta`, e.g. `kliinisesti hälyttävä`), never computed by us | `backend/app/decide.py`, `backend/app/tables/risk.json`, `.scratch/challenge-1-1-alignment/spec.md` (severity is source-supplied, no threshold inference) |
-| Modifies or condenses patient data | The generated prose is a **restatement with citations**, checked sentence-by-sentence against only the records it cites — **LUVN's own design decision**, because the shipped contract performs no whole-database query or embedding join, not a platform requirement; unsupported sentences are dropped and the deterministic briefing remains. The chat's **advice arm** (round R) drafts next steps only from the form-definition knowledge items retrieved for the question, and publishes one only when its citations resolve and a narrow contradiction check over the visible records passes; no clinician has reviewed that advice | `backend/app/grounding.py`, `backend/app/chat.py` (`generate_advice`), ADR-0002, [`docs/references.md`](references.md) §1 |
+| Alerts on risk data | The risk level and suggested actions come from deterministic tables marked illustrative, not law; the only *severity* wording rendered on a lab row is **source-supplied** (`tulkinta`, e.g. `kliinisesti hälyttävä`), never computed by us | `backend/app/decide.py`, `backend/app/tables/risk.json` (severity is source-supplied, no threshold inference) |
+| Modifies or condenses patient data | The generated prose is a **restatement with citations**, checked sentence-by-sentence against only the records it cites — **LUVN's own design decision**, because the shipped contract performs no whole-database query or embedding join, not a platform requirement; unsupported sentences are dropped and the deterministic briefing remains. The chat's **advice arm** (round R) drafts next steps only from the form-definition knowledge items retrieved for the question, and publishes one only when its citations resolve and a narrow contradiction check over the visible records passes; no clinician has reviewed that advice | `backend/app/grounding.py`, `backend/app/chat.py` (`generate_advice`), [`docs/references.md`](references.md) §1 |
 | Manufacturer's declared purpose | The declared purpose is served as a single value and states no diagnostic, preventive, monitoring or treatment purpose | `backend/app/intended_use.py`, and the "Käyttötarkoitus" row in the UI's run-specification disclosure |
 
 **The boundary, stated plainly.** *If this system is ever pointed at real patient data for a clinical purpose,
@@ -111,13 +109,13 @@ on the market under its own name), not only by agreement.
 
 ---
 
-## 3. Applicable-timeline table, as of 13.10.2026
+## 3. Applicable-timeline table
 
-Derived from the event material and labelled with the material's own dates. **The single most dangerous sentence
+Derived from the source material and labelled with the material's own dates. **The single most dangerous sentence
 for a presenter is "the AI Act does not apply yet" — it is false.** Parts of it are already applicable; what is
 deferred are the high-risk obligations of Chapter III, Sections 1–3.
 
-| Instrument | Applies from | Applies on 13.10.2026? |
+| Instrument | Applies from | Applies today? |
 |---|---|---|
 | **GDPR** (2016/679) | already in force | **Yes** — but see §4: today's payloads are fabricated, so special-category processing is not engaged |
 | **AI Act** (EU) 2024/1689 — Art. 5 prohibitions | 2.2.2025 | **Yes** |
@@ -151,22 +149,22 @@ retrieved, and it is the authoritative source for the 2027/2028 dates.*
 ## 4. What leaves this system, and under what condition real data may
 
 The two model layers are external services. That is a factual architectural property, so it is recorded here
-rather than discovered by a judge.
+rather than discovered by a reviewer.
 
 | Egress | What is sent | Minimisation already in code |
 |---|---|---|
 | Decision-1 (`<foundry-host>/providers/microsoft/v1/systemone`) | **One note at a time**, already permitted by `policy.cut`, plus a role/purpose `state` and the question `criteria`. Notes are never batched into one `state` | only post-cut records reach the shortlist; a withheld record is never sent and never counted |
 | Foundry (`gpt-6.1-sol`) | the selected post-cut evidence payloads | `source.basics_payload(record, "model")` returns `{}` for identity basics, so neither name nor display identifier is sent; a withheld record cannot be selected |
-| UpToDate Expert AI (**planned**; owner decision 2026-10-09) | the pathway question, plus the post-cut evidence projected exactly as Foundry's is | **not sent by any shipped code path yet.** The event path is an operator-supplied capture held locally; this row must be completed, with the processor and transfer analysis of section 4's condition, before real data reaches it |
+| UpToDate Expert AI (**planned**) | the pathway question, plus the post-cut evidence projected exactly as Foundry's is | **not sent by any shipped code path yet.** That path is an operator-supplied capture held locally; this row must be completed, with the processor and transfer analysis of section 4's condition, before real data reaches it |
 
 **Today's position.** Every fixture is fabricated from first principles, and the delivery corpus is **not loaded**
-(no 50 000-profile data in the image or the API). Under the event material's own table, fully invented persons,
+(no 50 000-profile data in the image or the API). Under the source material's own table, fully invented persons,
 events and identifiers do not make the rows personal data — so GDPR special-category processing and cross-border
 transfer are not engaged *for the synthetic demo*. The material also warns, and this repository agrees, that
 *"synteettisyys ei yksin todista anonymiteettiä"* — synthetic does not by itself prove anonymity — so this position
 is a statement about **these payloads**, not a general licence.
 
-**The condition for real data.** The 13.10 delivery is a different system. Before any of it reaches Decision-1 or
+**The condition for real data.** A real-data delivery is a different system. Before any of it reaches Decision-1 or
 Foundry, the provider/deployer must hold:
 
 1. a lawful basis under **GDPR Art. 6** *and*, for health data, **Art. 9** (the material notes patient consent is
@@ -178,8 +176,7 @@ Foundry, the provider/deployer must hold:
    processing — and the organisation already has a **DPO** obligation as a public authority (Art. 37(1)(a));
 4. a documented health-data-holder answer for **EHDS** before any of its phases bite (26.3.2027 onward).
 
-This is **registered as open work**, not implemented:
-[`.scratch/hackathon-readiness/issues/12-real-data-regulatory-gate.md`](../.scratch/hackathon-readiness/issues/12-real-data-regulatory-gate.md).
+This is **registered as open work**, not implemented.
 
 **Two national statutes, two different routes — and the care route has a limb this repository had under-used.**
 For **care delivery**, the relevant act is **703/2023** (*Laki sosiaali- ja terveydenhuollon asiakastietojen
@@ -256,12 +253,12 @@ reading of this section was wrong in both directions.
   **It now applies to this system**, because the conversational surface shipped: a professional can put a
   question to it, so a person is interacting directly with an AI system and the transparency duty attaches.
   This paragraph previously said no such duty attached, on the grounds that no conversational surface existed;
-  that was true of the revision it described and is false of this one. What is implemented with it
-  ([ADR-0019](adr/0019-the-conversational-surface-explains.md)): every turn returns a visible notice —
+  that was true of the revision it described and is false of this one. What is implemented with it:
+  every turn returns a visible notice —
   *"Olet yhteydessä tekoälyyn. Vastaus on tarkistettava."* — from the API rather than the interface, so a
   client cannot omit it. **What is not yet done:** the per-turn machine-readable marking of §5.2's second
-  half reaches the briefing's accepted prose (ADR-0017) but not yet each chat turn, which is recorded here as
-  an open obligation rather than described as complete.
+  half reaches the briefing's accepted prose ([ADR-0017](adr/0017-machine-readable-ai-marking.md)) but not
+  yet each chat turn, which is recorded here as an open obligation rather than described as complete.
 - **Art. 50(2)** is different and does reach this system. Its actual text: *"Providers of AI systems, including
   general-purpose AI systems, generating synthetic audio, image, video or text content, shall ensure that the
   outputs of the AI system are marked in a machine-readable format and detectable as artificially generated or
@@ -285,11 +282,11 @@ reading of this section was wrong in both directions.
   systems already on the market **before 2.8.2026** (Commission FAQ, last update 24.7.2026). It is **not**
   deferred to 2027–2028, and it is not satisfied by a visible caption: the requirement is a machine-readable
   marking, detectable as AI-generated or manipulated.
-- **This system does not qualify for that transition.** Its hosting first appears on **2026-10-01** (`1ab8d73`
-  adds `azure/hosting/main.bicep`) and its earliest live revision was `--0000010` on **2026-10-02**, so the duty
+- **This system does not qualify for that transition.** Its hosting began after 2.8.2026, so the duty
   applied to it from its first hosting day. **2.12.2026 is not its compliance deadline** — it is the date this
-  repository chose to revisit the marking decision by (ADR-0017, "Limits"). Stating it as a deadline we are
-  answerable to would misattribute a date the system does not own.
+  repository chose to revisit the marking decision by
+  ([ADR-0017](adr/0017-machine-readable-ai-marking.md), "Limits"). Stating it as a deadline we are answerable
+  to would misattribute a date the system does not own.
 
 **Where this system stands, today.** The payload **is marked**, and the limit of that marking is
 stated plainly: `backend/app/provenance.py` emits structured-field response headers on
@@ -334,7 +331,7 @@ materially past a few sentences, moving to a public or long-form surface, or bei
 it is marked on — rather than on a token count or a date this system does not own.
 
 **What the label is for, beyond that.** It earns its place through the *Tekoälyn hyödyntäminen* criterion: a
-judge can see what the model produced, and that a human — not the model — decides. The disclosure an internal
+reviewer can see what the model produced, and that a human — not the model — decides. The disclosure an internal
 clinical tool owes to its staff and patients comes from professional accountability and GDPR Articles 13–15, and
 this demo claims none of that either.
 
@@ -358,7 +355,7 @@ this demo claims none of that either.
   registration — self-assessed, no notified body). The position recorded here is that this demo has no such
   intended use: synthetic data, no manufacturer's declaration of a patient-care purpose, no interoperability
   claim. That is why the point is written down rather than left implicit, and it does not survive a real
-  clinical deployment. See [issue 13](../.scratch/hackathon-readiness/issues/13-ehds-position.md).
+  clinical deployment.
 - No `legal_basis` value ships: the field stays empty and is absent from the rendered record, and no candidate
   statute is reachable from the UI. Absent beats unapproved.
 - No clinical validation, no measured accuracy, no legal compliance, no per-professional authorization and no
@@ -380,7 +377,7 @@ this demo claims none of that either.
   states both duties separately — Art. 50(1) for the conversational surface, Art. 50(2) for the generated
   prose — and records that 2.12.2026 is a transitional date only for systems already on the market before
   2.8.2026, which this system is not. Whether a short professional briefing must in fact be marked is **decided
-  by nobody yet** — hence issue 14 rather than a claim in either direction.
+  by nobody yet** — hence an open question rather than a claim in either direction.
 - **The citation layer was wrong in three places, and this pass corrected them.** A "200-token" short-text
   threshold is not in any retrievable Commission document and has been **removed as a citation** (§5.2,
   ADR-0017); a quotation attributed to the Commission's Guidelines ("AI-generated summaries of text") could not
@@ -397,11 +394,10 @@ this demo claims none of that either.
   FinLOINC; Fimea's catalogue entry; any HL7/openEHR joint statement; Findata's procedure docs; and the
   non-existence of a Finlex English translation of 703/2023). This is **not** a lawyer's opinion: it has not had
   legal review. Verify before quoting a date or an article number outside this repository.
-- **Open questions with owners** are tracked outside this file: the real-data gate (issue 12), the EHDS position
-  (issue 13) and the Art. 50(2) marking decision (issue 14).
-- **Sources.** The primary-source citation layer is [`docs/references.md`](references.md), whose raw research
-  record is [`.scratch/reference-set-2026-10-11.md`](../.scratch/reference-set-2026-10-11.md). The event material
-  remains Nelli Karhu, *Sote-AI -ideasta kokeiluun – mitä sääntelystä kannattaa tietää?*, 6.10.2026, and Jouni
-  Meriluoto, *GDPR, EU AI Act ja EHDS SoTe AI:ssa*, 7.10.2026 (both received as event material); regulation
+- **Open questions** are tracked outside this file: the real-data gate, the EHDS position
+  and the Art. 50(2) marking decision.
+- **Sources.** The primary-source citation layer is [`docs/references.md`](references.md). The source material
+  is Nelli Karhu, *Sote-AI -ideasta kokeiluun – mitä sääntelystä kannattaa tietää?*, and Jouni
+  Meriluoto, *GDPR, EU AI Act ja EHDS SoTe AI:ssa*; regulation
   references are quoted as the material gives them, with the exceptions corrected in §3 and §5 against the
   primary sources linked in the reference set.

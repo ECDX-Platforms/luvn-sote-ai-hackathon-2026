@@ -1,0 +1,31 @@
+{
+  "encounters": 12,
+  "generate_wall_s": 3.6,
+  "import_wall_s": 15.9,
+  "index_mb": 312,
+  "integrity": {
+    "duplicate_record_ids": 0,
+    "indexed_records": 698142,
+    "persona_files": 50000,
+    "records_on_disk": 698142
+  },
+  "integrity_wall_s": 134.7,
+  "kind": "delivery-scale-dry-run",
+  "limits": [
+    "synthetic deterministic corpus; it exercises import scale and index shape, not the real 13.10.2026 schema",
+    "one machine; wall time is I/O-bound and not a throughput guarantee for another host"
+  ],
+  "peak_rss_mb": 71,
+  "pipeline_wall_s": 19.5,
+  "profiles": 50000,
+  "records": 698142,
+  "records_per_profile": [
+    4,
+    24
+  ],
+  "resolve_one_encounter_ms": 8,
+  "resolved_records": 19,
+  "seed": 20261013,
+  "skipped": 0,
+  "source_mb": 258
+}

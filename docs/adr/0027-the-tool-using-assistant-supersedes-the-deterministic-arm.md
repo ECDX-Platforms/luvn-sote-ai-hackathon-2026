@@ -1,22 +1,23 @@
 # ADR-0027 — The tool-using assistant supersedes the deterministic arm
 
-Status: **accepted by the owner, 2026-10-13.** Supersedes [ADR-0019](0019-the-conversational-surface-explains.md)'s
+Status: **accepted by the owner.** Supersedes the earlier conversational-surface decision's
 first decision (*the deterministic arm is the surface, and it makes no model call*) and
-[ADR-0022](0022-no-new-foundry-capability-before-the-event.md)'s refusal of function calling on the runtime
+the earlier no-new-capability decision's refusal of function calling on the runtime
 path. Every other invariant those two records state survives, and each is named below with the test that pins
-it. The surface still explains; it does not author clinical judgement (ADR-0019, Decision 2 and 3, unchanged).
+it. The surface still explains; it does not author clinical judgement (that record's Decisions 2 and 3,
+unchanged).
 
 ## Context
 
-ADR-0019 shipped the conversational surface as a keyword-routed **deterministic arm**: a question was matched
+The surface first shipped as a keyword-routed **deterministic arm**: a question was matched
 by four- and five-character stems against record payloads, and a question whose words it did not recognise as
 a "topic" was refused. The generator was an addition to that arm, restating what the arm had already selected.
 In use, the arm refused the questions a professional actually asks — including the one whose whole purpose is
 the engine's next steps — because the answer to "what should I do" cites nothing by design, and the refusal
 could not tell an unknown word from an absent fact.
 
-ADR-0022 rejected function calling because *"a tool that can choose what to fetch is a permission decision by
-another name."* That is true of a tool over an open store. It is not true of a tool closed over a set the
+The earlier no-new-capability decision rejected function calling because *"a tool that can choose what to
+fetch is a permission decision by another name."* That is true of a tool over an open store. It is not true of a tool closed over a set the
 permission cut has already produced: such a tool cannot choose anything the cut did not admit, because there
 is no wider set to hand it. The objection was to model latitude over permission, and that latitude does not
 exist when the tools are built from the cached `Picture`.
@@ -63,18 +64,19 @@ never stored and never treated as evidence.
 **5. A model step is a proposal, not a verified sentence.** `steps` are kept when every cited record is in the
 picture and every figure is traceable to those records (a figure with no record behind it is dropped); they
 are labelled `Tekoälyn ehdotus, tarkistettavaksi` with the basis note that the professional decides. They are
-not sent to Decision-1. The engine's own steps (`rule_output`) remain the engine's, as ADR-0019 Decision 3 says.
+not sent to Decision-1. The engine's own steps (`rule_output`) remain the engine's, as the retained decision says.
 
 ## Consequences
 
-- ADR-0019's Decision 1 is superseded: the surface now makes a model call when one is configured. With none
+- The earlier conversational-surface decision's Decision 1 is superseded: the surface now makes a model call when one is configured. With none
   configured, the turn is still the engine's own findings and steps, or the one refusal — that fallback stands.
-- ADR-0022's row *Function calling / tools* is superseded for this surface only. Its reasoning holds for tools
+- The earlier no-new-capability decision's row *Function calling / tools* is superseded for this surface only. Its reasoning holds for tools
   over an open store; the tools here are closed over the cut's output. The other rejections in that table stand,
   and Decision-1 stays a typed call ([ADR-0021](0021-decision-1-stays-a-typed-call.md)).
 - The JSON route `POST /api/encounters/{id}/chat`, `chat.answer` and the keyword fact lookup are gone; the opening
   prompts (`GET …/chat/prompts`) are derived from the briefing's attention summary (`assistant.opening_prompts`),
   which reads rendered rows only, so nothing withheld can leak into a suggested question.
-- The transparency notice (`answer_notice`) is on every `turn` event, so Art. 50(1) is honoured as ADR-0019 said.
+- The transparency notice (`answer_notice`) is on every `turn` event, so Art. 50(1) is honoured as the
+  earlier conversational-surface decision said.
 - The model reads tool results and writes sentences; latent inference across records survives per-sentence
-  verification exactly as ADR-0019 recorded. This ADR does not claim otherwise.
+  verification exactly as that decision recorded. This ADR does not claim otherwise.

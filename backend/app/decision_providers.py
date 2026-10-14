@@ -25,7 +25,10 @@ import httpx
 
 from . import source
 
-DEFAULT_FOUNDRY_HOST = "https://rf-hackathon-ecdx-proto-foundry-001.cognitiveservices.azure.com"
+# The live deployment reads its host from the environment (`LUNA_FOUNDRY_BASE`). This placeholder only
+# keeps a deployment that is configured without a base URL from silently pointing at someone else's
+# resource.
+DEFAULT_FOUNDRY_HOST = "https://your-foundry-resource.cognitiveservices.azure.com"
 FOUNDRY_DECISION_PATH = "/providers/microsoft/v1/systemone"
 # "Microsoft Decision 1 1M Tokens" is listed at 0.042 for swedencentral in the retail price feed. Kept for
 # order-of-magnitude cost arithmetic in the evals, not as billing truth.

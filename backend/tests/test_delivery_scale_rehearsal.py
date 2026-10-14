@@ -1,7 +1,7 @@
 """The scale rehearsal, run as a test at a size the gate can afford.
 
 `scripts/rehearse_delivery_scale.py` is the runnable artifact; the tracked measurement at 100 000 records is
-`.scratch/hackathon-readiness/results/delivery-scale-rehearsal-v1.json`. What this test pins is that the
+the recorded rehearsal artifact under `docs/evidence/`. What this test pins is that the
 script's own machinery keeps working: the four stages run on a foreign layout, one row is in flight in the
 profiler (the streaming claim's structural half), the index resolves what the import reported, and the
 memory-bound merge turns two measured passes into a verdict with its numbers attached.

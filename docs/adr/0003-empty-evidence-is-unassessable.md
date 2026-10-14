@@ -67,6 +67,6 @@ rendered it, so the third tier (silent absence) was invisible.
   each asserts the `arvioimaton` reason does not contain `risk-yleinen-matala`'s own
   reason, read from `risk.json` rather than from a literal. So the false reassurance
   cannot return by enum refactor, and it also cannot return by rewording or
-  recasing the table — which is how a wording pin set as a literal would rot. Until
-  2026-10-09 only the `matala`-level half of this consequence was actually pinned;
-  the wording half was a claim in this record with no test behind it.
+  recasing the table — which is how a wording pin set as a literal would rot. For
+  a time only the `matala`-level half of this consequence was actually pinned;
+  the wording half was a claim in this record with no test behind it, and is now pinned too.

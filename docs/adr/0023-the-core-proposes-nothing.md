@@ -1,15 +1,13 @@
 # ADR-0023 — The core proposes nothing: actions move behind an optional module, and a risk reason attaches to its record
 
-Status: accepted by the owner, 2026-10-12. **Supersedes the "risk scoring and recommended actions are
-retained" half of the owner's DEV-FORK answer recorded in
-[`.scratch/final-touches/CAMPAIGN.md`](../../.scratch/final-touches/CAMPAIGN.md) and
-`architecture/review_ledger.md` of the alternative plan.** It implements the two changes that reading
-recommended (`alternative-architecture-lessons-2026-10-12.md` §2.3, §2.4) and leaves one open.
+Status: accepted by the owner. **Supersedes the "risk scoring and recommended actions are
+retained" half of the earlier alternative-plan answer.** It implements the two changes that reading
+recommended (the alternative-architecture lessons, §2.3 and §2.4) and leaves one open.
 
 ## Context
 
-An alternative plan for this same challenge — a fork of this repository's own architecture, read on
-2026-10-12 — made two structural choices this repository had not:
+An alternative plan for the same corpus — a fork of this repository's own architecture — made two
+structural choices this repository had not:
 
 1. **Its core proposes nothing.** "No action recommendations are produced at any stage"; every suggestion
    lives in an optional downstream module that receives "exactly one thing: the final structured JSON".
@@ -22,7 +20,7 @@ This repository did the opposite on both. `app.decide.decide()` evaluated a thir
 every request and returned `actions` as part of the core decision, wired into the external `Picture`
 (`app/picture.py`) and rendered at alert severity. And `risk` was one global patient-level row per view.
 
-`docs/regulatory-position.md` §2 already recorded the exposure honestly — the event material's warning is
+`docs/regulatory-position.md` §2 already recorded the exposure honestly — the regulatory material's warning is
 that a system which "alerts on risk data" may change status, and this repository's answer was that the level
 and the suggestions come from deterministic tables marked illustrative. That answered a **trigger with a
 caveat** at a point where a **shape change** was available. The owner has now chosen the shape change for
@@ -37,7 +35,7 @@ strings. It never receives a record, a persona, a `Scoped`, or a store handle, s
 never given; the module boundary holds by construction rather than by policy.
 
 `Picture.actions` remains in the wire shape and defaults to `[]`. The module is **on by default**
-(`LUVN_ACTIONS_MODULE`; `0`/`false`/`no`/`off` switches it off), so the shipped demo shows what it showed
+(`LUVN_ACTIONS_MODULE`; `0`/`false`/`no`/`off` switches it off), so the default configuration shows what it showed
 before. A deployment that wants the simpler posture flips one variable, and the briefing remains complete
 without it: situation, risk, records and citations are unaffected. `scripts/check.sh` passes in both states.
 
@@ -52,7 +50,7 @@ This is provenance, not a new judgement: it restates the rule the tables already
 **not** an urgency assessment. To be exact, because an earlier draft of this ADR got it wrong: the per-record
 urgency Score *does* exist — `app.decision_model` asks the `urgency` `score` question for every `Kirjaus`
 (`decision_model.py`, the `ROLE_SELECTION` fan-out), its distribution is already on the wire as
-`gate_probabilities.urgency`, and [ADR-0009](0009-decision-purpose-relevance-selection.md) makes it
+`gate_probabilities.urgency`, and the recorded Decision-1 contract makes it
 **ordering-only**. What this ADR refuses is *promoting* it to a per-record label, which would be a new
 clinical claim rather than a restatement of an existing one.
 

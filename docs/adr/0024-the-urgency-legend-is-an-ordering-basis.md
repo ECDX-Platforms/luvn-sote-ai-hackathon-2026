@@ -1,12 +1,12 @@
 # ADR-0024 — The urgency legend is an ordering basis, not a verdict
 
-Status: accepted by the owner, 2026-10-12, on the recommendation of a `claude-fable-5.1` oracle review that
+Status: accepted by the owner on the recommendation of a `claude-fable-5.1` oracle review that
 **refused** the larger version. Records what was shipped: the classifier's own leading urgency level is shown
 **in words beside its probability distribution**, under a label that names its own limit — and nothing else.
 
 ## Context
 
-An alternative plan for this challenge (a fork of this repository's own architecture) proposes a
+An alternative plan for the same corpus (a fork of this repository's own architecture) proposes a
 **per-record urgency shape**: a named urgency level per record, carrying the classifier's recorded reason and
 the floor it had to clear, rendered on the record the way `risk_reasons_by_record` now is
 ([ADR-0023](0023-the-core-proposes-nothing.md)).
@@ -19,13 +19,13 @@ Three facts decided the outcome, and each was checked against the code rather th
 2. **Two of its three fields do not exist and would have to be invented.** The classifier returns
    `score`, `confidence`, `probabilities` and `legend` — there is no reason text anywhere in the response.
    And urgency clears **no floor**: the named floors apply to the relevance, time-sensitivity and
-   subject-binding gates only ([ADR-0009](0009-decision-purpose-relevance-selection.md)). Presenting a
+   subject-binding gates only (the recorded Decision-1 contract). Presenting a
    "floor it cleared" would fabricate a threshold.
 3. **A per-record *level* changes the posture; a distribution does not.** `docs/regulatory-position.md` §2
-   answers the event material's "alerts on risk data" trigger by saying the only severity wording on a row is
+   answers the regulatory material's "alerts on risk data" trigger by saying the only severity wording on a row is
    **source-supplied** (`tulkinta`), "never computed by us". A named, model-derived urgency level on a record
    is a computed severity statement about the patient — the same genus as the action suggestions that
-   `app/actions.py` exists to keep out of the core. ADR-0009 is explicit that the score "does not affect
+   `app/actions.py` exists to keep out of the core. The recorded Decision-1 contract is explicit that the score "does not affect
    visibility, inclusion or omission" and that "no model decides clinical priority"; a visible level per
    record makes that read false whatever the code does.
 
@@ -73,7 +73,7 @@ predates this round. The register row is inaccurate and is left for its owner: c
 whether the shipped ordering is disclosed in the declared purpose of use, which is a positioning decision
 rather than an engineering one.
 
-**Resolved 2026-10-12 by the owner: O3 — disclosed in the regulatory position as narrowed wording.** The blanket
+**Resolved by the owner: O3 — disclosed in the regulatory position as narrowed wording.** The blanket
 "no ordering" clause is replaced by *"The system orders already permitted and selected records by a validated
 scheduling-urgency score; urgency never selects, withholds or omits a record, and inclusion and omission are
 decided before it runs."* — the formulation already recorded at `:62-64` above.

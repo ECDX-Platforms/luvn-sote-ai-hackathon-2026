@@ -563,8 +563,8 @@ def _digits_traceable(text: str, cited: Sequence[Record | RecordView], *, extra:
     """
     haystack = json.dumps([_model_payload(record) for record in cited],
                           ensure_ascii=False).lower()
-    # The date in both spellings the surface uses. `recorded_at` serialises as `2026-09-30`, whose year is not
-    # a number the extractor can see, while a sentence writes the Finnish `30.9.2026` — and `30.9` extracts as
+    # The date in both spellings the surface uses. `recorded_at` serialises as `2026-10-13`, whose year is not
+    # a number the extractor can see, while a sentence writes the Finnish `13.10.2026` — and `13.10` extracts as
     # one decimal, not as `30` and `9`. The record carries the day; it carries it in one notation, and both
     # notations are the same fact, so the check is given both rather than the renderer being made to hide the
     # year. This is not a loosening: a date the record does not carry is still absent in both spellings.

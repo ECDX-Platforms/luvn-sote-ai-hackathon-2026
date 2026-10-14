@@ -1,10 +1,10 @@
 # ADR-0016 — The Swiss 1 foundations library is the UI authority
 
-Status: **superseded by [ADR-0026](0026-the-luvn-component-library-is-the-ui-authority.md) (2026-10-13) for the vendor choice only** — the contract below is retained. Originally accepted and implemented (2026-10-08). All nine phases landed and the app ships the vendored library as its UI authority; the migration is deployed as revision `--0000032`. The pinned copy is `frontend/vendor/comp-lib/`, with the SHA-256 of every pinned file in its `PROVENANCE.md` and re-checked by the gate. It was re-vendored from **`comp-lib-dev-test-button-pipeline`**, which adds `Button` on top of the batch-1 foundations (`comp-lib-dev-batch-1-foundations`); the token files are byte-identical between the two, so no design decision moved when it was re-pointed. The ownable design source is the **Swiss 1 baseline styleguide v2.1**, kept by the design owner and not in this repository; the library mirrors the Figma **Design-Library** (`fileKey P8E4RKubznUkk8vi9765oW`). Work, including the phase resolutions and an adversarial review of the finished result, is tracked in [`.scratch/design-system-migration/`](../../.scratch/design-system-migration/spec.md).
+Status: **superseded by [ADR-0026](0026-the-luvn-component-library-is-the-ui-authority.md) for the vendor choice only** — the contract below is retained. Accepted and implemented. All nine phases landed and the app ships the vendored library as its UI authority. The pinned copy is `frontend/vendor/comp-lib/`, with the SHA-256 of every pinned file in its `PROVENANCE.md` and re-checked by the gate. It was re-vendored from a later development branch, which adds `Button` on top of the batch-1 foundations; the token files are byte-identical between the two, so no design decision moved when it was re-pointed. The ownable design source is the **Swiss 1 baseline styleguide v2.1**, kept by the design owner and not in this repository; the library mirrors the Figma **Design-Library** (`fileKey P8E4RKubznUkk8vi9765oW`). The phase resolutions and an adversarial review of the finished result are recorded in the migration itself.
 
 ## Context
 
-Two authorities coexisted. The UI remake ([`.scratch/ui-remake/`](../../.scratch/ui-remake/spec.md)) took its
+Two authorities coexisted. The UI remake took its
 token values and visual rules from `style-options.html`, an owner-authored HTML mockup, and enforced them
 with a test that parsed the mockup's `PRESETS` and compared all seven palettes × both modes against
 `frontend/src/styles.css`. That mockup is a design *input* — it is not maintained, and it cannot state a
@@ -26,9 +26,9 @@ Three facts force the replacement:
 Batch 1 contained no components; the pinned copy now exports the library's `Button` (`src/index.ts`), so every product surface is built in the app
 against the library's rules until a later batch supplies components.
 
-**Re-vendored to the whole library, 2026-10-09.** The pinned copy is now **`ECDX-Platforms/comp-lib-dev` @
-`main` `164683d`** — the library's 35 components, not just `Button` — and `PROVENANCE.md` records that
-repository and revision in place of the former local-directory source. Three facts made this a pointer change
+**Re-vendored to the whole library.** The pinned copy is now the whole
+`ECDX-Platforms/comp-lib-dev` library at a pinned revision — its 35 components, not just `Button` — and
+`PROVENANCE.md` records that repository and revision in place of the former local-directory source. Three facts made this a pointer change
 rather than a redesign, and they are the reason no design decision moved:
 
 - **The token layer is byte-identical** to the previous copy (`tokens/figma-export.json`,
@@ -75,10 +75,10 @@ to appear in `PROVENANCE.md`'s checksum table — 119 files — and fails if the
   pinned by SHA-256 and its token names asserted, and the app stylesheets are checked for raw hex,
   `opacity`, primitive references, raw type declarations, off-scale lengths, unscoped selectors and
   dead selectors.
-- The `.scratch/ui-remake/` tracker is superseded for token and style authority. Its record of what was
+- The earlier UI-remake tracker is superseded for token and style authority. Its record of what was
   implemented stays true below the token layer and is not rewritten.
-- Screenshots cannot be taken by the agent session, so visual acceptance is owned by a Pi
-  chrome-devtools session against a capture matrix; the repository gate
+- Screenshots cannot be taken by the agent session, so visual acceptance is owned by a separate
+  browser-devtools session against a capture matrix; the repository gate
   (`scripts/check.sh --full`) remains the gate and is Azure-free.
 - Components are hand-built in the app until the library's next batch lands, and are kept in one block per
   component so the eventual swap is a replacement rather than archaeology.

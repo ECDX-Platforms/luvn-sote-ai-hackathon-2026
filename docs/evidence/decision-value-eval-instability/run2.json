@@ -1,0 +1,5528 @@
+{
+  "emphasis_provenance": "Emphasis expectations were authored after the first live observation of the emphasised IDs. They measure author agreement with Decision-1's priority ranking, not pre-registered or adjudicated validation, and must not be quoted as accuracy.",
+  "kind": "decision-value-eval",
+  "limits": [
+    "synthetic fixtures; the answer keys are author-authored and unadjudicated, not clinical truth",
+    "selection-only run against the live Decision-1 service; no Foundry call and no narration is measured",
+    "a green precision number on this synthetic inventory is not evidence of clinical or Finnish accuracy",
+    "answer keys are expectations, not model outputs; omission and abstention results are counted against their explicit authored IDs",
+    "candidate_observations records probabilities only for authored control IDs; note text is never copied",
+    "ablation_candidates records every candidate's parsed answer (choices and probabilities, no note text) so the floor/margin replay can rebuild the selection from one recorded answer set",
+    "wrong_omissions counts baseline records excluded from the generation-eligible selection; it is a selection-layer omission, not an observed model-call omission",
+    "the six evaluator-only encounters live in app.encounters.EVALUATION_ENCOUNTERS and are not part of the hosted product inventory",
+    "the 42-note scale fixture's per-run candidate outcomes and Decision-1 elapsed time are recorded in the scale result; over-byte-cap notes are not sent",
+    "Emphasis expectations were authored after the first live observation of the emphasised IDs. They measure author agreement with Decision-1's priority ranking, not pre-registered or adjudicated validation, and must not be quoted as accuracy."
+  ],
+  "mode": "selection-only; Foundry disabled (narration is not needed to measure selection)",
+  "preparation_window_s": 90.0,
+  "results": {
+    "bound-encounter-002-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-002",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9950908918597492,
+            "probabilities": {
+              "irrelevant": 0.0008020992220144036,
+              "relevant": 0.9967272612398328,
+              "unclear": 0.0024706395381528107
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9203968736790471,
+            "probabilities": {
+              "administrative": 0.022020077800992945,
+              "object": 0.010401548241943982,
+              "other_person": 0.024952017096606324,
+              "person": 0.9363174989432377,
+              "unclear": 0.006308857917219066
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.995503204728031,
+            "probabilities": {
+              "current": 0.997002136485354,
+              "historical": 0.001498931757323025,
+              "unclear": 0.001498931757323025
+            }
+          },
+          "urgency": {
+            "0": 0.008388927858113961,
+            "1": 0.16849608006750483,
+            "2": 0.458019859914189,
+            "3": 0.3567062043020783,
+            "4": 0.008388927858113961
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-002-alignment",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9978028362893598,
+            "probabilities": {
+              "irrelevant": 0.9985352241929065,
+              "relevant": 0.00029561112551859485,
+              "unclear": 0.0011691646815749474
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9433067646462543,
+            "probabilities": {
+              "administrative": 0.022451108426276355,
+              "object": 0.0050095194186648056,
+              "other_person": 0.01060515269253491,
+              "person": 0.9546454117170035,
+              "unclear": 0.007288807745520455
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9397421692656449,
+            "probabilities": {
+              "current": 0.9598281128437632,
+              "historical": 0.007328377556766324,
+              "unclear": 0.032843509599470404
+            }
+          },
+          "urgency": {
+            "0": 0.6982920132870769,
+            "1": 0.29109140163382263,
+            "2": 0.008790200761823578,
+            "3": 0.0011896243098080824,
+            "4": 0.0006367600074687921
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-002-draft",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9760950760237428,
+            "probabilities": {
+              "irrelevant": 0.9840633840158286,
+              "relevant": 0.003549086592080598,
+              "unclear": 0.01238752939209076
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9340538700551415,
+            "probabilities": {
+              "administrative": 0.015310762135845169,
+              "object": 0.007232291929946838,
+              "other_person": 0.025243173185555856,
+              "person": 0.9472430960441132,
+              "unclear": 0.004970676704538931
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9685567201377316,
+            "probabilities": {
+              "current": 0.9790378134251545,
+              "historical": 0.005137517771979226,
+              "unclear": 0.015824668802866235
+            }
+          },
+          "urgency": {
+            "0": 0.06158427907375205,
+            "1": 0.5842954411777821,
+            "2": 0.27600162333143924,
+            "3": 0.06978413056565785,
+            "4": 0.008334525851368834
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-002",
+          "bound-dx-002",
+          "bound-dx-003",
+          "bound-med-002",
+          "bound-med-003",
+          "bound-note-002",
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-002",
+          "bound-dx-002",
+          "bound-dx-003",
+          "bound-med-002",
+          "bound-med-003",
+          "bound-note-002",
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "coverage": {
+          "decision_assessed_count": 3,
+          "decision_baseline_attempted_count": 3,
+          "decision_baseline_candidate_count": 3,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 3,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 3,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 315,
+        "decision_reported_input_tokens": 1951,
+        "decision_reported_output_tokens": 12,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-002"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 290,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.022020077800992945,
+                "object": 0.010401548241943982,
+                "other_person": 0.024952017096606324,
+                "person": 0.9363174989432377,
+                "unclear": 0.006308857917219066
+              },
+              "time_sensitivity": {
+                "current": 0.997002136485354,
+                "historical": 0.001498931757323025,
+                "unclear": 0.001498931757323025
+              },
+              "urgency": {
+                "0": 0.008388927858113961,
+                "1": 0.16849608006750483,
+                "2": 0.458019859914189,
+                "3": 0.3567062043020783,
+                "4": 0.008388927858113961
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-002",
+            "relevance_confidence": 0.9950908918597492,
+            "relevance_probabilities": {
+              "irrelevant": 0.0008020992220144036,
+              "relevant": 0.9967272612398328,
+              "unclear": 0.0024706395381528107
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 262,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.022451108426276355,
+                "object": 0.0050095194186648056,
+                "other_person": 0.01060515269253491,
+                "person": 0.9546454117170035,
+                "unclear": 0.007288807745520455
+              },
+              "time_sensitivity": {
+                "current": 0.9598281128437632,
+                "historical": 0.007328377556766324,
+                "unclear": 0.032843509599470404
+              },
+              "urgency": {
+                "0": 0.6982920132870769,
+                "1": 0.29109140163382263,
+                "2": 0.008790200761823578,
+                "3": 0.0011896243098080824,
+                "4": 0.0006367600074687921
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-002-alignment",
+            "relevance_confidence": 0.9978028362893598,
+            "relevance_probabilities": {
+              "irrelevant": 0.9985352241929065,
+              "relevant": 0.00029561112551859485,
+              "unclear": 0.0011691646815749474
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 261,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.015310762135845169,
+                "object": 0.007232291929946838,
+                "other_person": 0.025243173185555856,
+                "person": 0.9472430960441132,
+                "unclear": 0.004970676704538931
+              },
+              "time_sensitivity": {
+                "current": 0.9790378134251545,
+                "historical": 0.005137517771979226,
+                "unclear": 0.015824668802866235
+              },
+              "urgency": {
+                "0": 0.06158427907375205,
+                "1": 0.5842954411777821,
+                "2": 0.27600162333143924,
+                "3": 0.06978413056565785,
+                "4": 0.008334525851368834
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-002-draft",
+            "relevance_confidence": 0.9760950760237428,
+            "relevance_probabilities": {
+              "irrelevant": 0.9840633840158286,
+              "relevant": 0.003549086592080598,
+              "unclear": 0.01238752939209076
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-002"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "urgency_order_scores": {
+          "bound-note-002": 2.1882101242345735,
+          "bound-note-002-alignment": 0.3147877161167692,
+          "bound-note-002-draft": 1.3789891829431096
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [],
+        "note": "no baseline-missed candidate is authored as relevant"
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-002"
+        ],
+        "actual_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-002"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": [
+          "bound-note-002-alignment",
+          "bound-note-002-draft"
+        ]
+      }
+    },
+    "bound-encounter-003-mielenterveys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-003",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9902159519937652,
+            "probabilities": {
+              "irrelevant": 0.002462584018551396,
+              "relevant": 0.9934773013291768,
+              "unclear": 0.004060114652271887
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9864093449631328,
+            "probabilities": {
+              "administrative": 0.00102206325277103,
+              "object": 0.00102206325277103,
+              "other_person": 0.006664689600856121,
+              "person": 0.9891274759705063,
+              "unclear": 0.0021637079230954746
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9973084293989722,
+            "probabilities": {
+              "current": 0.9982056195993149,
+              "historical": 0.0006256019976374539,
+              "unclear": 0.001168778403047696
+            }
+          },
+          "urgency": {
+            "0": 0.008764998191702171,
+            "1": 0.7889998167160692,
+            "2": 0.1994903917758715,
+            "3": 0.0025112140263935643,
+            "4": 0.00023357928996365103
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-003-alignment",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9968059314029958,
+            "probabilities": {
+              "irrelevant": 0.9978706209353305,
+              "relevant": 0.00020303515438360433,
+              "unclear": 0.0019263439102859086
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9475630572345133,
+            "probabilities": {
+              "administrative": 0.007314807000496238,
+              "object": 0.00269096711161951,
+              "other_person": 0.019883702207489345,
+              "person": 0.9580504457876106,
+              "unclear": 0.012060077892784349
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9296818821981101,
+            "probabilities": {
+              "current": 0.9531212547987401,
+              "historical": 0.005001522234181144,
+              "unclear": 0.04187722296707878
+            }
+          },
+          "urgency": {
+            "0": 0.48209892173655094,
+            "1": 0.48209892173655094,
+            "2": 0.027198163265583424,
+            "3": 0.005355635891103205,
+            "4": 0.003248357370211484
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-003-draft",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9609907735163508,
+            "probabilities": {
+              "irrelevant": 0.9739938490109006,
+              "relevant": 0.0031000085374521605,
+              "unclear": 0.022906142451647255
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9435709817172522,
+            "probabilities": {
+              "administrative": 0.0064337753942406515,
+              "object": 0.0039022820343116906,
+              "other_person": 0.025446069235443968,
+              "person": 0.9548567853738017,
+              "unclear": 0.009361087962201982
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8123699675782114,
+            "probabilities": {
+              "current": 0.8749133117188076,
+              "historical": 0.006680045667848328,
+              "unclear": 0.11840664261334409
+            }
+          },
+          "urgency": {
+            "0": 0.012471810141443758,
+            "1": 0.1950919349720895,
+            "2": 0.46800119496173537,
+            "3": 0.3216522229305302,
+            "4": 0.0027828369942011566
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-arviointi-003",
+          "bound-demo-003",
+          "bound-dx-004",
+          "bound-med-004",
+          "bound-note-003",
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-arviointi-003",
+          "bound-demo-003",
+          "bound-dx-004",
+          "bound-med-004",
+          "bound-note-003",
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "coverage": {
+          "decision_assessed_count": 3,
+          "decision_baseline_attempted_count": 3,
+          "decision_baseline_candidate_count": 3,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 3,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 3,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 292,
+        "decision_reported_input_tokens": 1952,
+        "decision_reported_output_tokens": 12,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-003"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 264,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.00102206325277103,
+                "object": 0.00102206325277103,
+                "other_person": 0.006664689600856121,
+                "person": 0.9891274759705063,
+                "unclear": 0.0021637079230954746
+              },
+              "time_sensitivity": {
+                "current": 0.9982056195993149,
+                "historical": 0.0006256019976374539,
+                "unclear": 0.001168778403047696
+              },
+              "urgency": {
+                "0": 0.008764998191702171,
+                "1": 0.7889998167160692,
+                "2": 0.1994903917758715,
+                "3": 0.0025112140263935643,
+                "4": 0.00023357928996365103
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-003",
+            "relevance_confidence": 0.9902159519937652,
+            "relevance_probabilities": {
+              "irrelevant": 0.002462584018551396,
+              "relevant": 0.9934773013291768,
+              "unclear": 0.004060114652271887
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 260,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.007314807000496238,
+                "object": 0.00269096711161951,
+                "other_person": 0.019883702207489345,
+                "person": 0.9580504457876106,
+                "unclear": 0.012060077892784349
+              },
+              "time_sensitivity": {
+                "current": 0.9531212547987401,
+                "historical": 0.005001522234181144,
+                "unclear": 0.04187722296707878
+              },
+              "urgency": {
+                "0": 0.48209892173655094,
+                "1": 0.48209892173655094,
+                "2": 0.027198163265583424,
+                "3": 0.005355635891103205,
+                "4": 0.003248357370211484
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-003-alignment",
+            "relevance_confidence": 0.9968059314029958,
+            "relevance_probabilities": {
+              "irrelevant": 0.9978706209353305,
+              "relevant": 0.00020303515438360433,
+              "unclear": 0.0019263439102859086
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 281,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.0064337753942406515,
+                "object": 0.0039022820343116906,
+                "other_person": 0.025446069235443968,
+                "person": 0.9548567853738017,
+                "unclear": 0.009361087962201982
+              },
+              "time_sensitivity": {
+                "current": 0.8749133117188076,
+                "historical": 0.006680045667848328,
+                "unclear": 0.11840664261334409
+              },
+              "urgency": {
+                "0": 0.012471810141443758,
+                "1": 0.1950919349720895,
+                "2": 0.46800119496173537,
+                "3": 0.3216522229305302,
+                "4": 0.0027828369942011566
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-003-draft",
+            "relevance_confidence": 0.9609907735163508,
+            "relevance_probabilities": {
+              "irrelevant": 0.9739938490109006,
+              "relevant": 0.0031000085374521605,
+              "unclear": 0.022906142451647255
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-003"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "urgency_order_scores": {
+          "bound-note-003": 1.1964485595068475,
+          "bound-note-003-alignment": 0.5655555854218733,
+          "bound-note-003-draft": 2.1071823416639552
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_emphasis": [
+          "bound-note-003"
+        ],
+        "expect_no_addition": [],
+        "note": "mood and sleep note; topic mielenterveys matches the mental-health purpose"
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-003"
+        ],
+        "actual_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-003"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-003"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": [
+          "bound-note-003-alignment",
+          "bound-note-003-draft"
+        ]
+      }
+    },
+    "bound-encounter-003-toimintakyky-fysioterapeutti": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-010",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9910281465062887,
+            "probabilities": {
+              "irrelevant": 0.0019189078057734916,
+              "relevant": 0.9940187643375258,
+              "unclear": 0.004062327856700673
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8905651516072042,
+            "probabilities": {
+              "administrative": 0.02431602467023433,
+              "object": 0.004788109152122352,
+              "other_person": 0.045428314790987474,
+              "person": 0.9124521212857633,
+              "unclear": 0.013015430100892634
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9911163764527187,
+            "probabilities": {
+              "current": 0.9940775843018124,
+              "historical": 0.00131892279816757,
+              "unclear": 0.0046034929000200436
+            }
+          },
+          "urgency": {
+            "0": 0.012269842548787116,
+            "1": 0.3164434477866546,
+            "2": 0.6699108041862173,
+            "3": 0.0012932318901383313,
+            "4": 8.267358820268079e-05
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-003",
+          "bound-note-010"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-003",
+          "bound-note-010"
+        ],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 1,
+          "decision_baseline_candidate_count": 1,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 229,
+        "decision_reported_input_tokens": 647,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 217,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.02431602467023433,
+                "object": 0.004788109152122352,
+                "other_person": 0.045428314790987474,
+                "person": 0.9124521212857633,
+                "unclear": 0.013015430100892634
+              },
+              "time_sensitivity": {
+                "current": 0.9940775843018124,
+                "historical": 0.00131892279816757,
+                "unclear": 0.0046034929000200436
+              },
+              "urgency": {
+                "0": 0.012269842548787116,
+                "1": 0.3164434477866546,
+                "2": 0.6699108041862173,
+                "3": 0.0012932318901383313,
+                "4": 8.267358820268079e-05
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-010",
+            "relevance_confidence": 0.9910281465062887,
+            "relevance_probabilities": {
+              "irrelevant": 0.0019189078057734916,
+              "relevant": 0.9940187643375258,
+              "unclear": 0.004062327856700673
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-010": 1.660475446182315
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-010"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-003-toimintakyky-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-010",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9943133429238271,
+            "probabilities": {
+              "irrelevant": 0.0013217502172800486,
+              "relevant": 0.9962088952825514,
+              "unclear": 0.0024693545001686123
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8332060243313733,
+            "probabilities": {
+              "administrative": 0.04314371805454538,
+              "object": 0.005152782309316817,
+              "other_person": 0.07113196565361812,
+              "person": 0.8665648194650986,
+              "unclear": 0.014006714517421139
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.99192339673563,
+            "probabilities": {
+              "current": 0.9946155978237533,
+              "historical": 0.0013196362780754068,
+              "unclear": 0.004064765898171348
+            }
+          },
+          "urgency": {
+            "0": 0.007384071153095153,
+            "1": 0.4031566967621302,
+            "2": 0.586589532534733,
+            "3": 0.0027164479693708127,
+            "4": 0.00015325158067080728
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-003",
+          "bound-note-010"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-003",
+          "bound-note-010"
+        ],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 1,
+          "decision_baseline_candidate_count": 1,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 234,
+        "decision_reported_input_tokens": 648,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-010"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 219,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.04314371805454538,
+                "object": 0.005152782309316817,
+                "other_person": 0.07113196565361812,
+                "person": 0.8665648194650986,
+                "unclear": 0.014006714517421139
+              },
+              "time_sensitivity": {
+                "current": 0.9946155978237533,
+                "historical": 0.0013196362780754068,
+                "unclear": 0.004064765898171348
+              },
+              "urgency": {
+                "0": 0.007384071153095153,
+                "1": 0.4031566967621302,
+                "2": 0.586589532534733,
+                "3": 0.0027164479693708127,
+                "4": 0.00015325158067080728
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-010",
+            "relevance_confidence": 0.9943133429238271,
+            "relevance_probabilities": {
+              "irrelevant": 0.0013217502172800486,
+              "relevant": 0.9962088952825514,
+              "unclear": 0.0024693545001686123
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-010"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-010": 1.585098112062392
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_emphasis": [
+          "bound-note-010"
+        ],
+        "expect_no_addition": [],
+        "note": "daily-tasks note; topic toimintakyky matches the functioning purpose, and this is the same person as the mental-health encounter, which must emphasise a different note"
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-010"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [
+          "bound-note-010"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [
+          "bound-note-010"
+        ],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-004-sosiaalipalvelut-sosiaalityontekija": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-004-draft",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9029503826647733,
+            "probabilities": {
+              "irrelevant": 0.9353002551098489,
+              "relevant": 0.004908004895205612,
+              "unclear": 0.059791739994945456
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8040477150886645,
+            "probabilities": {
+              "administrative": 0.06921720213122795,
+              "object": 0.017500849409595114,
+              "other_person": 0.047572240932700606,
+              "person": 0.8432381720709315,
+              "unclear": 0.02247153545554478
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9767109042859439,
+            "probabilities": {
+              "current": 0.9844739361906293,
+              "historical": 0.0031333649663893453,
+              "unclear": 0.012392698842981316
+            }
+          },
+          "urgency": {
+            "0": 0.01050937898781446,
+            "1": 0.16439436643513816,
+            "2": 0.736764457234801,
+            "3": 0.08799397390824487,
+            "4": 0.000337823434001474
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": true,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-009",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.33023276125746537,
+            "probabilities": {
+              "irrelevant": 0.3804067171421872,
+              "relevant": 0.5534885075049769,
+              "unclear": 0.0661047753528359
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.5650896419576312,
+            "probabilities": {
+              "administrative": 0.2718239314923923,
+              "object": 0.007243864135763177,
+              "other_person": 0.060652117366073316,
+              "person": 0.6520717135661049,
+              "unclear": 0.008208373439666307
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9953623823083815,
+            "probabilities": {
+              "current": 0.9969082548722543,
+              "historical": 0.0011672595232825023,
+              "unclear": 0.0019244856044631532
+            }
+          },
+          "urgency": {
+            "0": 0.004158828303824964,
+            "1": 0.6172247363674799,
+            "2": 0.3743657265399238,
+            "3": 0.004158828303824964,
+            "4": 9.188048494640407e-05
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-005",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9940504063136744,
+            "probabilities": {
+              "irrelevant": 0.0014974757196084443,
+              "relevant": 0.9960336042091162,
+              "unclear": 0.002468920071275423
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8708739660521136,
+            "probabilities": {
+              "administrative": 0.03068336204401162,
+              "object": 0.00533196882070561,
+              "other_person": 0.057324067099154004,
+              "person": 0.8966991728416909,
+              "unclear": 0.009961429194437911
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9963857471678081,
+            "probabilities": {
+              "current": 0.9975904981118722,
+              "historical": 0.0009096849543141813,
+              "unclear": 0.0014998169338136652
+            }
+          },
+          "urgency": {
+            "0": 0.026020718049399368,
+            "1": 0.7604368484671492,
+            "2": 0.19226854540146923,
+            "3": 0.020264955592952466,
+            "4": 0.001008932489029772
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-004-alignment",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9984240722567326,
+            "probabilities": {
+              "irrelevant": 0.9989493815044883,
+              "relevant": 0.00013969474774816584,
+              "unclear": 0.0009109237477635371
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.7667535910711107,
+            "probabilities": {
+              "administrative": 0.14134823114902073,
+              "object": 0.004268347240900094,
+              "other_person": 0.027833113664737414,
+              "person": 0.8134028728568885,
+              "unclear": 0.013147435088453261
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9854094374099693,
+            "probabilities": {
+              "current": 0.990272958273313,
+              "historical": 0.0021662135428927786,
+              "unclear": 0.0075608281837942735
+            }
+          },
+          "urgency": {
+            "0": 0.1410405682985687,
+            "1": 0.8116324196620468,
+            "2": 0.045789163037260244,
+            "3": 0.0013827129128232017,
+            "4": 0.00015513608930109034
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-arviointi-006",
+          "bound-arviointi-007",
+          "bound-demo-004",
+          "bound-note-004-alignment",
+          "bound-note-004-draft",
+          "bound-note-005",
+          "bound-paatos-005",
+          "bound-paatos-007"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-arviointi-006",
+          "bound-arviointi-007",
+          "bound-demo-004",
+          "bound-note-004-alignment",
+          "bound-note-004-draft",
+          "bound-note-005",
+          "bound-paatos-005",
+          "bound-paatos-007"
+        ],
+        "coverage": {
+          "decision_assessed_count": 4,
+          "decision_baseline_attempted_count": 3,
+          "decision_baseline_candidate_count": 3,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 4,
+          "decision_gate_refused_count": 1,
+          "decision_missed_attempted_count": 1,
+          "decision_missed_candidate_count": 1,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 4,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 276,
+        "decision_reported_input_tokens": 2563,
+        "decision_reported_output_tokens": 16,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-005"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 227,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.06921720213122795,
+                "object": 0.017500849409595114,
+                "other_person": 0.047572240932700606,
+                "person": 0.8432381720709315,
+                "unclear": 0.02247153545554478
+              },
+              "time_sensitivity": {
+                "current": 0.9844739361906293,
+                "historical": 0.0031333649663893453,
+                "unclear": 0.012392698842981316
+              },
+              "urgency": {
+                "0": 0.01050937898781446,
+                "1": 0.16439436643513816,
+                "2": 0.736764457234801,
+                "3": 0.08799397390824487,
+                "4": 0.000337823434001474
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-004-draft",
+            "relevance_confidence": 0.9029503826647733,
+            "relevance_probabilities": {
+              "irrelevant": 0.9353002551098489,
+              "relevant": 0.004908004895205612,
+              "unclear": 0.059791739994945456
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 211,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.03068336204401162,
+                "object": 0.00533196882070561,
+                "other_person": 0.057324067099154004,
+                "person": 0.8966991728416909,
+                "unclear": 0.009961429194437911
+              },
+              "time_sensitivity": {
+                "current": 0.9975904981118722,
+                "historical": 0.0009096849543141813,
+                "unclear": 0.0014998169338136652
+              },
+              "urgency": {
+                "0": 0.026020718049399368,
+                "1": 0.7604368484671492,
+                "2": 0.19226854540146923,
+                "3": 0.020264955592952466,
+                "4": 0.001008932489029772
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-005",
+            "relevance_confidence": 0.9940504063136744,
+            "relevance_probabilities": {
+              "irrelevant": 0.0014974757196084443,
+              "relevant": 0.9960336042091162,
+              "unclear": 0.002468920071275423
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 244,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.14134823114902073,
+                "object": 0.004268347240900094,
+                "other_person": 0.027833113664737414,
+                "person": 0.8134028728568885,
+                "unclear": 0.013147435088453261
+              },
+              "time_sensitivity": {
+                "current": 0.990272958273313,
+                "historical": 0.0021662135428927786,
+                "unclear": 0.0075608281837942735
+              },
+              "urgency": {
+                "0": 0.1410405682985687,
+                "1": 0.8116324196620468,
+                "2": 0.045789163037260244,
+                "3": 0.0013827129128232017,
+                "4": 0.00015513608930109034
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-004-alignment",
+            "relevance_confidence": 0.9984240722567326,
+            "relevance_probabilities": {
+              "irrelevant": 0.9989493815044883,
+              "relevant": 0.00013969474774816584,
+              "unclear": 0.0009109237477635371
+            },
+            "status": "irrelevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-005"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "urgency_order_scores": {
+          "bound-note-004-alignment": 0.9079794288322413,
+          "bound-note-004-draft": 1.9032564963654806,
+          "bound-note-005": 1.2098045360050642
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-005"
+        ],
+        "actual_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-005"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": [
+          "bound-note-004-alignment",
+          "bound-note-004-draft"
+        ]
+      }
+    },
+    "bound-encounter-005-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": true,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-013",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.4581855212435819,
+            "probabilities": {
+              "irrelevant": 0.6387903474957213,
+              "relevant": 0.019289798199565902,
+              "unclear": 0.3419198543047128
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.91689434387068,
+            "probabilities": {
+              "administrative": 0.9335154750965441,
+              "object": 0.02818972431209853,
+              "other_person": 0.0071274785009182275,
+              "person": 0.024877344390140617,
+              "unclear": 0.00628997770029863
+            }
+          },
+          "time_sensitivity": {
+            "choice": "historical",
+            "confidence": 0.9390135008980729,
+            "probabilities": {
+              "current": 0.0371977375133544,
+              "historical": 0.9593423339320486,
+              "unclear": 0.0034599285545969956
+            }
+          },
+          "urgency": {
+            "0": 0.8338757999095218,
+            "1": 0.087889858762385,
+            "2": 0.03663794403294666,
+            "3": 0.03233287212614318,
+            "4": 0.009263525169003401
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-011",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.987443645440812,
+            "probabilities": {
+              "irrelevant": 0.0016893589156223411,
+              "relevant": 0.9916290969605414,
+              "unclear": 0.006681544123836269
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9659247397073996,
+            "probabilities": {
+              "administrative": 0.004504679193041821,
+              "object": 0.005784122577890125,
+              "other_person": 0.0138753887493779,
+              "person": 0.9727397917659197,
+              "unclear": 0.0030960177137704125
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9938484154248473,
+            "probabilities": {
+              "current": 0.9958989436165648,
+              "historical": 0.0019225367918201289,
+              "unclear": 0.0021785195916150385
+            }
+          },
+          "urgency": {
+            "0": 0.003936831304582333,
+            "1": 0.13036994793637227,
+            "2": 0.7502272065483481,
+            "3": 0.1150510752439635,
+            "4": 0.0004149389667338508
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-012",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9965457144980232,
+            "probabilities": {
+              "irrelevant": 0.9976971429986822,
+              "relevant": 0.0008028798908791883,
+              "unclear": 0.0014999771104386673
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.7796268016397141,
+            "probabilities": {
+              "administrative": 0.059668732277387455,
+              "object": 0.031938370876711586,
+              "other_person": 0.0766161688257017,
+              "person": 0.8237014413117713,
+              "unclear": 0.008075286708427998
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9157240160529421,
+            "probabilities": {
+              "current": 0.9438160107019614,
+              "historical": 0.01958827455241561,
+              "unclear": 0.03659571474562293
+            }
+          },
+          "urgency": {
+            "0": 0.7028466351275894,
+            "1": 0.2585628119484212,
+            "2": 0.0349926713894946,
+            "3": 0.0032548254554104383,
+            "4": 0.0003430560790844772
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "baseline",
+          "elapsed_ms": 298,
+          "gate_refused": true,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-013",
+          "relevance_choice": "irrelevant",
+          "relevance_confidence": 0.4581855212435819,
+          "relevance_probabilities": {
+            "irrelevant": 0.6387903474957213,
+            "relevant": 0.019289798199565902,
+            "unclear": 0.3419198543047128
+          },
+          "status": "unclear",
+          "subject_binding_choice": "administrative",
+          "subject_binding_probabilities": {
+            "administrative": 0.9335154750965441,
+            "object": 0.02818972431209853,
+            "other_person": 0.0071274785009182275,
+            "person": 0.024877344390140617,
+            "unclear": 0.00628997770029863
+          },
+          "time_sensitivity_choice": "historical",
+          "time_sensitivity_probabilities": {
+            "current": 0.0371977375133544,
+            "historical": 0.9593423339320486,
+            "unclear": 0.0034599285545969956
+          },
+          "urgency_probabilities": {
+            "0": 0.8338757999095218,
+            "1": 0.087889858762385,
+            "2": 0.03663794403294666,
+            "3": 0.03233287212614318,
+            "4": 0.009263525169003401
+          },
+          "urgency_score": 0.29521846388272144
+        },
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 277,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-011",
+          "relevance_choice": "relevant",
+          "relevance_confidence": 0.987443645440812,
+          "relevance_probabilities": {
+            "irrelevant": 0.0016893589156223411,
+            "relevant": 0.9916290969605414,
+            "unclear": 0.006681544123836269
+          },
+          "status": "relevant",
+          "subject_binding_choice": "person",
+          "subject_binding_probabilities": {
+            "administrative": 0.004504679193041821,
+            "object": 0.005784122577890125,
+            "other_person": 0.0138753887493779,
+            "person": 0.9727397917659197,
+            "unclear": 0.0030960177137704125
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.9958989436165648,
+            "historical": 0.0019225367918201289,
+            "unclear": 0.0021785195916150385
+          },
+          "urgency_probabilities": {
+            "0": 0.003936831304582333,
+            "1": 0.13036994793637227,
+            "2": 0.7502272065483481,
+            "3": 0.1150510752439635,
+            "4": 0.0004149389667338508
+          },
+          "urgency_score": 1.9776373426318943
+        },
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 301,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-012",
+          "relevance_choice": "irrelevant",
+          "relevance_confidence": 0.9965457144980232,
+          "relevance_probabilities": {
+            "irrelevant": 0.9976971429986822,
+            "relevant": 0.0008028798908791883,
+            "unclear": 0.0014999771104386673
+          },
+          "status": "irrelevant",
+          "subject_binding_choice": "person",
+          "subject_binding_probabilities": {
+            "administrative": 0.059668732277387455,
+            "object": 0.031938370876711586,
+            "other_person": 0.0766161688257017,
+            "person": 0.8237014413117713,
+            "unclear": 0.008075286708427998
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.9438160107019614,
+            "historical": 0.01958827455241561,
+            "unclear": 0.03659571474562293
+          },
+          "urgency_probabilities": {
+            "0": 0.7028466351275894,
+            "1": 0.2585628119484212,
+            "2": 0.0349926713894946,
+            "3": 0.0032548254554104383,
+            "4": 0.0003430560790844772
+          },
+          "urgency_score": 0.3396848554099796
+        }
+      ],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-005",
+          "bound-dx-005",
+          "bound-med-005",
+          "bound-note-013"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [
+          "bound-note-011"
+        ],
+        "baseline_record_ids": [
+          "bound-demo-005",
+          "bound-dx-005",
+          "bound-med-005",
+          "bound-note-013"
+        ],
+        "coverage": {
+          "decision_assessed_count": 3,
+          "decision_baseline_attempted_count": 1,
+          "decision_baseline_candidate_count": 1,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 3,
+          "decision_gate_refused_count": 1,
+          "decision_missed_attempted_count": 2,
+          "decision_missed_candidate_count": 2,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 3,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 316,
+        "decision_reported_input_tokens": 2021,
+        "decision_reported_output_tokens": 12,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-011"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 298,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9335154750965441,
+                "object": 0.02818972431209853,
+                "other_person": 0.0071274785009182275,
+                "person": 0.024877344390140617,
+                "unclear": 0.00628997770029863
+              },
+              "time_sensitivity": {
+                "current": 0.0371977375133544,
+                "historical": 0.9593423339320486,
+                "unclear": 0.0034599285545969956
+              },
+              "urgency": {
+                "0": 0.8338757999095218,
+                "1": 0.087889858762385,
+                "2": 0.03663794403294666,
+                "3": 0.03233287212614318,
+                "4": 0.009263525169003401
+              }
+            },
+            "gate_refused": true,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-013",
+            "relevance_confidence": 0.4581855212435819,
+            "relevance_probabilities": {
+              "irrelevant": 0.6387903474957213,
+              "relevant": 0.019289798199565902,
+              "unclear": 0.3419198543047128
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "historical"
+          },
+          {
+            "elapsed_ms": 277,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.004504679193041821,
+                "object": 0.005784122577890125,
+                "other_person": 0.0138753887493779,
+                "person": 0.9727397917659197,
+                "unclear": 0.0030960177137704125
+              },
+              "time_sensitivity": {
+                "current": 0.9958989436165648,
+                "historical": 0.0019225367918201289,
+                "unclear": 0.0021785195916150385
+              },
+              "urgency": {
+                "0": 0.003936831304582333,
+                "1": 0.13036994793637227,
+                "2": 0.7502272065483481,
+                "3": 0.1150510752439635,
+                "4": 0.0004149389667338508
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-011",
+            "relevance_confidence": 0.987443645440812,
+            "relevance_probabilities": {
+              "irrelevant": 0.0016893589156223411,
+              "relevant": 0.9916290969605414,
+              "unclear": 0.006681544123836269
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-011"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-011": 1.9776373426318943,
+          "bound-note-013": 0.29521846388272144
+        }
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-011"
+        ],
+        "expect_emphasis": [
+          "bound-note-011"
+        ],
+        "expect_no_addition": [
+          "bound-note-012"
+        ],
+        "expect_omissions": [
+          "bound-note-013"
+        ],
+        "note": "note-011 is a missed relevant medication-follow-up fact and the clinical priority; note-012 is unrelated; note-013 is administrative and should be omitted from generation but remain visible",
+        "observe_candidates": [
+          "bound-note-013"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-011"
+        ],
+        "actual_emphasized": [
+          "bound-note-011"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-011"
+        ],
+        "correct_emphasis": [
+          "bound-note-011"
+        ],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": true,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-011"
+        ],
+        "expected_emphasis": [
+          "bound-note-011"
+        ],
+        "expected_omissions": [
+          "bound-note-013"
+        ],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [
+          "bound-note-013"
+        ],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-006-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": true,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-014",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.43300880339702874,
+            "probabilities": {
+              "irrelevant": 0.6220058689313525,
+              "relevant": 0.0841793454641398,
+              "unclear": 0.29381478560450774
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.49723668388863773,
+            "probabilities": {
+              "administrative": 0.005171890610338636,
+              "object": 0.014058656264861474,
+              "other_person": 0.31997357988802033,
+              "person": 0.5977893471109101,
+              "unclear": 0.06300652612586942
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.5563069077662215,
+            "probabilities": {
+              "current": 0.704204605177481,
+              "historical": 0.15712928633051312,
+              "unclear": 0.13866610849200584
+            }
+          },
+          "urgency": {
+            "0": 0.373853449583644,
+            "1": 0.5439535594696006,
+            "2": 0.07361610903838205,
+            "3": 0.00775908080790712,
+            "4": 0.0008178011004662543
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 312,
+          "gate_refused": true,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-014",
+          "relevance_choice": "irrelevant",
+          "relevance_confidence": 0.43300880339702874,
+          "relevance_probabilities": {
+            "irrelevant": 0.6220058689313525,
+            "relevant": 0.0841793454641398,
+            "unclear": 0.29381478560450774
+          },
+          "status": "unclear",
+          "subject_binding_choice": "person",
+          "subject_binding_probabilities": {
+            "administrative": 0.005171890610338636,
+            "object": 0.014058656264861474,
+            "other_person": 0.31997357988802033,
+            "person": 0.5977893471109101,
+            "unclear": 0.06300652612586942
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.704204605177481,
+            "historical": 0.15712928633051312,
+            "unclear": 0.13866610849200584
+          },
+          "urgency_probabilities": {
+            "0": 0.373853449583644,
+            "1": 0.5439535594696006,
+            "2": 0.07361610903838205,
+            "3": 0.00775908080790712,
+            "4": 0.0008178011004662543
+          },
+          "urgency_score": 0.717734224371951
+        }
+      ],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 1,
+          "decision_missed_attempted_count": 1,
+          "decision_missed_candidate_count": 1,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 330,
+        "decision_reported_input_tokens": 643,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-014"
+        ],
+        "note": "current note describes the spouse's medication, not the encounter person",
+        "observe_candidates": [
+          "bound-note-014"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-007-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-015",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9376007605641703,
+            "probabilities": {
+              "irrelevant": 0.9584005070427802,
+              "relevant": 0.004438275556714444,
+              "unclear": 0.03716121740050529
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.8446845527789768,
+            "probabilities": {
+              "administrative": 0.8757476422231814,
+              "object": 0.009728678395642775,
+              "other_person": 0.012491870330786243,
+              "person": 0.0923031306547469,
+              "unclear": 0.009728678395642775
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8721259601828484,
+            "probabilities": {
+              "current": 0.914750640121899,
+              "historical": 0.06626431559847921,
+              "unclear": 0.018985044279621815
+            }
+          },
+          "urgency": {
+            "0": 0.5486098820055635,
+            "1": 0.1571793721681172,
+            "2": 0.1571793721681172,
+            "3": 0.12241141812720145,
+            "4": 0.014619955531000758
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 255,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-015",
+          "relevance_choice": "irrelevant",
+          "relevance_confidence": 0.9376007605641703,
+          "relevance_probabilities": {
+            "irrelevant": 0.9584005070427802,
+            "relevant": 0.004438275556714444,
+            "unclear": 0.03716121740050529
+          },
+          "status": "irrelevant",
+          "subject_binding_choice": "administrative",
+          "subject_binding_probabilities": {
+            "administrative": 0.8757476422231814,
+            "object": 0.009728678395642775,
+            "other_person": 0.012491870330786243,
+            "person": 0.0923031306547469,
+            "unclear": 0.009728678395642775
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.914750640121899,
+            "historical": 0.06626431559847921,
+            "unclear": 0.018985044279621815
+          },
+          "urgency_probabilities": {
+            "0": 0.5486098820055635,
+            "1": 0.1571793721681172,
+            "2": 0.1571793721681172,
+            "3": 0.12241141812720145,
+            "4": 0.014619955531000758
+          },
+          "urgency_score": 0.897252193009959
+        }
+      ],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 1,
+          "decision_missed_candidate_count": 1,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 271,
+        "decision_reported_input_tokens": 651,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-015"
+        ],
+        "note": "current office-room booking is not a patient situation fact",
+        "observe_candidates": [
+          "bound-note-015"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-008-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "no_input",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-016"
+        ],
+        "note": "the medication note is older than the current-note window and must not be added",
+        "observe_candidates": [
+          "bound-note-016"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-009-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-017",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.992838932687738,
+            "probabilities": {
+              "irrelevant": 0.0007067839669977891,
+              "relevant": 0.9952259551251588,
+              "unclear": 0.004067260907843423
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8919881157957452,
+            "probabilities": {
+              "administrative": 0.0042307640521265346,
+              "object": 0.045484989267122404,
+              "other_person": 0.03126134546921567,
+              "person": 0.9135904926365962,
+              "unclear": 0.005432408574939292
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9897274857868175,
+            "probabilities": {
+              "current": 0.9931516571912117,
+              "historical": 0.0027895587609838373,
+              "unclear": 0.004058784047804471
+            }
+          },
+          "urgency": {
+            "0": 0.0017188544692967641,
+            "1": 0.0345241231398377,
+            "2": 0.8903888578516169,
+            "3": 0.07308756926057444,
+            "4": 0.000280595278674127
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 264,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-017",
+          "relevance_choice": "relevant",
+          "relevance_confidence": 0.992838932687738,
+          "relevance_probabilities": {
+            "irrelevant": 0.0007067839669977891,
+            "relevant": 0.9952259551251588,
+            "unclear": 0.004067260907843423
+          },
+          "status": "relevant",
+          "subject_binding_choice": "person",
+          "subject_binding_probabilities": {
+            "administrative": 0.0042307640521265346,
+            "object": 0.045484989267122404,
+            "other_person": 0.03126134546921567,
+            "person": 0.9135904926365962,
+            "unclear": 0.005432408574939292
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.9931516571912117,
+            "historical": 0.0027895587609838373,
+            "unclear": 0.004058784047804471
+          },
+          "urgency_probabilities": {
+            "0": 0.0017188544692967641,
+            "1": 0.0345241231398377,
+            "2": 0.8903888578516169,
+            "3": 0.07308756926057444,
+            "4": 0.000280595278674127
+          },
+          "urgency_score": 2.0356869277394916
+        }
+      ],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [
+          "bound-note-017"
+        ],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 1,
+          "decision_missed_candidate_count": 1,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 277,
+        "decision_reported_input_tokens": 649,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-017"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 264,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.0042307640521265346,
+                "object": 0.045484989267122404,
+                "other_person": 0.03126134546921567,
+                "person": 0.9135904926365962,
+                "unclear": 0.005432408574939292
+              },
+              "time_sensitivity": {
+                "current": 0.9931516571912117,
+                "historical": 0.0027895587609838373,
+                "unclear": 0.004058784047804471
+              },
+              "urgency": {
+                "0": 0.0017188544692967641,
+                "1": 0.0345241231398377,
+                "2": 0.8903888578516169,
+                "3": 0.07308756926057444,
+                "4": 0.000280595278674127
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-017",
+            "relevance_confidence": 0.992838932687738,
+            "relevance_probabilities": {
+              "irrelevant": 0.0007067839669977891,
+              "relevant": 0.9952259551251588,
+              "unclear": 0.004067260907843423
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-017"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-017": 2.0356869277394916
+        }
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-017"
+        ],
+        "expect_no_addition": [],
+        "note": "the current adherence/side-effect note is relevant but shares no medication baseline term",
+        "observe_candidates": [
+          "bound-note-017"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-017"
+        ],
+        "actual_emphasized": [
+          "bound-note-017"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-017"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-017"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-017"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-010-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": false,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-000",
+          "relevance": null,
+          "status": "too_long",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-020",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9727043717599697,
+            "probabilities": {
+              "irrelevant": 0.9818029145066465,
+              "relevant": 0.005838012639194275,
+              "unclear": 0.012359072854159285
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8736018235962983,
+            "probabilities": {
+              "administrative": 0.034853418580005346,
+              "object": 0.007776848869476854,
+              "other_person": 0.050711424804002286,
+              "person": 0.8988814588770386,
+              "unclear": 0.007776848869476854
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.5943428453508441,
+            "probabilities": {
+              "current": 0.7295618969005627,
+              "historical": 0.12677884781559787,
+              "unclear": 0.14365925528383933
+            }
+          },
+          "urgency": {
+            "0": 0.8560773513447211,
+            "1": 0.11585747426950878,
+            "2": 0.02281368934333578,
+            "3": 0.003964424761844855,
+            "4": 0.00128706028058947
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-001",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-041",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.993822186530837,
+            "probabilities": {
+              "irrelevant": 0.0013213161022857618,
+              "relevant": 0.9958814576872247,
+              "unclear": 0.0027972262104895523
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9830847350575813,
+            "probabilities": {
+              "administrative": 0.0027707848284180664,
+              "object": 0.0031397105421029636,
+              "other_person": 0.005176507554606586,
+              "person": 0.986467788046065,
+              "unclear": 0.002445209028807333
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9977310762778184,
+            "probabilities": {
+              "current": 0.9984873841852123,
+              "historical": 0.0008035156991285625,
+              "unclear": 0.0007091001156590522
+            }
+          },
+          "urgency": {
+            "0": 0.000940388022929566,
+            "1": 0.016668776545169354,
+            "2": 0.551994068891733,
+            "3": 0.42989341310365264,
+            "4": 0.0005033534365154284
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-002",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.32337677529826414,
+            "probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9396361132429529,
+            "probabilities": {
+              "administrative": 0.9517088905943623,
+              "object": 0.005659068787909568,
+              "other_person": 0.004407287203478917,
+              "person": 0.03256568462633972,
+              "unclear": 0.005659068787909568
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572222853083,
+            "probabilities": {
+              "current": 0.9225048148568722,
+              "historical": 0.04592880789158871,
+              "unclear": 0.031566377251539116
+            }
+          },
+          "urgency": {
+            "0": 0.5286131139373478,
+            "1": 0.4116843070762202,
+            "2": 0.05571541894402401,
+            "3": 0.0035617675693271327,
+            "4": 0.00042539247308087853
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-021",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9758600756398454,
+            "probabilities": {
+              "irrelevant": 0.9839067170932303,
+              "relevant": 0.0051630679566882845,
+              "unclear": 0.010930214950081467
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8422326454690734,
+            "probabilities": {
+              "administrative": 0.04350325300435906,
+              "object": 0.009706885495538175,
+              "other_person": 0.06329685962930591,
+              "person": 0.8737861163752587,
+              "unclear": 0.009706885495538175
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.4744408120415322,
+            "probabilities": {
+              "current": 0.6496272080276881,
+              "historical": 0.18612131127082523,
+              "unclear": 0.16425148070148662
+            }
+          },
+          "urgency": {
+            "0": 0.8255972688625769,
+            "1": 0.14346728669867975,
+            "2": 0.024930876165765174,
+            "3": 0.004909181760549135,
+            "4": 0.001095386512429079
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-003",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.32337677529826414,
+            "probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9396361132429529,
+            "probabilities": {
+              "administrative": 0.9517088905943623,
+              "object": 0.005659068787909568,
+              "other_person": 0.004407287203478917,
+              "person": 0.03256568462633972,
+              "unclear": 0.005659068787909568
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572222853083,
+            "probabilities": {
+              "current": 0.9225048148568722,
+              "historical": 0.04592880789158871,
+              "unclear": 0.031566377251539116
+            }
+          },
+          "urgency": {
+            "0": 0.5286131139373478,
+            "1": 0.4116843070762202,
+            "2": 0.05571541894402401,
+            "3": 0.0035617675693271327,
+            "4": 0.00042539247308087853
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-022",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-004",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-023",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9758600756398454,
+            "probabilities": {
+              "irrelevant": 0.9839067170932303,
+              "relevant": 0.0051630679566882845,
+              "unclear": 0.010930214950081467
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.83454879335638,
+            "probabilities": {
+              "administrative": 0.04894884190213911,
+              "object": 0.009638600756276684,
+              "other_person": 0.06285155711977657,
+              "person": 0.867639034685104,
+              "unclear": 0.010921965536703666
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.39836410655077503,
+            "probabilities": {
+              "current": 0.5989094043671833,
+              "historical": 0.24966258390895654,
+              "unclear": 0.1514280117238601
+            }
+          },
+          "urgency": {
+            "0": 0.8448631243284851,
+            "1": 0.1295639641425113,
+            "2": 0.01986927742537233,
+            "3": 0.0044334339969437486,
+            "4": 0.0012702001066874295
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-005",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.35305229334397614,
+            "probabilities": {
+              "irrelevant": 0.12689447834621756,
+              "relevant": 0.3044039927577983,
+              "unclear": 0.5687015288959841
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9447206891467426,
+            "probabilities": {
+              "administrative": 0.9557765513173941,
+              "object": 0.007297442281639319,
+              "other_person": 0.005015453842766635,
+              "person": 0.025470582347863396,
+              "unclear": 0.006439970210336562
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8964734019319218,
+            "probabilities": {
+              "current": 0.9309822679546146,
+              "historical": 0.04090450458787963,
+              "unclear": 0.028113227457505805
+            }
+          },
+          "urgency": {
+            "0": 0.5898758393739156,
+            "1": 0.3577777606787874,
+            "2": 0.048419954577224734,
+            "3": 0.0035075305814440093,
+            "4": 0.00041891478862815095
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-024",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-006",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-025",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9715604862683753,
+            "probabilities": {
+              "irrelevant": 0.9810403241789168,
+              "relevant": 0.006610198742529274,
+              "unclear": 0.012349477078553876
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8345487730037748,
+            "probabilities": {
+              "administrative": 0.04894884973630246,
+              "object": 0.009638600000893689,
+              "other_person": 0.0628515671790414,
+              "person": 0.8676390184030198,
+              "unclear": 0.010921964680742595
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.5111792638896726,
+            "probabilities": {
+              "current": 0.6741195092597817,
+              "historical": 0.19313847305996482,
+              "unclear": 0.1327420176802535
+            }
+          },
+          "urgency": {
+            "0": 0.8254768640474832,
+            "1": 0.1434463763051907,
+            "2": 0.02492723951267079,
+            "3": 0.004908465660925452,
+            "4": 0.001241054473729869
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-007",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-026",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9786562241152197,
+            "probabilities": {
+              "irrelevant": 0.9857708160768132,
+              "relevant": 0.004565025295909385,
+              "unclear": 0.00966415862727745
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8448106711173142,
+            "probabilities": {
+              "administrative": 0.03848210132337556,
+              "object": 0.009729796624555014,
+              "other_person": 0.06344625899308684,
+              "person": 0.8758485368938513,
+              "unclear": 0.01249330616513123
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.38624623797228286,
+            "probabilities": {
+              "current": 0.5908308253148552,
+              "historical": 0.2173545008883528,
+              "unclear": 0.191814673796792
+            }
+          },
+          "urgency": {
+            "0": 0.8560773513447211,
+            "1": 0.11585747426950878,
+            "2": 0.02281368934333578,
+            "3": 0.003964424761844855,
+            "4": 0.00128706028058947
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-008",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-027",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9767559841571691,
+            "probabilities": {
+              "irrelevant": 0.9845039894381128,
+              "relevant": 0.004559158316103019,
+              "unclear": 0.01093685224578417
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8504170889622009,
+            "probabilities": {
+              "administrative": 0.043829232673061526,
+              "object": 0.009779623705523013,
+              "other_person": 0.0562778487461318,
+              "person": 0.8803336711697607,
+              "unclear": 0.009779623705523013
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.40668175235076154,
+            "probabilities": {
+              "current": 0.6044545015671744,
+              "historical": 0.2223663842500948,
+              "unclear": 0.17317911418273074
+            }
+          },
+          "urgency": {
+            "0": 0.8549681495363445,
+            "1": 0.11570735322743593,
+            "2": 0.022784128757457816,
+            "3": 0.005083827510572795,
+            "4": 0.0014565409681889046
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-009",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.25972056423549383,
+            "probabilities": {
+              "irrelevant": 0.1863237288506969,
+              "relevant": 0.3071958949923071,
+              "unclear": 0.5064803761569959
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9406826370692443,
+            "probabilities": {
+              "administrative": 0.9525461096553954,
+              "object": 0.007272780730967949,
+              "other_person": 0.004998504223391841,
+              "person": 0.028764398921988697,
+              "unclear": 0.006418206468256144
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572198884298,
+            "probabilities": {
+              "current": 0.9225048132589532,
+              "historical": 0.04592880883862188,
+              "unclear": 0.03156637790242486
+            }
+          },
+          "urgency": {
+            "0": 0.5597988283101576,
+            "1": 0.3847437329773195,
+            "2": 0.05206939586884115,
+            "3": 0.0029375543012139507,
+            "4": 0.0004504885424678424
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-028",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-010",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-029",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9758600756398454,
+            "probabilities": {
+              "irrelevant": 0.9839067170932303,
+              "relevant": 0.0051630679566882845,
+              "unclear": 0.010930214950081467
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8434798621198483,
+            "probabilities": {
+              "administrative": 0.043552925972383826,
+              "object": 0.008576079613266351,
+              "other_person": 0.06336913337132055,
+              "person": 0.8747838896958786,
+              "unclear": 0.009717971347150713
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.26839405058739774,
+            "probabilities": {
+              "current": 0.5122627003915985,
+              "historical": 0.2741944484453393,
+              "unclear": 0.2135428511630622
+            }
+          },
+          "urgency": {
+            "0": 0.8419961375302248,
+            "1": 0.1291242916786073,
+            "2": 0.02243843736023709,
+            "3": 0.005006692121670213,
+            "4": 0.0014344413092606386
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-011",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-030",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-012",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-031",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9691447581922323,
+            "probabilities": {
+              "irrelevant": 0.9794298387948216,
+              "relevant": 0.0065993458760172105,
+              "unclear": 0.013970815329161218
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8502903097984993,
+            "probabilities": {
+              "administrative": 0.03011989119829178,
+              "object": 0.007615501116259036,
+              "other_person": 0.07225386285255919,
+              "person": 0.8802322478387995,
+              "unclear": 0.009778496994090467
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.4508763957024102,
+            "probabilities": {
+              "current": 0.6339175971349401,
+              "historical": 0.20580292427854446,
+              "unclear": 0.16027947858651548
+            }
+          },
+          "urgency": {
+            "0": 0.8056435992678777,
+            "1": 0.1586406378411632,
+            "2": 0.027567605942837924,
+            "3": 0.0061511657954862655,
+            "4": 0.001996991152634902
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-013",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.32337677529826414,
+            "probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9396361132429529,
+            "probabilities": {
+              "administrative": 0.9517088905943623,
+              "object": 0.005659068787909568,
+              "other_person": 0.004407287203478917,
+              "person": 0.03256568462633972,
+              "unclear": 0.005659068787909568
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572222853083,
+            "probabilities": {
+              "current": 0.9225048148568722,
+              "historical": 0.04592880789158871,
+              "unclear": 0.031566377251539116
+            }
+          },
+          "urgency": {
+            "0": 0.5286131139373478,
+            "1": 0.4116843070762202,
+            "2": 0.05571541894402401,
+            "3": 0.0035617675693271327,
+            "4": 0.00042539247308087853
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-032",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-014",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-033",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9702664490657285,
+            "probabilities": {
+              "irrelevant": 0.9801776327104856,
+              "relevant": 0.007483749803645755,
+              "unclear": 0.012338617485868663
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.831717987842693,
+            "probabilities": {
+              "administrative": 0.043084456500411546,
+              "object": 0.009613439386822055,
+              "other_person": 0.07103425986878292,
+              "person": 0.8653743902741544,
+              "unclear": 0.01089345396982911
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.4936176808471098,
+            "probabilities": {
+              "current": 0.6624117872314065,
+              "historical": 0.18978416019453823,
+              "unclear": 0.14780405257405532
+            }
+          },
+          "urgency": {
+            "0": 0.8402528784020513,
+            "1": 0.1288569523087023,
+            "2": 0.022391980743689137,
+            "3": 0.006415409894267945,
+            "4": 0.0020827786512892577
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-015",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.35305229334397614,
+            "probabilities": {
+              "irrelevant": 0.12689447834621756,
+              "relevant": 0.3044039927577983,
+              "unclear": 0.5687015288959841
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9447206891467426,
+            "probabilities": {
+              "administrative": 0.9557765513173941,
+              "object": 0.007297442281639319,
+              "other_person": 0.005015453842766635,
+              "person": 0.025470582347863396,
+              "unclear": 0.006439970210336562
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8964734019319218,
+            "probabilities": {
+              "current": 0.9309822679546146,
+              "historical": 0.04090450458787963,
+              "unclear": 0.028113227457505805
+            }
+          },
+          "urgency": {
+            "0": 0.5898758393739156,
+            "1": 0.3577777606787874,
+            "2": 0.048419954577224734,
+            "3": 0.0035075305814440093,
+            "4": 0.00041891478862815095
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-034",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9777580124989533,
+            "probabilities": {
+              "irrelevant": 0.9851720083326355,
+              "relevant": 0.005169707161598912,
+              "unclear": 0.009658284505765575
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8672600901683125,
+            "probabilities": {
+              "administrative": 0.03927118740041157,
+              "object": 0.008762584244709699,
+              "other_person": 0.050425202765635856,
+              "person": 0.89380807213465,
+              "unclear": 0.007732953454592887
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.39836410655077514,
+            "probabilities": {
+              "current": 0.5989094043671834,
+              "historical": 0.24966258390895654,
+              "unclear": 0.1514280117238601
+            }
+          },
+          "urgency": {
+            "0": 0.8082617847749962,
+            "1": 0.15915618915841218,
+            "2": 0.02440739211155346,
+            "3": 0.0061711536848152665,
+            "4": 0.0020034802702228478
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-016",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.32337677529826414,
+            "probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9396361132429529,
+            "probabilities": {
+              "administrative": 0.9517088905943623,
+              "object": 0.005659068787909568,
+              "other_person": 0.004407287203478917,
+              "person": 0.03256568462633972,
+              "unclear": 0.005659068787909568
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572222853083,
+            "probabilities": {
+              "current": 0.9225048148568722,
+              "historical": 0.04592880789158871,
+              "unclear": 0.031566377251539116
+            }
+          },
+          "urgency": {
+            "0": 0.5286131139373478,
+            "1": 0.4116843070762202,
+            "2": 0.05571541894402401,
+            "3": 0.0035617675693271327,
+            "4": 0.00042539247308087853
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-035",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9691447581922323,
+            "probabilities": {
+              "irrelevant": 0.9794298387948216,
+              "relevant": 0.0065993458760172105,
+              "unclear": 0.013970815329161218
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8670102884769024,
+            "probabilities": {
+              "administrative": 0.03057758988695262,
+              "object": 0.009927092369473865,
+              "other_person": 0.05712645869431964,
+              "person": 0.893608230781522,
+              "unclear": 0.008760628267731859
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.21287647146612243,
+            "probabilities": {
+              "current": 0.4752509809774149,
+              "historical": 0.3266349234296276,
+              "unclear": 0.1981140955929575
+            }
+          },
+          "urgency": {
+            "0": 0.8248015223975859,
+            "1": 0.14332901097519044,
+            "2": 0.024906850417138738,
+            "3": 0.005557468197365323,
+            "4": 0.0014051480127195814
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-017",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.25972056423549383,
+            "probabilities": {
+              "irrelevant": 0.1863237288506969,
+              "relevant": 0.3071958949923071,
+              "unclear": 0.5064803761569959
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9406826370692443,
+            "probabilities": {
+              "administrative": 0.9525461096553954,
+              "object": 0.007272780730967949,
+              "other_person": 0.004998504223391841,
+              "person": 0.028764398921988697,
+              "unclear": 0.006418206468256144
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572198884298,
+            "probabilities": {
+              "current": 0.9225048132589532,
+              "historical": 0.04592880883862188,
+              "unclear": 0.03156637790242486
+            }
+          },
+          "urgency": {
+            "0": 0.5597988283101576,
+            "1": 0.3847437329773195,
+            "2": 0.05206939586884115,
+            "3": 0.0029375543012139507,
+            "4": 0.0004504885424678424
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-036",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-018",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-037",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9712925028653885,
+            "probabilities": {
+              "irrelevant": 0.9808616685769257,
+              "relevant": 0.005147090055571652,
+              "unclear": 0.013991241367502679
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8516830678852474,
+            "probabilities": {
+              "administrative": 0.043879656176416725,
+              "object": 0.008640418665118372,
+              "other_person": 0.056342593806038316,
+              "person": 0.8813464543081979,
+              "unclear": 0.009790877044228615
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.4508764371990578,
+            "probabilities": {
+              "current": 0.6339176247993719,
+              "historical": 0.20580290872625104,
+              "unclear": 0.16027946647437716
+            }
+          },
+          "urgency": {
+            "0": 0.8583579998525687,
+            "1": 0.11616612129744962,
+            "2": 0.017814655927418772,
+            "3": 0.005783572001976554,
+            "4": 0.0018776509205863587
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-019",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.32337677529826414,
+            "probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "administrative",
+            "confidence": 0.9396361132429529,
+            "probabilities": {
+              "administrative": 0.9517088905943623,
+              "object": 0.005659068787909568,
+              "other_person": 0.004407287203478917,
+              "person": 0.03256568462633972,
+              "unclear": 0.005659068787909568
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.8837572222853083,
+            "probabilities": {
+              "current": 0.9225048148568722,
+              "historical": 0.04592880789158871,
+              "unclear": 0.031566377251539116
+            }
+          },
+          "urgency": {
+            "0": 0.5286131139373478,
+            "1": 0.4116843070762202,
+            "2": 0.05571541894402401,
+            "3": 0.0035617675693271327,
+            "4": 0.00042539247308087853
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-038",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9794498108356913,
+            "probabilities": {
+              "irrelevant": 0.9862998738904608,
+              "relevant": 0.004030782221947499,
+              "unclear": 0.009669343887591659
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8421262367882365,
+            "probabilities": {
+              "administrative": 0.033877060718117434,
+              "object": 0.010998271348985452,
+              "other_person": 0.07171773810304319,
+              "person": 0.8737009894305893,
+              "unclear": 0.00970594039926456
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.2215363948800545,
+            "probabilities": {
+              "current": 0.48102426325336967,
+              "historical": 0.29175596372884977,
+              "unclear": 0.22721977301778057
+            }
+          },
+          "urgency": {
+            "0": 0.8580638860230448,
+            "1": 0.11612631039795264,
+            "2": 0.02017972689620266,
+            "3": 0.003973623828294397,
+            "4": 0.001656452854505449
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-scale-039",
+          "relevance": {
+            "choice": "irrelevant",
+            "confidence": 0.9748461839485645,
+            "probabilities": {
+              "irrelevant": 0.983230789299043,
+              "relevant": 0.005846503734278599,
+              "unclear": 0.010922706966678384
+            }
+          },
+          "status": "irrelevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8449995693469581,
+            "probabilities": {
+              "administrative": 0.038488734702157516,
+              "object": 0.011027207117247386,
+              "other_person": 0.06345719558578125,
+              "person": 0.8759996554775664,
+              "unclear": 0.011027207117247386
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.5563068984544643,
+            "probabilities": {
+              "current": 0.7042045989696429,
+              "historical": 0.13866611140218216,
+              "unclear": 0.1571292896281749
+            }
+          },
+          "urgency": {
+            "0": 0.8440603512878507,
+            "1": 0.12944086261741936,
+            "2": 0.01985039919507329,
+            "3": 0.005018966909045195,
+            "4": 0.0016294199906114325
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": null,
+          "record_id": "bound-note-scale-040",
+          "relevance": null,
+          "status": "unavailable",
+          "subject_binding": null,
+          "time_sensitivity": null,
+          "urgency": null
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "baseline",
+          "elapsed_ms": null,
+          "gate_refused": false,
+          "model": null,
+          "negation_probability": null,
+          "record_id": "bound-note-scale-000",
+          "relevance_choice": null,
+          "relevance_confidence": null,
+          "relevance_probabilities": null,
+          "status": "too_long",
+          "subject_binding_choice": null,
+          "subject_binding_probabilities": null,
+          "time_sensitivity_choice": null,
+          "time_sensitivity_probabilities": null,
+          "urgency_probabilities": null,
+          "urgency_score": null
+        },
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 267,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-scale-041",
+          "relevance_choice": "relevant",
+          "relevance_confidence": 0.993822186530837,
+          "relevance_probabilities": {
+            "irrelevant": 0.0013213161022857618,
+            "relevant": 0.9958814576872247,
+            "unclear": 0.0027972262104895523
+          },
+          "status": "relevant",
+          "subject_binding_choice": "person",
+          "subject_binding_probabilities": {
+            "administrative": 0.0027707848284180664,
+            "object": 0.0031397105421029636,
+            "other_person": 0.005176507554606586,
+            "person": 0.986467788046065,
+            "unclear": 0.002445209028807333
+          },
+          "time_sensitivity_choice": "current",
+          "time_sensitivity_probabilities": {
+            "current": 0.9984873841852123,
+            "historical": 0.0008035156991285625,
+            "unclear": 0.0007091001156590522
+          },
+          "urgency_probabilities": {
+            "0": 0.000940388022929566,
+            "1": 0.016668776545169354,
+            "2": 0.551994068891733,
+            "3": 0.42989341310365264,
+            "4": 0.0005033534365154284
+          },
+          "urgency_score": 2.412350567385655
+        }
+      ],
+      "coverage_matches_expected": {
+        "decision_budget_exhausted_count": true,
+        "decision_candidate_count": true,
+        "decision_not_shortlisted_count": true,
+        "decision_shortlisted_count": true,
+        "decision_too_long_count": true
+      },
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-note-scale-000",
+          "bound-note-scale-001",
+          "bound-note-scale-002",
+          "bound-note-scale-003",
+          "bound-note-scale-004",
+          "bound-note-scale-005",
+          "bound-note-scale-006",
+          "bound-note-scale-007",
+          "bound-note-scale-008",
+          "bound-note-scale-009",
+          "bound-note-scale-010",
+          "bound-note-scale-011",
+          "bound-note-scale-012",
+          "bound-note-scale-013",
+          "bound-note-scale-014",
+          "bound-note-scale-015",
+          "bound-note-scale-016",
+          "bound-note-scale-017",
+          "bound-note-scale-018",
+          "bound-note-scale-019"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "baseline_record_ids": [
+          "bound-note-scale-000",
+          "bound-note-scale-001",
+          "bound-note-scale-002",
+          "bound-note-scale-003",
+          "bound-note-scale-004",
+          "bound-note-scale-005",
+          "bound-note-scale-006",
+          "bound-note-scale-007",
+          "bound-note-scale-008",
+          "bound-note-scale-009",
+          "bound-note-scale-010",
+          "bound-note-scale-011",
+          "bound-note-scale-012",
+          "bound-note-scale-013",
+          "bound-note-scale-014",
+          "bound-note-scale-015",
+          "bound-note-scale-016",
+          "bound-note-scale-017",
+          "bound-note-scale-018",
+          "bound-note-scale-019"
+        ],
+        "coverage": {
+          "decision_assessed_count": 41,
+          "decision_baseline_attempted_count": 19,
+          "decision_baseline_candidate_count": 20,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 42,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 22,
+          "decision_missed_candidate_count": 22,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 42,
+          "decision_too_long_count": 1,
+          "decision_unavailable_count": 17
+        },
+        "decision_elapsed_ms": 5124,
+        "decision_reported_input_tokens": 15298,
+        "decision_reported_output_tokens": 96,
+        "decision_status": "partial",
+        "emphasized_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": null,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-000",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "too_long",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1438,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-001",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 267,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.0027707848284180664,
+                "object": 0.0031397105421029636,
+                "other_person": 0.005176507554606586,
+                "person": 0.986467788046065,
+                "unclear": 0.002445209028807333
+              },
+              "time_sensitivity": {
+                "current": 0.9984873841852123,
+                "historical": 0.0008035156991285625,
+                "unclear": 0.0007091001156590522
+              },
+              "urgency": {
+                "0": 0.000940388022929566,
+                "1": 0.016668776545169354,
+                "2": 0.551994068891733,
+                "3": 0.42989341310365264,
+                "4": 0.0005033534365154284
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-041",
+            "relevance_confidence": 0.993822186530837,
+            "relevance_probabilities": {
+              "irrelevant": 0.0013213161022857618,
+              "relevant": 0.9958814576872247,
+              "unclear": 0.0027972262104895523
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 261,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9517088905943623,
+                "object": 0.005659068787909568,
+                "other_person": 0.004407287203478917,
+                "person": 0.03256568462633972,
+                "unclear": 0.005659068787909568
+              },
+              "time_sensitivity": {
+                "current": 0.9225048148568722,
+                "historical": 0.04592880789158871,
+                "unclear": 0.031566377251539116
+              },
+              "urgency": {
+                "0": 0.5286131139373478,
+                "1": 0.4116843070762202,
+                "2": 0.05571541894402401,
+                "3": 0.0035617675693271327,
+                "4": 0.00042539247308087853
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-002",
+            "relevance_confidence": 0.32337677529826414,
+            "relevance_probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 268,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9517088905943623,
+                "object": 0.005659068787909568,
+                "other_person": 0.004407287203478917,
+                "person": 0.03256568462633972,
+                "unclear": 0.005659068787909568
+              },
+              "time_sensitivity": {
+                "current": 0.9225048148568722,
+                "historical": 0.04592880789158871,
+                "unclear": 0.031566377251539116
+              },
+              "urgency": {
+                "0": 0.5286131139373478,
+                "1": 0.4116843070762202,
+                "2": 0.05571541894402401,
+                "3": 0.0035617675693271327,
+                "4": 0.00042539247308087853
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-003",
+            "relevance_confidence": 0.32337677529826414,
+            "relevance_probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1305,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-004",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 630,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9557765513173941,
+                "object": 0.007297442281639319,
+                "other_person": 0.005015453842766635,
+                "person": 0.025470582347863396,
+                "unclear": 0.006439970210336562
+              },
+              "time_sensitivity": {
+                "current": 0.9309822679546146,
+                "historical": 0.04090450458787963,
+                "unclear": 0.028113227457505805
+              },
+              "urgency": {
+                "0": 0.5898758393739156,
+                "1": 0.3577777606787874,
+                "2": 0.048419954577224734,
+                "3": 0.0035075305814440093,
+                "4": 0.00041891478862815095
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-005",
+            "relevance_confidence": 0.35305229334397614,
+            "relevance_probabilities": {
+              "irrelevant": 0.12689447834621756,
+              "relevant": 0.3044039927577983,
+              "unclear": 0.5687015288959841
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1198,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-006",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1295,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-007",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1139,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-008",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 168,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9525461096553954,
+                "object": 0.007272780730967949,
+                "other_person": 0.004998504223391841,
+                "person": 0.028764398921988697,
+                "unclear": 0.006418206468256144
+              },
+              "time_sensitivity": {
+                "current": 0.9225048132589532,
+                "historical": 0.04592880883862188,
+                "unclear": 0.03156637790242486
+              },
+              "urgency": {
+                "0": 0.5597988283101576,
+                "1": 0.3847437329773195,
+                "2": 0.05206939586884115,
+                "3": 0.0029375543012139507,
+                "4": 0.0004504885424678424
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-009",
+            "relevance_confidence": 0.25972056423549383,
+            "relevance_probabilities": {
+              "irrelevant": 0.1863237288506969,
+              "relevant": 0.3071958949923071,
+              "unclear": 0.5064803761569959
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1352,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-010",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1392,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-011",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1128,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-012",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 192,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9517088905943623,
+                "object": 0.005659068787909568,
+                "other_person": 0.004407287203478917,
+                "person": 0.03256568462633972,
+                "unclear": 0.005659068787909568
+              },
+              "time_sensitivity": {
+                "current": 0.9225048148568722,
+                "historical": 0.04592880789158871,
+                "unclear": 0.031566377251539116
+              },
+              "urgency": {
+                "0": 0.5286131139373478,
+                "1": 0.4116843070762202,
+                "2": 0.05571541894402401,
+                "3": 0.0035617675693271327,
+                "4": 0.00042539247308087853
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-013",
+            "relevance_confidence": 0.32337677529826414,
+            "relevance_probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1254,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-014",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 262,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9557765513173941,
+                "object": 0.007297442281639319,
+                "other_person": 0.005015453842766635,
+                "person": 0.025470582347863396,
+                "unclear": 0.006439970210336562
+              },
+              "time_sensitivity": {
+                "current": 0.9309822679546146,
+                "historical": 0.04090450458787963,
+                "unclear": 0.028113227457505805
+              },
+              "urgency": {
+                "0": 0.5898758393739156,
+                "1": 0.3577777606787874,
+                "2": 0.048419954577224734,
+                "3": 0.0035075305814440093,
+                "4": 0.00041891478862815095
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-015",
+            "relevance_confidence": 0.35305229334397614,
+            "relevance_probabilities": {
+              "irrelevant": 0.12689447834621756,
+              "relevant": 0.3044039927577983,
+              "unclear": 0.5687015288959841
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 574,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9517088905943623,
+                "object": 0.005659068787909568,
+                "other_person": 0.004407287203478917,
+                "person": 0.03256568462633972,
+                "unclear": 0.005659068787909568
+              },
+              "time_sensitivity": {
+                "current": 0.9225048148568722,
+                "historical": 0.04592880789158871,
+                "unclear": 0.031566377251539116
+              },
+              "urgency": {
+                "0": 0.5286131139373478,
+                "1": 0.4116843070762202,
+                "2": 0.05571541894402401,
+                "3": 0.0035617675693271327,
+                "4": 0.00042539247308087853
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-016",
+            "relevance_confidence": 0.32337677529826414,
+            "relevance_probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1492,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9525461096553954,
+                "object": 0.007272780730967949,
+                "other_person": 0.004998504223391841,
+                "person": 0.028764398921988697,
+                "unclear": 0.006418206468256144
+              },
+              "time_sensitivity": {
+                "current": 0.9225048132589532,
+                "historical": 0.04592880883862188,
+                "unclear": 0.03156637790242486
+              },
+              "urgency": {
+                "0": 0.5597988283101576,
+                "1": 0.3847437329773195,
+                "2": 0.05206939586884115,
+                "3": 0.0029375543012139507,
+                "4": 0.0004504885424678424
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-017",
+            "relevance_confidence": 0.25972056423549383,
+            "relevance_probabilities": {
+              "irrelevant": 0.1863237288506969,
+              "relevant": 0.3071958949923071,
+              "unclear": 0.5064803761569959
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 1198,
+            "gate_probabilities": {},
+            "gate_refused": false,
+            "model": null,
+            "negation_probability": null,
+            "record_id": "bound-note-scale-018",
+            "relevance_confidence": null,
+            "relevance_probabilities": {},
+            "status": "unavailable",
+            "subject_binding": null,
+            "time_sensitivity": null
+          },
+          {
+            "elapsed_ms": 1591,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.9517088905943623,
+                "object": 0.005659068787909568,
+                "other_person": 0.004407287203478917,
+                "person": 0.03256568462633972,
+                "unclear": 0.005659068787909568
+              },
+              "time_sensitivity": {
+                "current": 0.9225048148568722,
+                "historical": 0.04592880789158871,
+                "unclear": 0.031566377251539116
+              },
+              "urgency": {
+                "0": 0.5286131139373478,
+                "1": 0.4116843070762202,
+                "2": 0.05571541894402401,
+                "3": 0.0035617675693271327,
+                "4": 0.00042539247308087853
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-scale-019",
+            "relevance_confidence": 0.32337677529826414,
+            "relevance_probabilities": {
+              "irrelevant": 0.1572675971641517,
+              "relevant": 0.2938145526370056,
+              "unclear": 0.5489178501988428
+            },
+            "status": "unclear",
+            "subject_binding": "administrative",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-scale-041"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-scale-002": 0.5355020175645732,
+          "bound-note-scale-003": 0.5355020175645732,
+          "bound-note-scale-005": 0.4668159207320815,
+          "bound-note-scale-009": 0.499497141788515,
+          "bound-note-scale-013": 0.5355020175645732,
+          "bound-note-scale-015": 0.4668159207320815,
+          "bound-note-scale-016": 0.5355020175645732,
+          "bound-note-scale-017": 0.499497141788515,
+          "bound-note-scale-019": 0.5355020175645732,
+          "bound-note-scale-041": 2.412350567385655
+        }
+      },
+      "expected": {
+        "expect_additions": [
+          "bound-note-scale-041"
+        ],
+        "expect_no_addition": [],
+        "expected_coverage": {
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 42,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 42,
+          "decision_too_long_count": 1
+        },
+        "note": "42 current free-text notes exercise the 80-note shortlist/call cap, byte cap and coverage accounting. bound-note-scale-041 remains the unchanged authored relevant keyless missed note. The one over-byte-cap note is not sent; the live run measures all other responses, including any throttling or timeout, rather than assuming all 41 concurrent requests succeed.",
+        "observe_candidates": [
+          "bound-note-scale-000",
+          "bound-note-scale-041"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [
+          "bound-note-scale-041"
+        ],
+        "actual_emphasized": [
+          "bound-note-scale-041"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 1,
+        "addition_precision_numerator": 1,
+        "correct_additions": [
+          "bound-note-scale-041"
+        ],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [
+          "bound-note-scale-041"
+        ],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-scale-041"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-011-laakitys-sairaanhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "missed",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-018",
+          "relevance": {
+            "choice": "unclear",
+            "confidence": 0.9972693338469549,
+            "probabilities": {
+              "irrelevant": 0.0009102220510150657,
+              "relevant": 0.0009102220510150657,
+              "unclear": 0.9981795558979699
+            }
+          },
+          "status": "unclear",
+          "subject_binding": {
+            "choice": "unclear",
+            "confidence": 0.9769259116845708,
+            "probabilities": {
+              "administrative": 0.0007898780741477894,
+              "object": 0.004011331848803273,
+              "other_person": 0.0013022887821071134,
+              "person": 0.01235577194728536,
+              "unclear": 0.9815407293476566
+            }
+          },
+          "time_sensitivity": {
+            "choice": "unclear",
+            "confidence": 0.9482656961581142,
+            "probabilities": {
+              "current": 0.03303794969192305,
+              "historical": 0.0014515862026674964,
+              "unclear": 0.9655104641054094
+            }
+          },
+          "urgency": {
+            "0": 0.0010865066317567672,
+            "1": 0.04619943758254152,
+            "2": 0.9279404333439937,
+            "3": 0.024728776957205097,
+            "4": 4.4845484502961306e-05
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [
+        {
+          "candidate_group": "missed",
+          "elapsed_ms": 220,
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "negation_probability": null,
+          "record_id": "bound-note-018",
+          "relevance_choice": "unclear",
+          "relevance_confidence": 0.9972693338469549,
+          "relevance_probabilities": {
+            "irrelevant": 0.0009102220510150657,
+            "relevant": 0.0009102220510150657,
+            "unclear": 0.9981795558979699
+          },
+          "status": "unclear",
+          "subject_binding_choice": "unclear",
+          "subject_binding_probabilities": {
+            "administrative": 0.0007898780741477894,
+            "object": 0.004011331848803273,
+            "other_person": 0.0013022887821071134,
+            "person": 0.01235577194728536,
+            "unclear": 0.9815407293476566
+          },
+          "time_sensitivity_choice": "unclear",
+          "time_sensitivity_probabilities": {
+            "current": 0.03303794969192305,
+            "historical": 0.0014515862026674964,
+            "unclear": 0.9655104641054094
+          },
+          "urgency_probabilities": {
+            "0": 0.0010865066317567672,
+            "1": 0.04619943758254152,
+            "2": 0.9279404333439937,
+            "3": 0.024728776957205097,
+            "4": 4.4845484502961306e-05
+          },
+          "urgency_score": 1.976446017080156
+        }
+      ],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 1,
+          "decision_missed_candidate_count": 1,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 240,
+        "decision_reported_input_tokens": 658,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "expected": {
+        "expect_abstentions": [
+          "bound-note-018"
+        ],
+        "expect_additions": [],
+        "expect_no_addition": [
+          "bound-note-018"
+        ],
+        "note": "owner-authored ambiguous note: actor, date and tablet are unspecified; expected Decision-1 abstention",
+        "observe_candidates": [
+          "bound-note-018"
+        ]
+      },
+      "metrics": {
+        "actual_abstentions": [
+          "bound-note-018"
+        ],
+        "actual_additions": [],
+        "actual_emphasized": [],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [
+          "bound-note-018"
+        ],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-012-neuvola-terveydenhoitaja": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-020",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9898846599782998,
+            "probabilities": {
+              "irrelevant": 0.0031613177248736545,
+              "relevant": 0.9932564399855331,
+              "unclear": 0.0035822422895933205
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9396404414661346,
+            "probabilities": {
+              "administrative": 0.0056590872268191894,
+              "object": 0.0018372366311829708,
+              "other_person": 0.03690189299035433,
+              "person": 0.9517123531729077,
+              "unclear": 0.0038894299787357637
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9898846623924353,
+            "probabilities": {
+              "current": 0.9932564415949569,
+              "historical": 0.0031613169703908948,
+              "unclear": 0.003582241434652348
+            }
+          },
+          "urgency": {
+            "0": 0.4970486329223618,
+            "1": 0.4970486329223618,
+            "2": 0.005521712529831642,
+            "3": 0.0003115135558414631,
+            "4": 6.95080696033125e-05
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-012",
+          "bound-mittaus-012",
+          "bound-mittaus-013",
+          "bound-note-020"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-012",
+          "bound-mittaus-012",
+          "bound-mittaus-013",
+          "bound-note-020"
+        ],
+        "coverage": {
+          "decision_assessed_count": 1,
+          "decision_baseline_attempted_count": 1,
+          "decision_baseline_candidate_count": 1,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 1,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 1,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 238,
+        "decision_reported_input_tokens": 670,
+        "decision_reported_output_tokens": 4,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-note-020"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 230,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.0056590872268191894,
+                "object": 0.0018372366311829708,
+                "other_person": 0.03690189299035433,
+                "person": 0.9517123531729077,
+                "unclear": 0.0038894299787357637
+              },
+              "time_sensitivity": {
+                "current": 0.9932564415949569,
+                "historical": 0.0031613169703908948,
+                "unclear": 0.003582241434652348
+              },
+              "urgency": {
+                "0": 0.4970486329223618,
+                "1": 0.4970486329223618,
+                "2": 0.005521712529831642,
+                "3": 0.0003115135558414631,
+                "4": 6.95080696033125e-05
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-020",
+            "relevance_confidence": 0.9898846599782998,
+            "relevance_probabilities": {
+              "irrelevant": 0.0031613177248736545,
+              "relevant": 0.9932564399855331,
+              "unclear": 0.0035822422895933205
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-note-020"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-note-020": 0.5093046309279627
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-note-020"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-note-020"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    },
+    "bound-encounter-013-vammaispalvelut-sosiaalityontekija": {
+      "ablation_candidates": [
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-note-022",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9906375815461856,
+            "probabilities": {
+              "irrelevant": 0.001026847978786044,
+              "relevant": 0.9937583876974571,
+              "unclear": 0.005214764323756935
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.9304745467973552,
+            "probabilities": {
+              "administrative": 0.028517793476756616,
+              "object": 0.004373345273118528,
+              "other_person": 0.013470851796395721,
+              "person": 0.9443796374378842,
+              "unclear": 0.009258372015844887
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9965457144980232,
+            "probabilities": {
+              "current": 0.9976971429986822,
+              "historical": 0.0008028798908791883,
+              "unclear": 0.0014999771104386673
+            }
+          },
+          "urgency": {
+            "0": 0.014413607287900594,
+            "1": 0.6944865326339194,
+            "2": 0.28950504137745425,
+            "3": 0.001519183031283959,
+            "4": 7.563566944183326e-05
+          }
+        },
+        {
+          "attempted": true,
+          "candidate_group": "baseline",
+          "gate_refused": false,
+          "model": "microsoft-decision-1",
+          "record_id": "bound-esitieto-013",
+          "relevance": {
+            "choice": "relevant",
+            "confidence": 0.9962045224031759,
+            "probabilities": {
+              "irrelevant": 0.0010306831962083713,
+              "relevant": 0.9974696816021172,
+              "unclear": 0.0014996352016744274
+            }
+          },
+          "status": "relevant",
+          "subject_binding": {
+            "choice": "person",
+            "confidence": 0.8753149254911947,
+            "probabilities": {
+              "administrative": 0.05755118023893063,
+              "object": 0.0036791247397681575,
+              "other_person": 0.02718525261564047,
+              "person": 0.9002519403929558,
+              "unclear": 0.011332502012705045
+            }
+          },
+          "time_sensitivity": {
+            "choice": "current",
+            "confidence": 0.9953623823083815,
+            "probabilities": {
+              "current": 0.9969082548722543,
+              "historical": 0.0011672595232825023,
+              "unclear": 0.0019244856044631532
+            }
+          },
+          "urgency": {
+            "0": 0.029966630403392192,
+            "1": 0.284315473173175,
+            "2": 0.6820373642876948,
+            "3": 0.003579003618028855,
+            "4": 0.00010152851770910166
+          }
+        }
+      ],
+      "baseline_identical_without_decision": true,
+      "candidate_observations": [],
+      "coverage_matches_expected": {},
+      "decision_off_baseline": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-013",
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "coverage": {
+          "decision_assessed_count": 0,
+          "decision_baseline_attempted_count": 0,
+          "decision_baseline_candidate_count": 0,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 0,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 0,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 0,
+        "decision_reported_input_tokens": 0,
+        "decision_reported_output_tokens": 0,
+        "decision_status": "disabled",
+        "emphasized_record_ids": [],
+        "notes": [],
+        "priority_record_ids": [],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {}
+      },
+      "decision_on": {
+        "additional_record_ids": [],
+        "baseline_record_ids": [
+          "bound-demo-013",
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "coverage": {
+          "decision_assessed_count": 2,
+          "decision_baseline_attempted_count": 2,
+          "decision_baseline_candidate_count": 2,
+          "decision_budget_exhausted_count": 0,
+          "decision_candidate_count": 2,
+          "decision_gate_refused_count": 0,
+          "decision_missed_attempted_count": 0,
+          "decision_missed_candidate_count": 0,
+          "decision_not_shortlisted_count": 0,
+          "decision_shortlisted_count": 2,
+          "decision_too_long_count": 0,
+          "decision_unavailable_count": 0
+        },
+        "decision_elapsed_ms": 270,
+        "decision_reported_input_tokens": 1307,
+        "decision_reported_output_tokens": 8,
+        "decision_status": "complete",
+        "emphasized_record_ids": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "notes": [
+          {
+            "elapsed_ms": 251,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.028517793476756616,
+                "object": 0.004373345273118528,
+                "other_person": 0.013470851796395721,
+                "person": 0.9443796374378842,
+                "unclear": 0.009258372015844887
+              },
+              "time_sensitivity": {
+                "current": 0.9976971429986822,
+                "historical": 0.0008028798908791883,
+                "unclear": 0.0014999771104386673
+              },
+              "urgency": {
+                "0": 0.014413607287900594,
+                "1": 0.6944865326339194,
+                "2": 0.28950504137745425,
+                "3": 0.001519183031283959,
+                "4": 7.563566944183326e-05
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-note-022",
+            "relevance_confidence": 0.9906375815461856,
+            "relevance_probabilities": {
+              "irrelevant": 0.001026847978786044,
+              "relevant": 0.9937583876974571,
+              "unclear": 0.005214764323756935
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          },
+          {
+            "elapsed_ms": 251,
+            "gate_probabilities": {
+              "subject_binding": {
+                "administrative": 0.05755118023893063,
+                "object": 0.0036791247397681575,
+                "other_person": 0.02718525261564047,
+                "person": 0.9002519403929558,
+                "unclear": 0.011332502012705045
+              },
+              "time_sensitivity": {
+                "current": 0.9969082548722543,
+                "historical": 0.0011672595232825023,
+                "unclear": 0.0019244856044631532
+              },
+              "urgency": {
+                "0": 0.029966630403392192,
+                "1": 0.284315473173175,
+                "2": 0.6820373642876948,
+                "3": 0.003579003618028855,
+                "4": 0.00010152851770910166
+              }
+            },
+            "gate_refused": false,
+            "model": "microsoft-decision-1",
+            "negation_probability": null,
+            "record_id": "bound-esitieto-013",
+            "relevance_confidence": 0.9962045224031759,
+            "relevance_probabilities": {
+              "irrelevant": 0.0010306831962083713,
+              "relevant": 0.9974696816021172,
+              "unclear": 0.0014996352016744274
+            },
+            "status": "relevant",
+            "subject_binding": "person",
+            "time_sensitivity": "current"
+          }
+        ],
+        "priority_record_ids": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "rule_version": "challenge-1.1-decision-selection-v8",
+        "selection_omitted_baseline_record_ids": [],
+        "urgency_order_scores": {
+          "bound-esitieto-013": 1.6595333266734875,
+          "bound-note-022": 1.2783567071604471
+        }
+      },
+      "expected": {
+        "expect_additions": [],
+        "expect_no_addition": []
+      },
+      "metrics": {
+        "actual_abstentions": [],
+        "actual_additions": [],
+        "actual_emphasized": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "actual_omissions": [],
+        "addition_precision_denominator": 0,
+        "addition_precision_numerator": 0,
+        "correct_additions": [],
+        "correct_emphasis": [],
+        "correct_omissions": [],
+        "emphasis_expectation_authored": false,
+        "expected_abstentions": [],
+        "expected_additions": [],
+        "expected_emphasis": [],
+        "expected_omissions": [],
+        "gate_refused_abstentions": [],
+        "irrelevant_candidate_wrongly_added": [],
+        "missed_expected_abstentions": [],
+        "missed_expected_additions": [],
+        "missed_expected_emphasis": [],
+        "missed_expected_omissions": [],
+        "unauthored_additions": [],
+        "unauthored_emphasis": [
+          "bound-esitieto-013",
+          "bound-note-022"
+        ],
+        "wrong_additions": [],
+        "wrong_emphasis": [],
+        "wrong_omissions": []
+      }
+    }
+  },
+  "selection_caps": {
+    "max_notes": 80,
+    "max_text_bytes": 4096,
+    "shortlist_limit": 80,
+    "total_budget_s": 8.0
+  },
+  "totals": {
+    "addition_precision": 1.0,
+    "addition_precision_denominator": 3,
+    "addition_precision_numerator": 3,
+    "additions": 3,
+    "audited_emphasized_sources": 3,
+    "baseline_attempted_denominator": 34,
+    "baseline_candidate_denominator": 35,
+    "correct_abstentions": 1,
+    "correct_additions": 3,
+    "correct_emphasis": 3,
+    "correct_omissions": 0,
+    "emphasized_sources": 11,
+    "encounters": 14,
+    "encounters_with_emphasis": 10,
+    "expected_abstentions": 1,
+    "expected_additions": 3,
+    "expected_emphasis": 3,
+    "expected_omissions": 1,
+    "f2_denominators": {
+      "abstentions": [
+        1,
+        1
+      ],
+      "addition_precision": [
+        3,
+        3
+      ],
+      "correct_omissions": [
+        0,
+        1
+      ],
+      "emphasis_matches": [
+        3,
+        3
+      ],
+      "missed_expected_additions": [
+        0,
+        3
+      ],
+      "missed_expected_omissions": [
+        1,
+        1
+      ],
+      "unauthored_additions": [
+        0,
+        3
+      ],
+      "wrong_additions": [
+        0,
+        3
+      ],
+      "wrong_emphasis": [
+        0,
+        3
+      ],
+      "wrong_omissions": [
+        6,
+        35
+      ]
+    },
+    "missed_expected_abstentions": 0,
+    "missed_expected_additions": 0,
+    "missed_expected_emphasis": 0,
+    "missed_expected_omissions": 1,
+    "unauthored_additions": 0,
+    "unauthored_emphasis": 8,
+    "wrong_additions": 0,
+    "wrong_emphasis": 0,
+    "wrong_omissions": 6
+  }
+}

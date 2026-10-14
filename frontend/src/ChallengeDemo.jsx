@@ -484,7 +484,7 @@ export function AssistantPane({ open, onClose, onKeyDown, roleLabel = '', person
 // different anatomy — label and value on one line, wrapping — that the component has no slot for.
 //
 // The vendored revision has no `columns` prop; the revision the reference bundle was built from did
-// (`.scratch/ui-ux-upgrade/issues/01-vendor-the-reference.md`). That decision was to proceed on the vendored
+// That decision was to proceed on the vendored
 // revision and **not** hand-patch the vendored copy (ADR-0016), so the grid is the component's own and the
 // app no longer re-scopes it at 850px or 540px.
 function DefinitionGrid({ source }) {
@@ -860,7 +860,7 @@ function RelevantAssessments({ presentation, narration, anchorOwner }) {
             and an answer the source did not supply renders as absent rather than as 0.
             What it deliberately does NOT render is `kysymys`, the instrument's own Finnish item wording.
             That text is already in `assess.py` and already serialized, but displaying it is a new
-            exposure of instrument wording, and Step 1 of `.scratch/work-orders/phq9-item9-decision.md`
+            exposure of instrument wording, and the first step of the recorded item-9 decision
             says "no per-item wording is added, because the item text is the instrument's, not ours".
             The source's own item code identifies the item; the wording is a separate decision for the
             instrument's owner, not one to take inside a UI round. */}

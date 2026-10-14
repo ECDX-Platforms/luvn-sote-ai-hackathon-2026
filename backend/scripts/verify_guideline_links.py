@@ -28,8 +28,8 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 from app import guidance  # noqa: E402
 
-RESULTS = ROOT / ".scratch" / "retrieval-and-knowledge" / "results"
-TARGET = RESULTS / "guideline-links-v1.json"
+EVIDENCE = ROOT / "docs" / "evidence"
+TARGET = EVIDENCE / "guideline-links-v1.json"
 
 
 def _probe(url: str, timeout_s: float = 25.0) -> dict:
@@ -154,7 +154,7 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         return check(json.loads(TARGET.read_text(encoding="utf-8")))
     document = run()
-    RESULTS.mkdir(parents=True, exist_ok=True)
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
     TARGET.write_text(json.dumps(document, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
                       encoding="utf-8")
     return check(document)

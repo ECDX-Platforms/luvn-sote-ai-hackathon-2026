@@ -1,13 +1,9 @@
 .git
 .pi
-.scratch
 .foundry
-azure
 docs
 backend/tests
 backend/scripts
-HANDOFF.md
-AGENTS.md
 .env
 **/.env
 **/.venv

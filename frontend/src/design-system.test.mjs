@@ -9,7 +9,7 @@
 //
 // The app-half rules (no raw hex, no raw type values, no off-scale lengths, no opacity, no primitive
 // references, app-root scoping, the dead-selector check) are added by phase 03 and phase 04 of
-// `.scratch/design-system-migration/`. This half must pass before either of them.
+// the design-system contract. This half must pass before either of them.
 import assert from 'node:assert/strict';
 import postcss from '../node_modules/postcss/lib/postcss.mjs';
 import { createHash } from 'node:crypto';

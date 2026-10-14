@@ -1,0 +1,214 @@
+{
+  "aggregate": {
+    "added_bound_note_017": 5,
+    "additions_each": [
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "margin_clears_threshold_on_every_run": true,
+    "precision_each": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runs": 5,
+    "subject_binding_margin_max": 0.8681,
+    "subject_binding_margin_min": 0.7618,
+    "threshold": 0.25
+  },
+  "kind": "decision-value-eval-instability",
+  "limits": [
+    "Five runs: this measures stability, not correctness, and a stable wrong answer is still wrong.",
+    "The watched record is one keyed note; stability elsewhere is not measured."
+  ],
+  "live_service": "the live decision model, reached through the configured provider endpoint",
+  "note": "N=5 repeat of backend/scripts/run_decision_value_eval.py against the live decision model under the shipped contract. Margins are the subject-binding top probability minus its runner-up, recomputed from the recorded distributions, and are compared against DECISION_MARGIN. A margin that crosses the threshold between runs would mean the same input renders differently.",
+  "per_run": [
+    {
+      "addition_precision": 1.0,
+      "additions": [
+        "bound-note-011",
+        "bound-note-017",
+        "bound-note-scale-041"
+      ],
+      "bound_note_017": {
+        "added": true,
+        "gate_refused": false,
+        "status": "relevant",
+        "subject_binding_choice": "person",
+        "subject_binding_margin": 0.8312,
+        "subject_binding_probabilities": {
+          "administrative": 0.004149867445619669,
+          "object": 0.06491484882000476,
+          "other_person": 0.030663603358809778,
+          "person": 0.8961218129299462,
+          "unclear": 0.004149867445619669
+        }
+      },
+      "decision_on_coverage": {
+        "decision_assessed_count": 63,
+        "decision_budget_exhausted_count": 0,
+        "decision_candidate_count": 64,
+        "decision_gate_refused_count": 1,
+        "decision_not_shortlisted_count": 0,
+        "decision_shortlisted_count": 64,
+        "decision_too_long_count": 1,
+        "decision_unavailable_count": 0
+      },
+      "missed_expected_additions": 0,
+      "run": 1,
+      "total_additions": 4,
+      "wrong_additions": 0
+    },
+    {
+      "addition_precision": 1.0,
+      "additions": [
+        "bound-note-011",
+        "bound-note-017",
+        "bound-note-scale-041"
+      ],
+      "bound_note_017": {
+        "added": true,
+        "gate_refused": false,
+        "status": "relevant",
+        "subject_binding_choice": "person",
+        "subject_binding_margin": 0.8681,
+        "subject_binding_probabilities": {
+          "administrative": 0.0042307640521265346,
+          "object": 0.045484989267122404,
+          "other_person": 0.03126134546921567,
+          "person": 0.9135904926365962,
+          "unclear": 0.005432408574939292
+        }
+      },
+      "decision_on_coverage": {
+        "decision_assessed_count": 63,
+        "decision_budget_exhausted_count": 0,
+        "decision_candidate_count": 64,
+        "decision_gate_refused_count": 3,
+        "decision_not_shortlisted_count": 0,
+        "decision_shortlisted_count": 64,
+        "decision_too_long_count": 1,
+        "decision_unavailable_count": 17
+      },
+      "missed_expected_additions": 0,
+      "run": 2,
+      "total_additions": 3,
+      "wrong_additions": 0
+    },
+    {
+      "addition_precision": 1.0,
+      "additions": [
+        "bound-note-011",
+        "bound-note-017",
+        "bound-note-scale-041"
+      ],
+      "bound_note_017": {
+        "added": true,
+        "gate_refused": false,
+        "status": "relevant",
+        "subject_binding_choice": "person",
+        "subject_binding_margin": 0.8681,
+        "subject_binding_probabilities": {
+          "administrative": 0.0042307640521265346,
+          "object": 0.045484989267122404,
+          "other_person": 0.03126134546921567,
+          "person": 0.9135904926365962,
+          "unclear": 0.005432408574939292
+        }
+      },
+      "decision_on_coverage": {
+        "decision_assessed_count": 63,
+        "decision_budget_exhausted_count": 0,
+        "decision_candidate_count": 64,
+        "decision_gate_refused_count": 1,
+        "decision_not_shortlisted_count": 0,
+        "decision_shortlisted_count": 64,
+        "decision_too_long_count": 1,
+        "decision_unavailable_count": 17
+      },
+      "missed_expected_additions": 0,
+      "run": 3,
+      "total_additions": 4,
+      "wrong_additions": 0
+    },
+    {
+      "addition_precision": 1.0,
+      "additions": [
+        "bound-note-011",
+        "bound-note-017",
+        "bound-note-scale-041"
+      ],
+      "bound_note_017": {
+        "added": true,
+        "gate_refused": false,
+        "status": "relevant",
+        "subject_binding_choice": "person",
+        "subject_binding_margin": 0.7618,
+        "subject_binding_probabilities": {
+          "administrative": 0.004006122251364612,
+          "object": 0.1033192546125241,
+          "other_person": 0.023053641828108897,
+          "person": 0.8650814500760721,
+          "unclear": 0.004539531231930401
+        }
+      },
+      "decision_on_coverage": {
+        "decision_assessed_count": 63,
+        "decision_budget_exhausted_count": 0,
+        "decision_candidate_count": 64,
+        "decision_gate_refused_count": 1,
+        "decision_not_shortlisted_count": 0,
+        "decision_shortlisted_count": 64,
+        "decision_too_long_count": 1,
+        "decision_unavailable_count": 17
+      },
+      "missed_expected_additions": 0,
+      "run": 4,
+      "total_additions": 4,
+      "wrong_additions": 0
+    },
+    {
+      "addition_precision": 1.0,
+      "additions": [
+        "bound-note-011",
+        "bound-note-017",
+        "bound-note-scale-041"
+      ],
+      "bound_note_017": {
+        "added": true,
+        "gate_refused": false,
+        "status": "relevant",
+        "subject_binding_choice": "person",
+        "subject_binding_margin": 0.8681,
+        "subject_binding_probabilities": {
+          "administrative": 0.0042307640521265346,
+          "object": 0.045484989267122404,
+          "other_person": 0.03126134546921567,
+          "person": 0.9135904926365962,
+          "unclear": 0.005432408574939292
+        }
+      },
+      "decision_on_coverage": {
+        "decision_assessed_count": 63,
+        "decision_budget_exhausted_count": 0,
+        "decision_candidate_count": 64,
+        "decision_gate_refused_count": 0,
+        "decision_not_shortlisted_count": 0,
+        "decision_shortlisted_count": 64,
+        "decision_too_long_count": 1,
+        "decision_unavailable_count": 15
+      },
+      "missed_expected_additions": 0,
+      "run": 5,
+      "total_additions": 4,
+      "wrong_additions": 0
+    }
+  ],
+  "runs": 5
+}

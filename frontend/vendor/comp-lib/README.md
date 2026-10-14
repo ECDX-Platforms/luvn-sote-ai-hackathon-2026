@@ -1,6 +1,6 @@
 # LUVN-Component-Library — Swiss 1 component library
 
-React component library for the SOTE AI Hackathon 2026 product (Challenge 1.1).
+React component library for the LUVN product.
 It mirrors the Figma **Design-Library** file and follows the Swiss 1 baseline styleguide (v2.1).
 
 - **Figma:** https://www.figma.com/design/P8E4RKubznUkk8vi9765oW/Design-Library

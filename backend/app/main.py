@@ -1257,6 +1257,6 @@ def spa(path: str):
     # The shell must revalidate. Vite hashes asset filenames, so a shell cached without revalidation
     # pins a browser to a previous build's bundle indefinitely: the page keeps rendering the old app
     # while the revision, the health check and every gate report the new one. That is not hypothetical -
-    # it cost two deploys on 2026-10-08, the second one diagnosed as a wrong image when the image was
+    # it cost two deploys, the second one diagnosed as a wrong image when the image was
     # already correct. `no-cache` still allows a 304 revalidation; it forbids reuse without asking.
     return FileResponse(index, headers={"Cache-Control": "no-cache"})

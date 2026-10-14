@@ -15,7 +15,7 @@ vendor choice of [ADR-0016](../../../docs/adr/0016-swiss-1-foundations-is-the-ui
 | Copied | 2026-10-14, from a clean clone at `014b02a` |
 | Figma | `fileKey P8E4RKubznUkk8vi9765oW`, **Design-Library**, the same file the styleguide v2.1 mirrors |
 | Runtime dependency | `lucide-react` and React ≥19, as before. The library's `@fontsource/host-grotesk` dependency is **not** adopted: the product self-hosts Host Grotesk (`frontend/src/fonts.css`). |
-| Previous source | `ECDX-Platforms/comp-lib-dev` @ `main` `164683d`. That repository describes itself as the rehearsal: *"At the event the real library is `LUVN-Component-Library`"* (`docs/EVENT-RUNBOOK.md`, the copy this tree carried before this re-pin). |
+| Previous source | `ECDX-Platforms/comp-lib-dev` @ `main` `164683d`. That repository describes itself as the rehearsal copy. |
 
 Every vendored file is copied from `LUVN-Component-Library` at the revision above. Nothing is carried from the rehearsal repository.
 
@@ -61,8 +61,7 @@ repository's own additions: `*.stories.tsx`, `*.test.tsx`, `*.test.ts`, `*.check
 Playwright or `@figma/code-connect`, which the product does not install), `src/foundations/` (Storybook pages
 only), `src/styles/fonts.css` (the product self-hosts its font), `src/styles/` files other than the three above,
 `.storybook/`, `test/`, `scripts/`, `.github/`, `tsconfig.json`, `vite.config.ts`, `vitest.config.ts`,
-`figma.config.json`, `package.json`, `package-lock.json`, and the library's devDependencies. `docs/` is not
-vendored except `EVENT-RUNBOOK.md`.
+`figma.config.json`, `package.json`, `package-lock.json`, and the library's devDependencies. `docs/` is not vendored.
 
 ## Pinned checksums
 

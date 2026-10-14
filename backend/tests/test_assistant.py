@@ -300,7 +300,7 @@ def test_a_guideline_question_cites_the_guideline_from_the_question_alone_when_a
 
 
 def test_a_guideline_question_cites_the_guideline_even_when_the_model_published_nothing(fixture_picture):
-    """The live failure on --night1: the model wrote only guideline-only sentences, every one was dropped, and the
+    """The live failure this pins: the model wrote only guideline-only sentences, every one was dropped, and the
     turn carried the engine steps alone with no Käypä hoito row. The question names the topic and the post-cut
     picture holds the records that support the guideline, so the recorded reference is cited beside the engine's
     steps; a question naming no recorded topic still cites nothing."""

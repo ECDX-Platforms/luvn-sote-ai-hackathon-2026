@@ -1,0 +1,29 @@
+{
+  "acceptance_status": "accepted",
+  "foundry_generation_model": "gpt-6.1-sol",
+  "foundry_generation_status": "generated",
+  "kind": "content-safety-probe",
+  "rejection_reason": null,
+  "stages": [
+    {
+      "elapsed_ms": 554,
+      "model": null,
+      "stage": "foundry.agent.token",
+      "status": "ok"
+    },
+    {
+      "elapsed_ms": 3816,
+      "model": "gpt-6.1-sol",
+      "stage": "foundry.agent.call",
+      "status": "ok"
+    },
+    {
+      "elapsed_ms": 4772,
+      "model": "gpt-6.1-sol",
+      "stage": "foundry.generation",
+      "status": "generated"
+    }
+  ],
+  "support_status": "supported",
+  "synthetic_non_operational": true
+}
