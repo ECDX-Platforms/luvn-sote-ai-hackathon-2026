@@ -12,7 +12,35 @@ export interface CalendarDate {
   day: number;
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** The words of the age and gap texts and the month abbreviations, for another language. */
+export interface DateWords {
+  /** Month abbreviations, January first. */
+  months: readonly string[];
+  /** Age: the latest result is from today. */
+  today: string;
+  /** Age: "1 month ago" from the duration ("1 month"). */
+  ago: (duration: string) => string;
+  /** Singular and plural of day, month and year, for the age. */
+  day: readonly [one: string, many: string];
+  month: readonly [one: string, many: string];
+  year: readonly [one: string, many: string];
+  /** Gap: the short year and month units ("1 y 2 mo"). */
+  yearShort: string;
+  monthShort: string;
+}
+
+/** English (Figma) words. */
+export const ENGLISH_DATE_WORDS: DateWords = {
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  today: 'Today',
+  ago: (duration) => `${duration} ago`,
+  day: ['day', 'days'],
+  month: ['month', 'months'],
+  year: ['year', 'years'],
+  yearShort: 'y',
+  monthShort: 'mo',
+};
+
 const NBSP = ' ';
 const MINUS = '−';
 
@@ -64,18 +92,18 @@ const plural = (n: number, one: string, many: string) => `${n}${NBSP}${n === 1 ?
  * Figma: Age. "1 month ago", "1 year 7 months ago", "12 days ago", "Today". Years and months only, once it is a month
  * or more; days only under a month. Numbers never break from their word (non-breaking space).
  */
-export function ageText(latest: CalendarDate, today: CalendarDate): string {
+export function ageText(latest: CalendarDate, today: CalendarDate, words: DateWords = ENGLISH_DATE_WORDS): string {
   const { years, months, days } = elapsed(latest, today);
-  if (years === 0 && months === 0) return days === 0 ? 'Today' : `${plural(days, 'day', 'days')} ago`;
-  const parts = [years > 0 ? plural(years, 'year', 'years') : '', months > 0 ? plural(months, 'month', 'months') : ''];
-  return `${parts.filter(Boolean).join(' ')} ago`;
+  if (years === 0 && months === 0) return days === 0 ? words.today : words.ago(plural(days, ...words.day));
+  const parts = [years > 0 ? plural(years, ...words.year) : '', months > 0 ? plural(months, ...words.month) : ''];
+  return words.ago(parts.filter(Boolean).join(' '));
 }
 
 /** Figma: Gap. The time from the previous result to the latest: "1 mo", "1 y 2 mo", "12 days". Rounded down. */
-export function gapText(previous: CalendarDate, latest: CalendarDate): string {
+export function gapText(previous: CalendarDate, latest: CalendarDate, words: DateWords = ENGLISH_DATE_WORDS): string {
   const { years, months, days } = elapsed(previous, latest);
-  if (years === 0 && months === 0) return plural(days, 'day', 'days');
-  return [years > 0 ? `${years}${NBSP}y` : '', months > 0 ? `${months}${NBSP}mo` : ''].filter(Boolean).join(' ');
+  if (years === 0 && months === 0) return plural(days, ...words.day);
+  return [years > 0 ? `${years}${NBSP}${words.yearShort}` : '', months > 0 ? `${months}${NBSP}${words.monthShort}` : ''].filter(Boolean).join(' ');
 }
 
 /** True when the latest result is more than one year old: today is after the date one year on. */
@@ -84,13 +112,13 @@ export function isOverAYearOld(latest: CalendarDate, today: CalendarDate): boole
 }
 
 /** English UI date (styleguide Content): "4 Sep 2026". Always with the year. */
-export function formatDate(d: CalendarDate): string {
-  return `${d.day} ${MONTHS[d.month - 1]} ${d.year}`;
+export function formatDate(d: CalendarDate, months: readonly string[] = ENGLISH_DATE_WORDS.months): string {
+  return `${d.day} ${months[d.month - 1]} ${d.year}`;
 }
 
 /** Month and year: "Jan 2026". */
-export function formatMonth(d: CalendarDate): string {
-  return `${MONTHS[d.month - 1]} ${d.year}`;
+export function formatMonth(d: CalendarDate, months: readonly string[] = ENGLISH_DATE_WORDS.months): string {
+  return `${months[d.month - 1]} ${d.year}`;
 }
 
 /** A value rounded to `decimals`, with a real minus sign. Never "−0.0". */

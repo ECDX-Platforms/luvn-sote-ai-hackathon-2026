@@ -99,6 +99,34 @@ def test_the_attention_summary_counts_only_rendered_rows():
     assert summary["lead"] is None, "no Decision-1 ran here, so there is no urgency lead to show"
 
 
+def test_the_attention_summary_lead_is_chosen_only_among_relevant_notes():
+    """The day row's "Ensin:" and the briefing's lifted block must name the same record: an irrelevant note with
+    the highest expected urgency never leads (the live contradiction on fP-Gluk, client 4293)."""
+    import asyncio
+
+    from app.picture import DecisionNoteOutcome, SelectionProvenance
+
+    store = Store(personas=load_personas(), path=None, encounters=ENCOUNTERS, example_labels=EXAMPLE_LABELS)
+    picture = asyncio.run(build_picture_for_encounter(ENCOUNTER, personas=store.persona_index(),
+                                                      encounters=store.encounter_index(), foundry_enabled=False))
+    views = [*picture.records.priority, *picture.records.accessible_other]
+    assert len(views) >= 2, "the fixture renders at least two records to disagree about"
+    irrelevant, relevant = views[0].record_id, views[1].record_id
+    selection = SelectionProvenance(
+        rule_version="test", decision_status="complete",
+        baseline_record_ids=[view.record_id for view in views],
+        decision_notes=[
+            DecisionNoteOutcome(record_id=irrelevant, status="irrelevant", gate_probabilities={"urgency": {"3": 0.1, "4": 0.9}}),
+            DecisionNoteOutcome(record_id=relevant, status="relevant", gate_probabilities={"urgency": {"0": 0.4, "1": 0.6}}),
+        ])
+    summary = briefings.attention_summary(picture.model_copy(update={"selection": selection}))
+    assert summary["lead"]["record_id"] == relevant, "the only relevant note leads, however urgent the irrelevant one"
+    assert summary["lead"]["urgency_level"] == 1
+    only_irrelevant = selection.model_copy(update={"decision_notes": selection.decision_notes[:1]})
+    assert briefings.attention_summary(picture.model_copy(update={"selection": only_irrelevant}))["lead"] is None, \
+        "no relevant note, no lead at all"
+
+
 def _delivery_with_appointments(tmp_path: Path, day: date) -> Path:
     corpus = tmp_path / "corpus"
     shutil.copytree(ROOT / "data" / "experimental" / "delivery-demo", corpus)

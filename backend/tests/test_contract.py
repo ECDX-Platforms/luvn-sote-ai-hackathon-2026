@@ -44,7 +44,7 @@ NARRATION_KEYS = {
 }
 FRONTEND_KEYS = {
     "identity_header", "encounter_id", "role", "selection", "proposals",
-    "conflicts", "assessments", "narrative", "citations", "records",
+    "conflicts", "assessments", "narrative", "narrative_sentences", "citations", "records",
     "duplicate_facts", "form_catalogue", "pipeline_trace_id", "pipeline_trace",
     "intended_use", "intended_use_version", "esitiedot", "prefilled_forms",
     *NARRATION_KEYS,

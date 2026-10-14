@@ -3,6 +3,14 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Tag } from '../Tag';
 import styles from './GroupedRecordRow.module.css';
 
+/** The fixed copy of the row, for another language. The summary and detail lines are the app's own text (`summary`, `detail`). */
+export interface GroupedRecordRowLabels {
+  /** The tag shown when `longTerm` is set. */
+  longTerm: string;
+}
+
+const DEFAULT_LABELS: GroupedRecordRowLabels = { longTerm: 'Long-term' };
+
 export interface GroupedRecordRowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Figma: Name. The code's own label from the agreed classification list (e.g. ICD-10), never one record's wording. Body-strong. Wraps when long. */
   name: ReactNode;
@@ -29,6 +37,8 @@ export interface GroupedRecordRowProps extends Omit<HTMLAttributes<HTMLDivElemen
   defaultExpanded?: boolean;
   /** Called with the new open state when the row is clicked or toggled with Enter or Space. */
   onExpandedChange?: (expanded: boolean) => void;
+  /** Every fixed word the row renders, for another language. Each key defaults to the English copy. */
+  labels?: Partial<GroupedRecordRowLabels>;
   /**
    * The records, shown when the row is open (under the detail line): a list (`<ul>`) of links, one per record,
    * newest first, indented 24. Use Source reference rows (Layout Row).
@@ -42,9 +52,10 @@ export interface GroupedRecordRowProps extends Omit<HTMLAttributes<HTMLDivElemen
  * attribute go on the outer `div`. Styleguide: Data table, Tag, Shared state model.
  */
 export const GroupedRecordRow = forwardRef<HTMLDivElement, GroupedRecordRowProps>(function GroupedRecordRow(
-  { name, code, summary, detail, longTerm = false, expanded, defaultExpanded = false, onExpandedChange, className, children, ...rest },
+  { name, code, summary, detail, longTerm = false, expanded, defaultExpanded = false, onExpandedChange, labels, className, children, ...rest },
   ref,
 ) {
+  const t = { ...DEFAULT_LABELS, ...labels };
   const recordsId = useId();
   const [ownExpanded, setOwnExpanded] = useState(defaultExpanded);
   const isControlled = expanded !== undefined;
@@ -68,7 +79,7 @@ export const GroupedRecordRow = forwardRef<HTMLDivElement, GroupedRecordRowProps
           <span className={styles.label}>
             <span className={[styles.name, 't-body-strong'].join(' ')}>{name}</span>
             <span className={[styles.code, 't-caption'].join(' ')}>{code}</span>
-            {longTerm ? <Tag className={styles.tag}>Long-term</Tag> : null}
+            {longTerm ? <Tag className={styles.tag}>{t.longTerm}</Tag> : null}
           </span>
         </span>
         <span className={[styles.summary, 't-caption'].join(' ')}>{summary}</span>

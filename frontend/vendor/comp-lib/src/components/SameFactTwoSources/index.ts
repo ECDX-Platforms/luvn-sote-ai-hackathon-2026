@@ -6,4 +6,5 @@ export type {
   SameFactOnlyInOneSourceProps,
   SameFactDescribedDifferentlyProps,
   SameFactSource,
+  SameFactTwoSourcesLabels,
 } from './SameFactTwoSources';

@@ -68,13 +68,17 @@ export function selectionReasonText(reason) {
   return 'Kirjaus valittiin sääntöpohjaisesti.';
 }
 
-// ---- Decision-1's findings for the attention panel ----
+// ---- What Decision-1 lifted for this visit ----
 //
 // Decision-1 answers per record with a verdict, a time-sensitivity read and an urgency distribution; it writes no
-// prose. What is worth a row in the professional's attention list is (1) a record it ADDED beyond the
-// rule-based baseline, (2) the record it puts first by expected urgency (the day view's lead, same formula), and
-// (3) records it called relevant AND current, by its own confidence. Everything is computed over the rendered
-// sources only, so a withheld record can never be named; the limit keeps the panel a list, not a dump.
+// prose. What is worth lifting into the professional's "Nostettu tälle käynnille" block is (1) a record it ADDED
+// beyond the rule-based baseline, (2) the record it puts first by expected urgency (the day view's lead, same
+// formula), and (3) records it called relevant AND current, by its own confidence. The lead is chosen ONLY among
+// notes whose verdict is `relevant`: a record the model called irrelevant can carry the highest expected urgency,
+// and lifting it would make the block, the record's own tag and its closed reasoning disagree about the same
+// record. Everything is computed over the rendered sources only, so a withheld record can never be named; the
+// limit keeps the block a list, not a dump. Each item carries the note's verdict so the UI writes it in words
+// and never derives a second reading of its own.
 export const DECISION_HIGHLIGHT_LIMIT = 4;
 
 function expectedUrgency(note) {
@@ -91,37 +95,78 @@ function expectedUrgency(note) {
   return weight > 0 ? expected : null;
 }
 
+/** The urgency label for a note's expected level (the day view's lead formula), or null without a usable distribution. */
+export function expectedUrgencyLabel(note) {
+  const expected = expectedUrgency(note);
+  if (expected === null) return null;
+  const level = Math.max(0, Math.min(URGENCY_UI_LABELS.length - 1, Math.round(expected)));
+  return URGENCY_UI_LABELS[level];
+}
+
+/** True when Decision-1 answered for this view (`complete` or `partial`); every other status is "no assessment". */
+export function decisionAnswered(selection) {
+  return Boolean(selection) && ['complete', 'partial'].includes(selection.decision_status);
+}
+
 export function decisionHighlights(presentation) {
   const selection = presentation?.selection;
   const sources = presentation?.sources ?? [];
-  if (!selection || !['complete', 'partial'].includes(selection.decision_status)) return [];
+  if (!decisionAnswered(selection)) return [];
   const byId = new Map(sources.map(source => [source.id, source]));
+  const notes = (selection.decision_notes ?? []).filter(note => byId.has(note.record_id));
+  const noteById = new Map(notes.map(note => [note.record_id, note]));
   const out = [];
   const taken = new Set();
   const push = (id, kind, text) => {
     if (!byId.has(id) || taken.has(id) || out.length >= DECISION_HIGHLIGHT_LIMIT) return;
     taken.add(id);
-    out.push({ id, kind, title: byId.get(id).title, text });
+    const note = noteById.get(id) ?? null;
+    out.push({
+      id, kind, title: byId.get(id).title, date: byId.get(id).date || null, text,
+      status: note?.status ?? null,
+      timeSensitivity: note?.time_sensitivity ?? null,
+      urgencyLabel: note ? (leadingUrgencyLabel(note.gate_probabilities?.urgency) ?? null) : null,
+    });
   };
   for (const id of selection.additional_record_ids ?? []) {
-    push(id, 'added', 'nosti esiin kirjauksen, jota sääntöpohjainen valinta ei valinnut');
+    push(id, 'added', 'Decision-1 nosti esiin kirjauksen, jota sääntöpohjainen valinta ei valinnut');
   }
-  const notes = (selection.decision_notes ?? []).filter(note => byId.has(note.record_id));
+  const relevantNotes = notes.filter(note => note.status === 'relevant');
   let lead = null;
-  for (const note of notes) {
+  for (const note of relevantNotes) {
     const expected = expectedUrgency(note);
     if (expected === null) continue;
     if (!lead || expected > lead.expected) lead = { note, expected };
   }
-  if (lead) {
-    const level = Math.max(0, Math.min(URGENCY_UI_LABELS.length - 1, Math.round(lead.expected)));
-    push(lead.note.record_id, 'lead', `asetti ensimmäiseksi: ${URGENCY_UI_LABELS[level]}`);
-  }
-  const relevant = notes
-    .filter(note => note.status === 'relevant' && note.time_sensitivity === 'current')
+  if (lead) push(lead.note.record_id, 'lead', `Decision-1 asetti ensimmäiseksi: ${expectedUrgencyLabel(lead.note)}`);
+  const current = relevantNotes
+    .filter(note => note.time_sensitivity === 'current')
     .sort((a, b) => Number(b.relevance_confidence ?? 0) - Number(a.relevance_confidence ?? 0));
-  for (const note of relevant) push(note.record_id, 'relevant', 'olennainen tälle käynnille ja ajankohtainen');
+  for (const note of current) push(note.record_id, 'relevant', 'Decision-1: olennainen tälle käynnille ja ajankohtainen');
   return out;
+}
+
+/** The ids `decisionHighlights` lifts, so a record row and the block read the same list and cannot disagree. */
+export function liftedRecordIds(presentation) {
+  return new Set(decisionHighlights(presentation).map(item => item.id));
+}
+
+// The triage signal's Finnish word per `situation_type` in `backend/app/tables/situation.json`. The raw table value
+// never reaches the screen: an unknown value is rendered as itself, capitalised, rather than invented a meaning.
+const SITUATION_WORD = {
+  ei_arvioitavissa: 'Ei arvioitavissa',
+  akuutti: 'Akuutti',
+  mielenterveys: 'Mielenterveys',
+  sosiaalipalvelut: 'Sosiaalipalvelut',
+  krooninen: 'Pitkäaikaissairaus',
+  ikääntyminen: 'Ikääntyminen',
+  yleinen: 'Yleinen',
+};
+export function situationWord(value) {
+  if (typeof value !== 'string' || !value.trim()) return SITUATION_WORD.ei_arvioitavissa;
+  if (SITUATION_WORD[value]) return SITUATION_WORD[value];
+  const text = value.trim();
+  return text.charAt(0).toLocaleUpperCase('fi') + text.slice(1);
 }
 
 export function decisionOutcomeText(status) {
@@ -521,14 +566,113 @@ function displayPayload(record) {
   }));
 }
 
-function sourceExcerpt(record) {
+// The excerpt as structured rows, the same field labels `sourceExcerpt` joins: the source dialog renders them
+// as "heading: content" sections instead of one dotted line.
+export function sourceExcerptFields(record) {
   const fields = SOURCE_FIELDS[record?.record_type] ?? [];
   return fields.flatMap(([key, label]) => {
-    const value = record?.payload?.[key];
+    const raw = record?.payload?.[key];
+    // A decision's validity is the one payload value that reaches the reader as a raw token
+    // (`toistaiseksi`, an ISO date); it is rendered in words here, nowhere else.
+    const value = record?.record_type === 'päätös' && key === 'voimassa' ? validityText(raw) : raw;
     return (typeof value === 'string' || typeof value === 'number') && String(value).trim()
-      ? [`${label}: ${value}`]
+      ? [{ label, value: String(value) }]
       : [];
-  }).join(' · ');
+  });
+}
+
+function sourceExcerpt(record) {
+  return sourceExcerptFields(record).map(({ label, value }) => `${label}: ${value}`).join(' · ');
+}
+
+// The vendor label printed under a record. `delivery` is the delivery stack's own source key — it names the
+// pipeline that served the record, not a vendor, a system or a form — so a reader cannot act on it and it
+// is omitted. Any other label is the record's own and renders as it came.
+export function sourceLabel(record) {
+  const source = typeof record?.source === 'string' ? record.source.trim() : '';
+  return source && source !== 'delivery' ? source : '';
+}
+
+// A decision's `voimassa` value, in words: an ISO date as d.m.yyyy, the two fixed tokens capitalised, and
+// anything else exactly as recorded (it is the data, and nothing here guesses what an unknown token means).
+const VALIDITY_WORDS = { toistaiseksi: 'Toistaiseksi', määräaikainen: 'Määräaikainen' };
+export function validityText(value) {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}(?:[T ].*)?$/.test(trimmed)) {
+    const parsed = new Date(trimmed.length === 10 ? `${trimmed}T00:00:00Z` : trimmed);
+    if (!Number.isNaN(parsed.valueOf())) {
+      return new Intl.DateTimeFormat('fi-FI', { dateStyle: 'medium', timeZone: 'UTC' }).format(parsed);
+    }
+  }
+  return VALIDITY_WORDS[trimmed.toLowerCase()] ?? value;
+}
+
+// The lines of an excerpt, for rendering. A note's text is markdown in the source system (`## KÄYNNIN
+// TIEDOT`, `# PÄÄTÖSLUONNOS`), and the marks are typesetting, not content: a heading line becomes a
+// `heading` block carrying its words without the marks, every other non-empty line a `paragraph`. The
+// field label the excerpt puts before a value (`Kirjaus: ## ...`) stays as its own paragraph before the
+// heading. The words are never changed — `PÄÄTÖSLUONNOS` stays on screen, as a heading.
+const EXCERPT_HEADING_LINE = /^(?:(.*?:)\s+)?#{1,6}\s+(.+?)\s*#*\s*$/;
+export function excerptBlocks(text) {
+  if (typeof text !== 'string') return [];
+  const blocks = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line) continue;
+    const heading = EXCERPT_HEADING_LINE.exec(line);
+    if (heading) {
+      if (heading[1]) blocks.push({ kind: 'paragraph', text: heading[1] });
+      blocks.push({ kind: 'heading', text: heading[2] });
+    } else {
+      blocks.push({ kind: 'paragraph', text: line });
+    }
+  }
+  return blocks;
+}
+
+// The "Valitut kirjaukset" list, folded: records with the same title, the same headings and the same
+// excerpt text (eight same-day home-care rows) are one entry whose records are listed newest first;
+// every other record is an entry of its own. Entries keep their national-heading grouping and their
+// order of first appearance. The fold is a rendering choice over rows the list already has — nothing is
+// dropped, and every record keeps its anchor.
+export function foldSelectedRecords(rows) {
+  const groups = new Map();
+  for (const row of rows ?? []) {
+    const heading = row.heading?.national || null;
+    const entries = groups.get(heading) ?? [];
+    const foldKey = [row.title ?? '', row.heading?.local ?? '', row.excerpt ?? ''].join('\u0000');
+    const entry = entries.find(candidate => candidate.foldKey === foldKey);
+    if (entry) entry.records.push(row); else entries.push({ foldKey, key: row.id, records: [row] });
+    groups.set(heading, entries);
+  }
+  const byDateDesc = (a, b) => String(b.date ?? '').localeCompare(String(a.date ?? ''));
+  return [...groups].map(([heading, entries]) => ({
+    heading,
+    entries: entries.map(({ key, records }) => ({ key, records: [...records].sort(byDateDesc) })),
+  }));
+}
+
+// The record type in the professional's words, for a source reference's label and a source dialog's title.
+// `vapaateksti` is "Kirjaus" — the same word the record card uses for a free-text entry.
+export const RECORD_TYPE_LABELS = {
+  diagnoosi: 'Diagnoosi', lääkitys: 'Lääkitys', vapaateksti: 'Kirjaus', arviointi: 'Arviointi', mittaus: 'Mittaus',
+  tutkimustulos: 'Tutkimustulos', asiointitapahtuma: 'Yhteydenotto', 'päätös': 'Päätös', perustieto: 'Perustieto',
+};
+export function recordTypeLabel(type) {
+  return RECORD_TYPE_LABELS[type] ?? 'Kirjaus';
+}
+
+// ISO dates inside generated prose (2024-07-20) read as the page writes them (20.7.2024). Only a full
+// yyyy-mm-dd with a real month and day, bounded by non-digits, is rewritten; every other digit run (a dose,
+// a code, a blood-pressure reading, a year on its own) is left exactly as the verifier accepted it.
+export function finnishDatesInText(text) {
+  if (typeof text !== 'string') return text;
+  return text.replace(/(?<!\d)(\d{4})-(\d{2})-(\d{2})(?!\d)/g, (match, year, month, day) => {
+    const m = Number(month);
+    const d = Number(day);
+    return m >= 1 && m <= 12 && d >= 1 && d <= 31 ? `${d}.${m}.${year}` : match;
+  });
 }
 
 // Read-only adapter for the existing Picture wire object; it never decides visibility.
@@ -598,6 +742,8 @@ export function picturePresentation(picture, { personName, roleLabel, purposeLab
       payload: displayPayload(record),
       title,
       excerpt: sourceExcerpt({ ...record, payload: displayPayload(record) }),
+      excerptFields: sourceExcerptFields({ ...record, payload: displayPayload(record) }),
+      typeLabel: recordTypeLabel(record.record_type),
       source: record.source || '',
       date: record.recorded_at || '',
       topic: record.topic || '',
@@ -620,6 +766,10 @@ export function picturePresentation(picture, { personName, roleLabel, purposeLab
       conceptKey: record.concept_key ?? null,
     };
   }).sort((a, b) => Number(Boolean(b.excerpt)) - Number(Boolean(a.excerpt)));
+  // Which rows Decision-1 lifted, from the same helper the "Nostettu tälle käynnille" block renders, so a row's
+  // "Ehdotus" tag and the block's list are one computation and cannot disagree.
+  const liftedIds = liftedRecordIds({ selection: safeSelection, sources });
+  for (const source of sources) source.lifted = liftedIds.has(source.id);
   const visibleIds = new Set(sources.map(source => source.id));
   const duplicateFacts = (picture?.duplicate_facts ?? []).map(group => ({
     recordIds: (group.record_ids ?? []).filter(id => visibleIds.has(id)),
@@ -633,6 +783,21 @@ export function picturePresentation(picture, { personName, roleLabel, purposeLab
     && typeof picture?.narrative === 'string'
     && picture.narrative.trim().length > 0;
   const citedSourceIds = narrativeAccepted ? unique((picture.citations ?? []).map(recordId).filter(Boolean)) : [];
+  // The accepted summary sentence by sentence, each with the record ids the verifier affirmed for it, cut to the
+  // ids that render. A cache row written before `narrative_sentences` existed carries only the flat narrative:
+  // it renders as one sentence whose sources are the record-level citations, never as nothing.
+  const wireSentences = Array.isArray(picture?.narrative_sentences) ? picture.narrative_sentences : [];
+  const summarySentences = !narrativeAccepted ? []
+    : wireSentences.length > 0
+      ? wireSentences
+        .filter(row => typeof row?.text === 'string' && row.text.trim())
+        .map((row, index) => ({
+          id: row.sentence_id || `s${index + 1}`,
+          text: finnishDatesInText(row.text.trim()),
+          recordIds: unique((row.record_ids ?? []).filter(id => visibleIds.has(id))),
+        }))
+      : [{ id: 'narrative', text: finnishDatesInText(picture.narrative.trim()),
+        recordIds: citedSourceIds.filter(id => visibleIds.has(id)) }];
   return {
     kind: 'runtime',
     exampleLabel,
@@ -656,6 +821,7 @@ export function picturePresentation(picture, { personName, roleLabel, purposeLab
     // renders nothing.
     intendedUse: picture?.intended_use ?? null,
     summary: narrativeAccepted ? picture.narrative : null,
+    summarySentences,
     selectedSourceIds: selection ? selectedSourceIds : sources.map(source => source.id),
     // Every record id an anchor can exist for, so a `#source-<id>` link is suppressed where its target
     // does not render. `conflicts`, `assessments` and `decision_notes` all name source ids that the
@@ -806,8 +972,14 @@ export function splitMedicationRows(rows) {
   return { active, historical };
 }
 
-export function medicationCountText({ active, historical }) {
-  return [active.length > 0 && `${active.length} käytössä`, historical.length > 0 && `${historical.length} aiempaa`]
+// The count line of the medications card. `active` and `historical` are the substances the card draws as
+// rows (one per substance, see `groupMedicationRows`), so the numbers are of substances, said as such; the
+// records those rows stand for are counted separately when the caller passes them.
+export function medicationCountText({ active, historical, records }) {
+  const substances = active.length + historical.length;
+  return [active.length > 0 && `${active.length} ${substances === 1 ? 'lääke' : 'lääkettä'} käytössä`,
+    historical.length > 0 && `${historical.length} ${active.length > 0 ? 'aiempaa' : (substances === 1 ? 'aiempi lääke' : 'aiempaa lääkettä')}`,
+    typeof records === 'number' && `${records} ${records === 1 ? 'kirjaus' : 'kirjausta'}`]
     .filter(Boolean).join(' · ');
 }
 
@@ -839,4 +1011,71 @@ export function labLabel(abbreviation) {
   const trimmed = abbreviation.trim();
   const label = LAB_LABELS[trimmed];
   return label ? `${label} (${trimmed})` : abbreviation;
+}
+
+// ---- Grouped records (W5): one row per substance, per test, per (code, status) group ----
+
+// A corpus status word as the professional reads it. The corpus writes `aktiivinen`, `päättynyt`,
+// `lopetettu`, `keskeytetty`, `ei_aktiivinen` and `sairastettu`; a word this map does not know renders with
+// its underscores as spaces and a capital first letter, never raw. An absent status is said in words.
+const RECORD_STATUS_WORDS = {
+  aktiivinen: 'Aktiivinen', päättynyt: 'Päättynyt', lopetettu: 'Lopetettu', keskeytetty: 'Keskeytetty',
+  ei_aktiivinen: 'Ei aktiivinen', sairastettu: 'Sairastettu',
+};
+export function recordStatusText(value) {
+  if (typeof value !== 'string' || !value.trim()) return 'Tila puuttuu';
+  const trimmed = value.trim();
+  const known = RECORD_STATUS_WORDS[trimmed.toLowerCase()];
+  if (known) return known;
+  const spaced = trimmed.replace(/_/g, ' ');
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+export const medicationStatusText = recordStatusText;
+
+// Medications, one group per substance (`lääke`), each group's records newest first. A substance with any
+// record in use is current, and its `since` is the earliest date of those records; a substance whose records
+// have all ended is historical, and its `ended` is the latest date. Groups keep their first-appearance
+// order; current substances come first.
+export function groupMedicationRows(rows) {
+  const groups = new Map();
+  for (const row of rows ?? []) {
+    const name = typeof row?.payload?.lääke === 'string' && row.payload.lääke.trim() ? row.payload.lääke.trim() : null;
+    const key = name ? `lääke|${name.toLowerCase()}` : `id|${row?.id}`;
+    if (!groups.has(key)) groups.set(key, { key, name: name ?? 'Nimetön lääkitys', records: [] });
+    groups.get(key).records.push(row);
+  }
+  const all = [...groups.values()].map(group => {
+    const records = [...group.records].sort((a, b) => recordTime(b) - recordTime(a));
+    const current = records.filter(row => !medicationIsHistorical(row));
+    const active = current.length > 0;
+    const dated = list => list.filter(row => Number.isFinite(recordTime(row)));
+    const since = active ? dated(current).at(-1)?.date ?? null : null;
+    const ended = active ? null : dated(records)[0]?.date ?? null;
+    return { ...group, records, newest: records[0], first: dated(records).at(-1) ?? records.at(-1), count: records.length, active, since, ended };
+  });
+  return { active: all.filter(group => group.active), historical: all.filter(group => !group.active) };
+}
+
+// Laboratory results, one group per test abbreviation, each group's results newest first, in first-appearance order.
+export function groupLabRows(rows) {
+  const groups = new Map();
+  for (const row of rows ?? []) {
+    const abbreviation = typeof row?.payload?.tutkimus === 'string' && row.payload.tutkimus.trim() ? row.payload.tutkimus.trim() : null;
+    const key = abbreviation ? `tutkimus|${abbreviation}` : `id|${row?.id}`;
+    if (!groups.has(key)) groups.set(key, { key, abbreviation, records: [] });
+    groups.get(key).records.push(row);
+  }
+  return [...groups.values()].map(group => {
+    const records = [...group.records].sort((a, b) => recordTime(b) - recordTime(a));
+    const dated = records.filter(row => Number.isFinite(recordTime(row)));
+    return { ...group, records, newest: records[0], first: dated.at(-1) ?? records.at(-1), count: records.length };
+  });
+}
+
+// The plain-Finnish name of a test on its own, for a row whose code slot already shows the abbreviation.
+// An abbreviation the map does not know is its own name, and the row then carries no separate code.
+export function labName(abbreviation) {
+  if (typeof abbreviation !== 'string') return 'Nimetön tutkimus';
+  const trimmed = abbreviation.trim();
+  return LAB_LABELS[trimmed] ?? (trimmed || 'Nimetön tutkimus');
 }

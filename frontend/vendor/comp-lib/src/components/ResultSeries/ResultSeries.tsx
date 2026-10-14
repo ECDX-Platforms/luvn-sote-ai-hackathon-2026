@@ -1,6 +1,7 @@
 import { forwardRef, useId, type HTMLAttributes } from 'react';
 import { Info } from 'lucide-react';
 import {
+  ENGLISH_DATE_WORDS,
   ageText,
   changeText,
   dayNumber,
@@ -13,6 +14,7 @@ import {
   localToday,
   parseDate,
   type CalendarDate,
+  type DateWords,
 } from './dates';
 import type { ResultSeriesScale } from './scales';
 import styles from './ResultSeries.module.css';
@@ -53,7 +55,49 @@ export interface ResultSeriesProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   decimals?: number;
   /** Heading level of the test name. Default 3: a result series usually sits in a Block, whose title is an h2. */
   headingLevel?: ResultSeriesHeadingLevel;
+  /** Every fixed word the series renders, for another language. Each key defaults to the English (Figma) copy. */
+  labels?: Partial<ResultSeriesLabels>;
 }
+
+/** One result in the chart label: the value and unit as shown, and the date. */
+export interface ResultSeriesChartLabelResult {
+  value: string;
+  unit: string;
+  date: string;
+}
+
+/** The fixed copy of the series. The date and age words are `DateWords` (month abbreviations, "ago", day/month/year). */
+export interface ResultSeriesLabels extends DateWords {
+  /** The change line's caption after the gap ("· 1 mo since previous"). */
+  sincePrevious: string;
+  /** The summary of a single result. */
+  onlyResult: string;
+  /** The summary of a series: the count, the month of the first result, and the lowest and highest value as shown. */
+  summary: (count: number, firstMonth: string, min: string, max: string) => string;
+  /** The scale caption's first words ("fixed scale 20–100 · Jan 2026"). */
+  fixedScale: string;
+  /** The note when the latest result is more than a year old. */
+  noNewerResults: string;
+  /** The caption under the summary. */
+  noReferenceRange: string;
+  /** The chart's accessible name: it lists every value and date, so it is one sentence per language. */
+  chartLabel: (parts: { test: string; unit: string; scale: string; first: string; today: string; results: ResultSeriesChartLabelResult[] }) => string;
+}
+
+const DEFAULT_LABELS: ResultSeriesLabels = {
+  ...ENGLISH_DATE_WORDS,
+  sincePrevious: 'since previous',
+  onlyResult: 'Only result',
+  summary: (count, firstMonth, min, max) => `${count} results since ${firstMonth}, between ${min} and ${max}`,
+  fixedScale: 'fixed scale',
+  noNewerResults: 'No newer results on record',
+  noReferenceRange: 'No reference range in the source.',
+  chartLabel: ({ test, unit, scale, first, today, results }) =>
+    `${test}, ${unit}, fixed scale ${scale}, from ${first} to today, ${today}. ` +
+    `${results.length === 1 ? '1 result' : `${results.length} results`}: ` +
+    results.map((r) => `${r.value} ${r.unit} on ${r.date}`).join(', ') +
+    '.',
+};
 
 const NBSP = ' ';
 const clamp = (n: number) => Math.min(100, Math.max(0, n));
@@ -64,9 +108,10 @@ const clamp = (n: number) => Math.min(100, Math.max(0, n));
  * NEW: Figma: Data display / Result series (177:962), option A. Styleguide v2.3: Charts.
  */
 export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(function ResultSeries(
-  { test, unit, results, scale, today, decimals = 1, headingLevel = 3, className, ...rest },
+  { test, unit, results, scale, today, decimals = 1, headingLevel = 3, labels, className, ...rest },
   ref,
 ) {
+  const t: ResultSeriesLabels = { ...DEFAULT_LABELS, ...labels };
   const titleId = useId();
   const Heading = `h${headingLevel}` as const;
 
@@ -83,8 +128,8 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
   const show = (v: number) => formatValue(v, decimals);
   const values = valid.map((r) => r.value);
   const summary = previous
-    ? `${valid.length} results since ${formatMonth(first.at)}, between ${show(Math.min(...values))} and ${show(Math.max(...values))}`
-    : 'Only result';
+    ? t.summary(valid.length, formatMonth(first.at, t.months), show(Math.min(...values)), show(Math.max(...values)))
+    : t.onlyResult;
   const scaleText = `${formatPlain(scale.min)}–${formatPlain(scale.max)}`;
 
   // Chart geometry in percent of the plot. x: first result (0) to today (100); a result after today sits on the today line.
@@ -98,11 +143,14 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
     x: span > 0 ? clamp(((dayNumber(r.at) - t0) / span) * 100) : 100,
     y: scaleOk ? clamp(((scale.max - r.value) / (scale.max - scale.min)) * 100) : 50,
   }));
-  const chartLabel =
-    `${test}, ${unit}, fixed scale ${scaleText}, from ${formatDate(first.at)} to today, ${formatDate(now)}. ` +
-    `${valid.length === 1 ? '1 result' : `${valid.length} results`}: ` +
-    valid.map((r) => `${show(r.value)} ${unit} on ${formatDate(r.at)}`).join(', ') +
-    '.';
+  const chartLabel = t.chartLabel({
+    test,
+    unit,
+    scale: scaleText,
+    first: formatDate(first.at, t.months),
+    today: formatDate(now, t.months),
+    results: valid.map((r) => ({ value: show(r.value), unit, date: formatDate(r.at, t.months) })),
+  });
 
   return (
     <div {...rest} ref={ref} role="group" aria-labelledby={titleId} className={[styles.series, className].filter(Boolean).join(' ')}>
@@ -118,10 +166,10 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
       </p>
 
       <p className={[styles.row, styles.tight].join(' ')}>
-        <span className={[styles.strong, 't-body-strong'].join(' ')}>{ageText(latest.at, now)}</span>
+        <span className={[styles.strong, 't-body-strong'].join(' ')}>{ageText(latest.at, now, t)}</span>
         <span className={[styles.meta, 't-caption'].join(' ')}>
           {'· '}
-          <time dateTime={latest.date}>{formatDate(latest.at)}</time>
+          <time dateTime={latest.date}>{formatDate(latest.at, t.months)}</time>
         </span>
       </p>
 
@@ -130,7 +178,7 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
           <span className={[styles.strong, 't-body-strong'].join(' ')}>
             {changeText(previous.value, latest.value, decimals, unit)}
           </span>
-          <span className={[styles.meta, 't-caption'].join(' ')}>{`· ${gapText(previous.at, latest.at)} since previous`}</span>
+          <span className={[styles.meta, 't-caption'].join(' ')}>{`· ${gapText(previous.at, latest.at, t)} ${t.sincePrevious}`}</span>
         </p>
       ) : null}
 
@@ -152,8 +200,8 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
       </div>
 
       <p className={[styles.scaleRow, 't-caption'].join(' ')}>
-        <span className={styles.meta}>{`fixed scale ${scaleText} · ${formatMonth(first.at)}`}</span>
-        <span className={styles.todayLabel}>Today</span>
+        <span className={styles.meta}>{`${t.fixedScale} ${scaleText} · ${formatMonth(first.at, t.months)}`}</span>
+        <span className={styles.todayLabel}>{t.today}</span>
       </p>
 
       <p className={[styles.text, 't-body'].join(' ')}>{summary}</p>
@@ -161,11 +209,11 @@ export const ResultSeries = forwardRef<HTMLDivElement, ResultSeriesProps>(functi
       {isOverAYearOld(latest.at, now) ? (
         <p className={[styles.noNewer, 't-caption'].join(' ')}>
           <Info size={16} strokeWidth={1.5} aria-hidden />
-          <span className={styles.text}>No newer results on record</span>
+          <span className={styles.text}>{t.noNewerResults}</span>
         </p>
       ) : null}
 
-      <p className={[styles.text, 't-caption'].join(' ')}>No reference range in the source.</p>
+      <p className={[styles.text, 't-caption'].join(' ')}>{t.noReferenceRange}</p>
     </div>
   );
 });

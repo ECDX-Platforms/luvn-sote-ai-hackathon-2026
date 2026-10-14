@@ -221,21 +221,12 @@
 .brief-app .brief-warning { color: var(--color-warning-fg); background: var(--color-warning-bg); border-color: var(--color-warning-border); }
 .brief-app .brief-success { color: var(--color-success-fg); background: var(--color-success-bg); border-color: var(--color-success-border); }
 .brief-app .brief-info { color: var(--color-info-fg); background: var(--color-info-bg); border-color: var(--color-info-border); }
-.brief-app .brief-narrative { margin: 0 0 var(--space-md); }
-/* Two parts main to one part rail, with a real gutter. The main column is the reading column: the metric tiles,
-   the six-column lab table and the other record cards. The side column (`brief-record-side`, the rail here)
-   carries the attention items, the medications table and the rule-based assessment card, so its 360px floor is
-   set by the medications table (see the note below the media query). Above 1280px the split is proportional and the floor applies when 1fr would take the rail
-   below it. */
-.brief-app .brief-record-columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr); gap: var(--space-lg); align-items: start; }
-.brief-app .brief-record-main,
-.brief-app .brief-record-side { min-width: 0; }
-.brief-app .brief-record-main { display: grid; gap: var(--space-md); align-content: start; }
-.brief-app .brief-record-side { display: grid; gap: var(--space-md); align-content: start; }
-/* The two columns own the rhythm: one gap step between cards, so every gap is the same and no card adds
-   a margin of its own on top of it. */
-.brief-app .brief-record-main > *,
-.brief-app .brief-record-side > * { margin: 0; }
+/* Blocks touch (styleguide: no gap, one hairline between consecutive Blocks): the summary Block adds no margin. */
+.brief-app .brief-narrative { margin: 0; }
+/* The record section's two columns are the library's `MainSide` now (W1, 2026-10-14): it owns the 2fr / 1fr split,
+   the column rule and the one-column stack below 1280px, so the app keeps no column grid of its own. The former
+   `.brief-record-columns` / `-main` / `-side` rules (a 24px gutter, 16px gaps between cards, a 360px floor under
+   the rail) are deleted, not overridden. */
 /* The record tables are the library `Table`: it owns the width, the hairlines, the header style, the numeric
    columns and the scroll box. The one cell it has no component for is the row header — the drug, the record,
    the instrument, the test — which stays a raw `th scope="row"` (the a11y and anchor assertions read it), so
@@ -244,17 +235,8 @@
 .brief-app .brief-data-section th[scope="row"] { height: var(--row-h); padding: var(--space-xs) var(--space-md) var(--space-xs) 0; text-align: left; vertical-align: top; box-shadow: inset 0 -1px 0 var(--color-line); overflow-wrap: break-word; }
 .brief-app .brief-data-section tr:last-child > th[scope="row"] { box-shadow: none; }
 .brief-app .brief-medication-doses { margin: var(--space-2xs) 0 0; color: var(--color-text-muted); }
-/* Metric tiles: the reading leads, its label sits under it, and the tile is a plain bordered surface inside
-   the card — no tint inside a white card, and no left accent rule, which was a second, weaker way of
-   saying what the border already says. */
-.brief-app .brief-measurements { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-sm); }
-.brief-app .brief-measurements article { min-width: 0; padding: var(--space-md); border: 1px solid var(--color-line); }
-.brief-app .brief-measurements h3 { margin: 0; color: var(--color-text-muted); }
-.brief-app .brief-measurements p { margin: var(--space-2xs) 0; }
-.brief-app .brief-measurements strong { font-variant-numeric: tabular-nums; }
-.brief-app .brief-measurements p span { color: var(--color-text-muted); }
-.brief-app .brief-measurement-value + .brief-measurement-value { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--color-line); }
-.brief-app .brief-measurement-value .brief-small a { display: inline-block; margin-right: 8px; }
+/* The measurement readings are the library `MetricRow`/`Metric` now (W5); their row override and the source list under
+   it are at the end of this sheet, with the grouped record rows. */
 /* The briefing's own context: person, role and purpose, in the reading column, above the patient pills. */
 .brief-app .brief-context-strip { margin: 0 0 var(--space-sm); padding: 0 0 var(--space-xs); border-bottom: 1px solid var(--color-line); }
 .brief-app .brief-context-strip dl { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); margin: 0; }
@@ -301,20 +283,11 @@
    level roles are exactly those two, so in capture mode every captured briefing lost its alerts panel and
    axe skipped the hidden nodes — a disclosure silently disappearing from the evidence (issue 03/07). */
 .brief-app[data-capture] .brief-transient-status { visibility: hidden; }
-/* The rail is 360px at minimum. It carries the attention items, the medications table and the rule-based
-   assessment card, so the floor is the narrowest width at which the medications table keeps its three columns.
-   It is not measured in a browser here.
-   The split is 2:1 above 1280px. A 1280px viewport leaves the main track 616px, and the six-column lab table
-   needs 531px of content box — at a 560px card (526px of content) it overflows by 5px, at 600px it fits — so
-   the main column keeps about 50px of slack. Below about 1240px the main column would fall under that minimum
-   and the lab table would scroll horizontally inside its card, so the workspace becomes one column instead.
-   The reading column is first in that one column, at every width: its record cards come first in the purpose's
-   order, then the side column (attention, medications, the rule-based assessment), and the rail follows. No
-   breakpoint reorders them. */
-@media (max-width: 1280px) {
-  .brief-app .brief-record-columns { grid-template-columns: minmax(0, 1fr); }
-  .brief-app .brief-record-side { grid-row: auto; }
-}
+/* The record columns' breakpoint is the library's (`MainSide`: one column below 1280px, side after main). The
+   former 360px floor under the rail — the narrowest width at which the medications table keeps its three
+   columns — is not reproduced: at 1280px the library's 1fr side track is about 333px (285px of Block content),
+   under that floor, so the medications table scrolls inside the library `Table`'s own scroll box there rather
+   than widening the column. Not overridden here; recorded in the W1 report. */
 
 /* Record workspace: compact, source-forward. One palette now (ADR-0016), light and dark. */
 /* The library's AppShell owns the sidebar column (its width, the surface fill, the hairline, hiding it on
@@ -439,7 +412,7 @@
    switched visibility here, which is what put the alerts panel and the rule-based assessment one click away.
    The `#section-*` ids live on the cards inside these wrappers, so deep links and `:target` behave as before. */
 .brief-app .brief-sections { display: block; }
-.brief-app .brief-section { display: block; margin: 0 0 var(--space-md); }
+.brief-app .brief-section { display: block; margin: 0; } /* Blocks touch: the hairline is the only separation. */
 .brief-app .brief-record-heading { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); }
 .brief-app .brief-record-heading time { flex: none; }
 .brief-app .brief-selected-record .brief-local-heading { margin: 0 0 var(--space-2xs); color: var(--color-text-muted); }
@@ -612,7 +585,6 @@ strong, b { font-weight: 600; }
 .brief-app .brief-esitieto-section dd { margin: 0; }
 .brief-app .brief-esitieto-section ul { margin: 0; padding-left: 16px; }
 .brief-app .brief-esitieto-section li { margin: var(--space-2xs) 0; overflow-wrap: break-word; }
-.brief-app .brief-esitieto-open { margin: 0; color: var(--color-text-muted); }
 .brief-app .brief-esitieto-sources { color: var(--color-text-muted); }
 /* A pre-filled form is a nested Block (level 3) inside Esitiedot; the padding is the Block's own, the rule above it is the app's. */
 .brief-app .brief-prefilled-form { margin-top: var(--space-md); border-top: 2px solid var(--color-line); }
@@ -642,3 +614,126 @@ strong, b { font-weight: 600; }
 .brief-app .brief-day-row,
 .brief-app .brief-day-pick,
 .brief-app .brief-button-row > * { max-width: 100%; min-width: 0; }
+
+/* ---- W2: the AI summary block, its source references and the source dialog ---- */
+/* The fold under the block lists every verified sentence when the library's first look (4) is exceeded. */
+.brief-app .brief-kooste-full { margin-top: var(--space-sm); }
+.brief-app .brief-kooste-full-list { margin: var(--space-xs) 0 0; padding-left: 24px; display: grid; gap: var(--space-sm); }
+.brief-app .brief-kooste-full-list p { margin: 0 0 var(--space-2xs); }
+/* Several references for one sentence sit side by side and wrap; the reference itself is the library's. */
+.brief-app .brief-kooste-sources { display: inline-flex; flex-wrap: wrap; gap: var(--space-xs); }
+.brief-app .brief-source-dialog-subtitle { margin: 0 0 var(--space-sm); color: var(--color-text-muted); }
+.brief-app .brief-source-dialog-state { margin: 0 0 var(--space-sm); }
+.brief-app .brief-source-dialog-fields { display: grid; gap: var(--space-xs); margin: 0 0 var(--space-md); }
+.brief-app .brief-source-dialog-fields dt { color: var(--color-text-muted); }
+.brief-app .brief-source-dialog-fields dd { margin: 0; overflow-wrap: anywhere; }
+.brief-app .brief-source-dialog-jump { margin: 0; }
+
+/* ---- W1 (2026-10-14): page layout — zones, identity block, identity strip, Now strip. ----
+   The briefing is two zones under `.t-overline` lines ("Nyt", "Kirjaukset"). Blocks touch inside them: the library
+   Block draws the one hairline between consecutive Blocks, and nothing here adds a gap, a fill or a margin. */
+.brief-app .brief-zone { display: block; min-width: 0; }
+/* The zone line: one overline over the group, a hairline under it, so the first Block of the zone sits on a rule. */
+.brief-app .brief-zone-heading { margin: 0; padding: 0 0 var(--space-xs); border-bottom: 1px solid var(--color-line); }
+/* The second zone's line stands one block step clear of whatever ended the first (the summary, or the proposal). */
+.brief-app .brief-zone-records > .brief-zone-heading { padding-top: var(--space-lg); }
+/* The identity block: the name, the role and the purpose, the basics facts. Its hairline is `.brief-heading`'s;
+   in the Nyt zone it stands one step under the zone line. */
+.brief-app .brief-zone-now .brief-identity { padding-top: var(--space-md); }
+.brief-app .brief-identity-name { margin: 0; }
+.brief-app .brief-identity-context { margin: var(--space-2xs) 0 0; color: var(--color-text-muted); }
+.brief-app .brief-identity-facts { margin: var(--space-2xs) 0 0; }
+/* The library's IdentityStrip sticks at the top of the content column (its holder is `position: sticky; top: 0`
+   and takes no height; the shell's header is not sticky, so the strip's place under it is the top of the screen).
+   The content column is `.brief-main`, which is padded: the strip spans the padded box, so it is pulled out to
+   the column's edges by the same clamp the padding uses. */
+.brief-app .brief-identity-strip { margin: 0 calc(-1 * clamp(16px, 2.5vw, 32px)); }
+/* The Now strip owns its rules; it sits on the identity block's hairline and the summary follows it. */
+.brief-app .brief-now-strip { margin: 0; }
+/* The 75ch measure (styleguide: prose is capped at 75ch; the library's `.prose` owns the `ch` unit, and the app's
+   lengths are px on the grid, so the cap is 640px — 75ch of the 14px body at Inter's zero width, about 63ch of
+   the 17px comfortable body). Paragraphs and lists inside the zones, never a table: a table cell's paragraph is
+   bounded by its column already. */
+.brief-app .brief-zone p,
+.brief-app .brief-zone ul,
+.brief-app .brief-zone ol { max-inline-size: 640px; }
+/* The zone line is not prose: it spans the zone. Same specificity as the measure rule, later in the sheet, so it wins. */
+.brief-app p.brief-zone-heading { max-inline-size: none; }
+@media (max-width: 850px) {
+  .brief-app .brief-identity-strip { margin: 0 calc(-1 * var(--space-md)); }
+}
+
+/* ---- W3: what Decision-1 lifted, and the suggestion pattern ----
+   "Nostettu tälle käynnille": the library Caution item's anatomy (tag slot, fact over qualifier, source on the right)
+   as app markup, because a model pick must never be drawn by the component that draws a safety fact. No fill, no
+   icon, no status colour: the tag is the neutral Tag and the rows are separated by the hairline only. */
+.brief-app .brief-lifted-basis,
+.brief-app .brief-lifted-note { margin: 0; }
+.brief-app .brief-lifted-note { color: var(--color-text); }
+.brief-app .brief-lifted-list { display: grid; margin: var(--space-xs) 0 0; padding: 0; list-style: none; }
+.brief-app .brief-lifted-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2xs) var(--space-md); min-width: 0; padding: var(--space-xs) 0; box-shadow: inset 0 -1px 0 var(--color-line); }
+.brief-app .brief-lifted-item:last-child { box-shadow: none; }
+.brief-app .brief-lifted-slot { display: flex; flex: none; align-items: flex-start; }
+.brief-app .brief-lifted-lines { display: flex; flex: 1 1 20rem; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.brief-app .brief-lifted-source { flex: 0 1 auto; }
+.brief-app .brief-lifted-footer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-sm); margin-top: var(--space-sm); }
+.brief-app .brief-lifted-footer > p { margin: 0; }
+/* The suggestion pattern, shared by the neutral risk row and the rule-based assessment: a neutral tag naming who
+   proposes (a table, never a model), then the sentence and its basis caption. No border box: a box with a strong word
+   reads as an alert, and these are proposals. */
+.brief-app .brief-suggestion { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-2xs) var(--space-sm); min-width: 0; margin: 0; }
+.brief-app .brief-suggestion-copy { flex: 1 1 20rem; min-width: 0; overflow-wrap: anywhere; }
+.brief-app .brief-suggestion-copy p { margin: 0; }
+.brief-app .brief-suggestion-copy p + p { margin-top: var(--space-2xs); }
+/* The task list is the library's; `.brief-data-section ul` above would hand it a bullet indent, so it is handed back. */
+.brief-app .brief-data-section .brief-suggestion-tasks { margin: var(--space-sm) 0 0; padding: 0; }
+
+/* W4 — Esitiedot "not on record" line, folded selected records and excerpt headings (2026-10-14).
+   The not-on-record line is app markup over the library NotOnRecordLine's shape (that component hard-codes
+   its English copy): one wrapping flex row, hairline on top, label and tags together; complete state is a
+   16px check in text-muted beside a caption. */
+.brief-app .brief-not-on-record { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); padding: var(--space-sm) 0; border-top: 1px solid var(--color-line); color: var(--color-text); }
+.brief-app .brief-not-on-record-label,
+.brief-app .brief-not-on-record-complete { min-width: 0; margin: 0; overflow-wrap: break-word; }
+.brief-app .brief-not-on-record-complete { color: var(--color-text-muted); }
+.brief-app .brief-not-on-record-kinds { display: contents; margin: 0; padding: 0; list-style: none; }
+.brief-app .brief-not-on-record-kind { display: flex; min-width: 0; max-width: 100%; }
+.brief-app .brief-not-on-record-check { display: inline-flex; flex: none; width: 16px; height: 16px; color: var(--color-text-muted); }
+/* The pre-fill block's error state, the library BlockState's shape: alert, retry and the loaded data, 16 apart. */
+.brief-app .brief-prefill-error { display: flex; flex-direction: column; gap: var(--space-md); min-width: 0; }
+.brief-app .brief-prefill-error > * { min-width: 0; }
+/* A markdown heading inside an excerpt is its own short strong line; the paragraph margin is the record card's. */
+.brief-app .brief-excerpt-heading { margin-top: var(--space-xs); }
+/* One grouped row for identical repeats: the row is the library's; the records under it are the app's list,
+   each with its date, state and provenance, and the same hairline the single record card uses. */
+.brief-app .brief-record-fold { border-top: 1px solid var(--color-line); }
+.brief-app .brief-record-fold-list { margin: var(--space-xs) 0 0; padding-left: 16px; }
+.brief-app .brief-record-fold-list > li { padding: var(--space-2xs) 0; overflow-wrap: break-word; }
+.brief-app .brief-record-fold-list > li > time { margin-right: var(--space-xs); }
+.brief-app .brief-record-fold-list > .brief-record-draft { color: var(--color-text-muted); font-style: italic; }
+
+/* ---- W5: grouped record rows (medications, diagnoses and decisions, laboratory results) and the measurement row ----
+   The rows are the library's `GroupedRecordRow`; the app owns only the container, the opened record list and the
+   fold. The list inside an opened row is handed back from `.brief-data-section ul`'s bullet indent: the library
+   already indents the records block by 24px. */
+.brief-app .brief-record-groups { display: block; min-width: 0; }
+.brief-app .brief-record-group { min-width: 0; }
+.brief-app .brief-data-section .brief-group-records { margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); }
+.brief-app .brief-data-section .brief-group-records > li { margin: 0; padding: var(--space-2xs) 0; overflow-wrap: break-word; }
+.brief-app .brief-data-section .brief-group-records > li + li { border-top: 1px solid var(--color-line); }
+.brief-app .brief-record-fold { margin-top: var(--space-xs); }
+.brief-app .brief-record-fold > .brief-record-groups { margin-top: var(--space-xs); }
+/* The measurement row takes the worklist's flex override (`.brief-worklist-metrics`, above) under its own class:
+   `MetricRow` fixes four columns and clears the right rule on its last child only, so one to three readings would
+   leave empty columns and a stray rule. Flex gives each reading an equal share and the last one no rule. */
+.brief-app .brief-measurement-metrics { display: flex; margin: 0 0 var(--space-sm); border-bottom: 1px solid var(--color-line); }
+.brief-app .brief-measurement-metrics > * { flex: 1 1 0; min-width: 0; }
+@media (max-width: 639px) {
+  .brief-app .brief-measurement-metrics { flex-wrap: wrap; }
+  .brief-app .brief-measurement-metrics > * { flex: 1 1 100%; }
+}
+/* The per-reading source lines under the row: the label, then each record's date (the anchor) and provenance. */
+.brief-app .brief-data-section .brief-measurement-sources { margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); }
+.brief-app .brief-data-section .brief-measurement-sources > li { margin: 0; padding: var(--space-2xs) 0; }
+.brief-app .brief-data-section .brief-measurement-sources > li + li { border-top: 1px solid var(--color-line); }
+.brief-app .brief-measurement-sources strong { color: var(--color-text); }

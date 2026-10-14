@@ -25,7 +25,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .llm import FreshNarration, SupportReview
-from .picture import GroundingResult, RecordView, RejectedSentence
+from .picture import GroundingResult, NarrativeSentence, RecordView, RejectedSentence
 from .policy import Scoped
 
 
@@ -144,8 +144,20 @@ def accept_supported_candidate(
     candidate_source_ids = [record_id for sentence in sentences.values() for record_id in sentence.source_ids]
     dropped_ids = [record_id for record_id in candidate_source_ids if record_id not in seen]
     narrative = " ".join(sentence.text.strip() for sentence, _verdict in accepted)
+    # Per-sentence sources: the verifier's affirmed ids. A supported verdict with no ids was rejected above,
+    # so the fallback to the sentence's own permitted sources is defensive, and it can never widen the set
+    # past `validation.records` (the permitted scope).
+    narrative_sentences = [
+        NarrativeSentence(
+            sentence_id=sentence.sentence_id, text=sentence.text.strip(),
+            record_ids=[record_id for record_id in
+                        (verdict.supporting_record_ids or sentence.source_ids)
+                        if record_id in validation.records],
+        )
+        for sentence, verdict in accepted
+    ]
     partial = len(accepted) != len(sentences)
     return GroundingResult(narrative=narrative, citations=citations, grounded=True,
                            dropped_citations=list(dict.fromkeys(dropped_ids)), dropped_actions=[],
-                           rejected_sentences=rejected_rows), \
+                           rejected_sentences=rejected_rows, narrative_sentences=narrative_sentences), \
         ("partial" if partial else "supported"), ("partial_support" if partial else None)

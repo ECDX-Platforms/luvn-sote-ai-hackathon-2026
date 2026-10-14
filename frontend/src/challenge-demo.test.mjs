@@ -18,6 +18,8 @@ import {
   leadingUrgencyLabel,
   personNameForEncounter,
   picturePresentation,
+  finnishDatesInText,
+  recordTypeLabel,
   prefillReviewKey,
   requestedView,
   seedPrefillReviews,
@@ -30,6 +32,9 @@ import {
   seedProposalReviews,
   briefingOrder,
   BRIEFING_SECTION_IDS,
+  excerptBlocks,
+  foldSelectedRecords,
+  sourceLabel,
 } from './challenge-demo.mjs';
 
 /*
@@ -434,6 +439,9 @@ let TechnicalView;
 let LENS_SCOPE_NOTE;
 let ILLUSTRATIVE_NOTE;
 let ILLUSTRATIVE_THRESHOLD;
+let SourceRecordDialog;
+let SourceRecordReference;
+let LiftedItems;
 let ChatPanel;
 let ChatRail;
 let App;
@@ -441,7 +449,7 @@ let DayView;
 try {
   ({ default: App } = await vite.ssrLoadModule('/src/App.jsx'));
   ({ DayView } = await vite.ssrLoadModule('/src/DayView.jsx'));
-  ({ PictureBriefing, LENS_SCOPE_NOTE, ILLUSTRATIVE_NOTE, ILLUSTRATIVE_THRESHOLD } = await vite.ssrLoadModule('/src/ChallengeDemo.jsx'));
+  ({ PictureBriefing, LENS_SCOPE_NOTE, ILLUSTRATIVE_NOTE, ILLUSTRATIVE_THRESHOLD, SourceRecordDialog, SourceRecordReference, LiftedItems } = await vite.ssrLoadModule('/src/ChallengeDemo.jsx'));
   ({ TechnicalView } = await vite.ssrLoadModule('/src/TechnicalView.jsx'));
   ({ ChatPanel, ChatRail } = await vite.ssrLoadModule('/src/ChatPanel.jsx'));
   const markup = renderToStaticMarkup(React.createElement(App));
@@ -1776,10 +1784,18 @@ try {
     throw new Error(`Unexpected request: ${url}`);
   };
   await withBriefingApp(fetchMock, async ({ document }) => {
-    const strip = document.querySelector('.brief-context-strip');
-    assert(strip?.textContent.includes('Aino Virtanen'), 'the loaded briefing states the identity the Picture supplies');
-    assert(strip.querySelector('dt')?.textContent === 'Henkilö' && strip.querySelector('dd')?.textContent === 'Aino Virtanen',
-      'the loaded briefing shows the Henkilö field with that identity');
+    // W1: the loaded briefing's identity is the identity block (the element the library IdentityStrip watches),
+    // not the loading panel's context strip. Under the shell the name is a level-2 heading: the Header owns the h1.
+    assert(!document.querySelector('.brief-context-strip'), 'the loading panel\'s context strip is gone once the briefing is loaded');
+    const identity = document.querySelector('.brief-identity');
+    assert(identity?.textContent.includes('Aino Virtanen'), 'the loaded briefing states the identity the Picture supplies');
+    assert.equal(identity.querySelector('h2.brief-identity-name')?.textContent, 'Aino Virtanen',
+      'the identity block names the person as its heading');
+    assert.equal(document.querySelectorAll('h1').length, 1, 'the shell Header is still the only h1');
+    const identityStrip = document.querySelector('[role="group"][aria-label="Henkilö ja palvelutilanne"]');
+    assert(identityStrip?.textContent.includes('Aino Virtanen'), 'the identity strip carries the same name');
+    // jsdom has no IntersectionObserver: the library shows the strip all the time there, so the name is never missing.
+    assert(!identityStrip.hasAttribute('hidden'), 'without an observer the strip is shown rather than lost');
   });
 }
 
@@ -1827,7 +1843,7 @@ try {
       });
     };
     assert.equal(pictureRequests(), 1, 'the briefing loads its Picture once');
-    assert(document.querySelector('.brief-context-strip'), 'the briefing is on screen');
+    assert(document.querySelector('.brief-identity'), 'the briefing is on screen');
     await clickIn('a', 'Työpäivä');
     assert(document.querySelector('.brief-case-picker'), 'the worklist is on screen');
     // Opening the case that is already open is not a new load: the same encounter, so no state reset.
@@ -1835,9 +1851,9 @@ try {
     assert.equal(pictureRequests(), 1, 'choosing the open case again does not request its Picture again');
     await clickIn('a', 'Tilannekuva');
     assert.equal(pictureRequests(), 1, 'returning to the briefing issues no second /picture request');
-    assert(document.querySelector('.brief-context-strip') && !document.querySelector('[aria-busy="true"]'),
+    assert(document.querySelector('.brief-identity') && !document.querySelector('[aria-busy="true"]'),
       'the already-loaded briefing is re-rendered, not a loading panel');
-    assert(document.querySelector('.brief-context-strip').textContent.includes('Mielialan arviointi'),
+    assert(document.querySelector('.brief-identity').textContent.includes('Mielialan arviointi'),
       'and it still states the same service purpose');
   });
 }
@@ -2465,6 +2481,34 @@ assert.equal(mapped.sources[1].selectionReasonTexts[0], 'Kirjauksen aihe sopii p
 assert(!JSON.stringify(mapped.sources).includes('unlisted_secret'));
 assert(!JSON.stringify(mapped.sources).includes('vastaukset'));
 assert.equal(mapped.summary, 'Hyväksytty lause.');
+// W2: the summary sentence by sentence. A picture without `narrative_sentences` (a cache row written before
+// the field existed) falls back to the flat narrative as ONE sentence whose sources are the citations.
+assert.deepEqual(mapped.summarySentences, [{ id: 'narrative', text: 'Hyväksytty lause.', recordIds: ['source-a'] }]);
+// With per-sentence rows, each sentence keeps its own verified ids, cut to the ids that render; order is kept,
+// an ISO date in the prose reads as the page writes dates, and the flat `narrative` is untouched.
+const perSentence = picturePresentation({ ...picture, narrative_sentences: [
+  { sentence_id: 's1', text: 'Verenpaine mitattiin 2024-07-20.', record_ids: ['source-b', 'source-a'] },
+  { sentence_id: 's3', text: 'Lause, jonka lähde ei näy.', record_ids: ['source-zzz'] },
+] });
+assert.deepEqual(perSentence.summarySentences, [
+  { id: 's1', text: 'Verenpaine mitattiin 20.7.2024.', recordIds: ['source-b', 'source-a'] },
+  { id: 's3', text: 'Lause, jonka lähde ei näy.', recordIds: [] },
+]);
+assert.equal(perSentence.summary, 'Hyväksytty lause.', 'the flat narrative is passed through unchanged');
+assert.deepEqual(picturePresentation({ ...picture, narrative: null, narration_acceptance_status: 'rejected',
+  narrative_sentences: [{ sentence_id: 's1', text: 'Ei hyväksytty.', record_ids: ['source-a'] }] }).summarySentences, [],
+'a rejected narration yields no sentences, whatever the wire rows say (fail-closed)');
+// The date rewrite touches only a full ISO date with a real month and day; every other digit run is left as
+// the verifier accepted it.
+assert.equal(finnishDatesInText('Käynti 2025-11-07 ja 2026-01-02.'), 'Käynti 7.11.2025 ja 2.1.2026.');
+assert.equal(finnishDatesInText('144/80 mmHg, ICD E11.9, 2 x 500 mg, vuosi 2024, 12024-07-20, 2024-13-01, 2024-07-200'),
+  '144/80 mmHg, ICD E11.9, 2 x 500 mg, vuosi 2024, 12024-07-20, 2024-13-01, 2024-07-200');
+assert.equal(finnishDatesInText(null), null);
+assert.equal(recordTypeLabel('lääkitys'), 'Lääkitys');
+assert.equal(recordTypeLabel('vapaateksti'), 'Kirjaus');
+assert.equal(recordTypeLabel('unknown-type'), 'Kirjaus');
+assert.deepEqual(mapped.sources[1].excerptFields, [{ label: 'Otsikko', value: 'Vastaanotto' }, { label: 'Kirjaus', value: 'Asiakas kuvaa mielialan vaihtelua.' }]);
+assert.equal(mapped.sources[0].typeLabel, 'Arviointi');
 assert.equal(mapped.narration.generationDeployment, 'deployment');
 assert.equal(mapped.narration.generationPath, 'agent_reference');
 assert.equal(picturePresentation({ ...picture, narration_generation_path: 'direct_fallback' }).narration.generationPath, 'direct_fallback');
@@ -2493,22 +2537,32 @@ assert.deepEqual(mapped.proposals, []);
 const briefProps = { picture, personName: 'Aino', roleLabel: 'Sairaanhoitaja', purposeLabel: 'Mielialan arviointi' };
 const visibleBrief = renderToStaticMarkup(React.createElement(PictureBriefing, briefProps));
 
-// ---- D3: Decision-1's time-sensitivity beside the record's "why" chip ----
+// ---- W3: Decision-1's verdict is written once, in the lifted block, never as per-row chips ----
 //
-// The fixture's `source-b` note is `relevant` and `current`, so its row carries both chips and the ordering
-// caveat the day view's lead line uses; `historical` reads as the model's own word, and `unclear` or an
-// unanswered question adds nothing.
-assert(visibleBrief.includes('Olennainen tälle käynnille') && visibleBrief.includes('>Ajankohtainen<'),
-  'a record Decision-1 called current carries the Ajankohtainen chip beside its why chip');
+// The four neutral chips ("Olennainen tälle käynnille", "Taustatieto tälle käynnille", "Ajankohtainen", "Aiempi
+// (mallin mukaan)") looked exactly like fact tags and sat on most rows, so they carried no signal. A row now
+// carries exactly one tag, "Ehdotus", and only when the record is one of the picks the "Nostettu tälle käynnille"
+// block lists; the verdict itself is in words in the block and in the closed "Valinnan perusteet" disclosure.
+for (const chip of ['Olennainen tälle käynnille', 'Taustatieto tälle käynnille', '>Ajankohtainen<', 'Aiempi (mallin mukaan)']) {
+  assert(!visibleBrief.includes(chip), `the ${chip} chip is gone from the record rows`);
+}
+assert.equal((visibleBrief.match(/<p class="brief-why">/g) ?? []).length, 1,
+  'exactly one record row carries the Ehdotus tag: source-b, the one record Decision-1 lifted');
+assert(/<p class="brief-why"><span class="[^"]*"><span class="[^"]*">Ehdotus<\/span><\/span><\/p>/.test(visibleBrief),
+  'the row tag is the neutral library Tag reading Ehdotus, and nothing else');
 assert(!visibleBrief.includes('(järjestysperuste, ei hoidon kiireellisyys)'),
-  'the ordering caveat is no longer printed beside every chip (owner, 2026-10-14); the technical page keeps it');
+  'the ordering caveat is not printed beside every row (owner, 2026-10-14); the lifted block says it once');
+assert(visibleBrief.includes('Järjestysperuste, ei hoidon kiireellisyys · Decision-1 arvioi 1 kirjauksen'),
+  'the lifted block carries the caveat once, with the number of notes Decision-1 answered (1: the unselected note is withheld)');
 {
-  const withTiming = sensitivity => renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
-    picture: { ...picture, selection: { ...picture.selection, decision_notes: picture.selection.decision_notes.map(note =>
-      note.record_id === 'source-b' ? { ...note, time_sensitivity: sensitivity } : note) } } }));
-  assert(withTiming('historical').includes('Aiempi (mallin mukaan)'), 'historical renders as the model\'s own word');
-  const unclear = withTiming('unclear');
-  assert(!unclear.includes('Ajankohtainen') && !unclear.includes('Aiempi (mallin mukaan)'), 'unclear adds no chip');
+  // A row's tag and the block's list are one computation (`source.lifted` is set from `liftedRecordIds`), so a
+  // record the block does not list carries no tag: with no additions and no relevant note, nothing is lifted.
+  const nothingLifted = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
+    picture: { ...picture, selection: { ...picture.selection, baseline_record_ids: ['source-a', 'source-b'], additional_record_ids: [],
+      decision_notes: picture.selection.decision_notes.map(note => note.record_id === 'source-b' ? { ...note, status: 'irrelevant' } : note) } } }));
+  assert(!nothingLifted.includes('<p class="brief-why">'), 'no row carries Ehdotus when the block lists nothing');
+  assert(nothingLifted.includes('Decision-1 ei nostanut kirjauksia esiin.'), 'and the block says so in words, never an empty block');
+  assert(nothingLifted.includes('Decision-1 arvioi kirjauksen epäolennaiseksi'), 'the closed reasoning still carries the verdict in words');
 }
 
 // ---- D2: accept / edit on the pre-filled form ----
@@ -2662,28 +2716,107 @@ assert(!/kiireellisyys \(järjestys\):/.test(visibleTechnical),
 // list of things needing attention and inflated the alert count; with more withheld sentences it buried
 // the real conflicts. Withholding is now stated once, beside the summary, in the professional's terms
 // and without identifiers or counts, and the per-sentence machinery lives in the technical disclosure.
-const withheldCaption = 'Osa tämän koosteen koneellisesti tuotetusta tekstistä jätettiin näyttämättä, koska sitä ei voitu vahvistaa lähteisiin.';
-assert(visibleBrief.includes(withheldCaption),
-  'a withheld sentence is disclosed once, beside the summary, in the professional\'s terms');
-assert(!/\d/.test(withheldCaption), 'the withheld caption carries no sentence count');
-assert(!/Lause\s+s\d|withheld-/.test(withheldCaption), 'the withheld caption names no sentence identifier');
-assert(!/[Pp]iilot/.test(withheldCaption), 'the withheld caption does not say text was hidden');
-assert(!/[Kk]ieltäyty/.test(withheldCaption), 'the withheld caption does not imply the model refused');
+// W2: the summary is the library AiSummaryBlock. The withholding is stated once, in the block's own footer
+// count ("jätettiin näyttämättä: 1 lause …"), in the professional's terms; the per-sentence machinery stays
+// on the technical page.
+const withheldLine = 'jätettiin näyttämättä: 1 lause (sitä ei voitu vahvistaa lähteisiin)';
+assert(visibleBrief.includes(withheldLine),
+  'a withheld sentence is disclosed once, in the block footer, in the professional\'s terms');
+assert(!/Lause\s+s\d|withheld-/.test(withheldLine), 'the withheld line names no sentence identifier');
+assert(!/[Pp]iilot/.test(withheldLine), 'the withheld line does not say text was hidden');
+assert(!/[Kk]ieltäyty/.test(withheldLine), 'the withheld line does not imply the model refused');
+assert(!visibleBrief.includes('Osa tämän koosteen koneellisesti tuotetusta tekstistä'),
+  'the old second caption is gone: the count carries the occurrence');
 assert(visibleTechnical.includes('Näyttämättä jätetyt lauseet')
   && visibleTechnical.includes('Lause s2 · hylätty · syy: ei tuettu (unsupported)'),
   'the per-sentence id, verdict and both reason forms stay auditable on the technical page');
 assert(!visibleBrief.includes('Näyttämättä jätetyt lauseet') && !visibleBrief.includes('Lause s2'),
   'and never on the briefing');
-// The method caption is not a second occurrence notice, and the occurrence caption is not a second method
-// claim: one still renders when nothing was withheld, the other only when something was.
+// Every fixed word of the block is Finnish; the library's English defaults never render.
+for (const finnish of ['Ehdotus', 'Millainen mielialan tilanne on?', 'Kooste on koneellisesti tuotettu (tekoäly) vain sallituista lähteistä',
+  'Perustuu', '1 kirjaukseen', 'Pidä tällä käynnillä', 'Ei hyödyllinen', 'Valinta näkyy vain tässä näkymässä',
+  'href="#section-records"', 'Hyväksytty lause.']) {
+  assert(visibleBrief.includes(finnish), `the summary block renders: ${finnish}`);
+}
+for (const english of ['Suggestion', 'Keep for this visit', 'Based on', 'Not useful', 'withheld:', 'Draft', 'Source record',
+  'AI-written', 'No summary is shown']) {
+  assert(!visibleBrief.includes(english), `no library default renders in English: ${english}`);
+}
+assert(!visibleBrief.includes('Lähteisiin perustuva kooste'), 'the old plain Block title is gone');
+// One SourceReference per accepted sentence: the fixture has one sentence (the flat narrative) and one
+// visible citation, so one reference, labelled by the record type in Finnish and dated d.m.yyyy.
+assert.equal((visibleBrief.match(/aria-haspopup="dialog"/g) ?? []).length, 1, 'one SourceReference per sentence');
+assert(visibleBrief.includes('Arviointi') && visibleBrief.includes('28.9.2026'), 'the reference names the type and the date');
+assert(!visibleBrief.includes('<dialog'), 'the source dialog is mounted only while open');
+// Per-sentence rows: one reference per verified record, the purpose question, a draft record says
+// "· Luonnos" in the label (never the library\'s "Draft"), and more than four sentences fold the full list.
+const sevenSentences = Array.from({ length: 7 }, (_, index) => ({
+  sentence_id: `s${index + 1}`, text: `Lause ${index + 1} päivältä 2026-09-2${index + 1}.`,
+  record_ids: index % 2 ? ['source-b'] : ['source-a', 'source-b'],
+}));
+const manyBrief = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps, purposeLabel: 'Lääkityksen seuranta',
+  picture: { ...picture, purpose: 'medication_follow_up', narrative_sentences: sevenSentences,
+    grounding: { ...picture.grounding, rejected_sentences: [] },
+    records: { ...picture.records, accessible_other: [{ ...picture.records.accessible_other[0], state: 'draft' }] } } }));
+assert(manyBrief.includes('Miten lääkitys toteutuu?'), 'the question follows the purpose code');
+assert(manyBrief.includes('Koko kooste (7 lausetta)'), 'more than four sentences fold the full list under the block');
+assert(manyBrief.includes('Lause 7 päivältä 27.9.2026.') && manyBrief.includes('Lause 1 päivältä 21.9.2026.'),
+  'every verified sentence is listed, with its dates as the page writes them');
+assert(manyBrief.includes('Kirjaus · Luonnos') && !manyBrief.includes('Draft'),
+  'a draft source says Luonnos in the label and never the library\'s English word');
+assert(manyBrief.includes('2 kirjaukseen'), 'the record count is the distinct verified records, not the first id per sentence');
+assert(manyBrief.includes('näyttämättä jätettyjä lauseita: 0'), 'nothing withheld reads as a zero count, not as an absent line');
+// First look: the library shows four sentences, each with its references (sentence 1, 3 cite two records);
+// the fold lists all seven again, so the reference count is 4-in-block + 7-in-fold worth of records.
+assert.equal((manyBrief.match(/aria-haspopup="dialog"/g) ?? []).length, (2 + 1 + 2 + 1) + (2 + 1 + 2 + 1 + 2 + 1 + 2),
+  'one SourceReference per verified record per sentence, in the block and in the fold');
+// Withheld (fail-closed): no accepted summary renders the neutral withheld sentence, never an absent block —
+// the social worker whose live briefing has no summary sees why, in the existing fail-closed wording.
+const socialWorkerBrief = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps, roleLabel: 'Sosiaalityöntekijä',
+  purposeLabel: 'Palvelutarpeen arviointi',
+  picture: { ...picture, role: 'sosiaalityontekija', purpose: 'functioning_service_needs', narrative: null, citations: [],
+    narration_acceptance_status: 'rejected', narration_support_status: 'not_run', grounding: { ...picture.grounding, rejected_sentences: [] } } }));
+assert(socialWorkerBrief.includes('Millainen on palvelutarve?') && socialWorkerBrief.includes('Ehdotus')
+  && socialWorkerBrief.includes('Koostetta ei näytetä: yhtään lausetta ei voitu vahvistaa lähteisiin.')
+  && socialWorkerBrief.includes('Valitut lähdetiedot ja sääntöpohjainen arvio säilyvät; lue kirjaukset alta.'),
+'a missing summary renders the withheld block with the fail-closed sentence, not nothing');
+assert(!socialWorkerBrief.includes('Pidä tällä käynnillä') && !socialWorkerBrief.includes('kirjaukseen</a>'),
+  'the withheld state has no feedback actions and no record-count link');
+assert(!socialWorkerBrief.includes('No summary is shown'), 'the withheld text is Finnish');
+// An unknown purpose falls back to the purpose label as the question.
+const unknownPurposeBrief = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps, purposeLabel: 'Muu käynti',
+  picture: { ...picture, purpose: 'something_else' } }));
+assert(unknownPurposeBrief.includes('Muu käynti'), 'the purpose label is the fallback question');
+// The source dialog: Finnish title "<type> · <date>", subtitle with the person, the excerpt fields as
+// heading: content, the draft tag for a draft, the jump link to the record anchor, and the close action.
+const dialogPresentation = picturePresentation({ ...picture,
+  records: { ...picture.records, accessible_other: [{ ...picture.records.accessible_other[0], state: 'draft' }] } }, { personName: 'Aino' });
+const dialogHtml = renderToStaticMarkup(React.createElement(SourceRecordDialog, {
+  presentation: dialogPresentation, dialog: { openId: 'source-b', open: () => {}, close: () => {} } }));
+for (const expected of ['Kirjaus · 29.9.2026', 'Lähdekirjaus · Aino', 'Luonnos', 'brief-state-draft', 'Otsikko', 'Vastaanotto',
+  'Kirjaus</dt>', 'Asiakas kuvaa mielialan vaihtelua.', 'href="#source-source-b"', 'Siirry kirjaukseen', 'Sulje']) {
+  assert(dialogHtml.includes(expected), `the source dialog renders: ${expected}`);
+}
+assert(!dialogHtml.includes('Draft') && !dialogHtml.includes('Source record'), 'the source dialog never renders English');
+assert.equal(renderToStaticMarkup(React.createElement(SourceRecordDialog, {
+  presentation: dialogPresentation, dialog: { openId: null, open: () => {}, close: () => {} } })), '',
+'a closed dialog leaves no markup');
+assert.equal(renderToStaticMarkup(React.createElement(SourceRecordDialog, {
+  presentation: dialogPresentation, dialog: { openId: 'source-zzz', open: () => {}, close: () => {} } })), '',
+'a record the picture does not render has no dialog');
+// A reference to a record the picture does not render renders nothing, the same rule as SourceLink.
+assert.equal(renderToStaticMarkup(React.createElement(SourceRecordReference, { id: 'source-zzz', presentation: dialogPresentation, dialog: {} })), '');
+assert(renderToStaticMarkup(React.createElement(SourceRecordReference, { id: 'source-a', presentation: dialogPresentation, dialog: {} }))
+  .includes('Arviointi'), 'a reference to a rendered record names its type');
+// The method caption stays when nothing was withheld, and the withheld count reads zero.
 const noWithheldBrief = renderToStaticMarkup(React.createElement(PictureBriefing, {
   picture: { ...picture, grounding: { ...picture.grounding, rejected_sentences: [] } },
   personName: 'Aino', roleLabel: 'Sairaanhoitaja', purposeLabel: 'Mielialan arviointi',
 }));
 assert(noWithheldBrief.includes('koneellisesti tuotettu'),
   'the method caption stays when nothing was withheld');
-assert(!noWithheldBrief.includes(withheldCaption),
-  'the occurrence caption is absent when nothing was withheld');
+assert(!noWithheldBrief.includes(withheldLine) && noWithheldBrief.includes('näyttämättä jätettyjä lauseita: 0'),
+  'the withheld count is zero when nothing was withheld');
 // The grounding row must not call the withholding a rejection. `narration_rejection_reason` is
 // `partial_support` on the shipped medication-conflict encounter, whose narration was ACCEPTED
 // (`narration_acceptance_status: accepted`, `narration_support_status: supported`); the old line rendered
@@ -2776,14 +2909,16 @@ assert(/<h2[^>]*>Tilanne ja hälytykset<\/h2>/.test(visibleBrief)
 assert.equal(attentionCaption(visibleBrief), String(renderedAttention),
   `the attention caption equals the number of rows in the attention group (${renderedAttention})`);
 // This fixture withholds one sentence. The withheld sentence contributes no row and no number, so the attention
-// group holds exactly the three actionable rows (the coverage gap, the conflict and the warning-level risk) plus
-// Decision-1's own finding rows (`decisionHighlights`), which are counted separately here so the withheld
-// sentence is still shown to add nothing.
+// group holds exactly the three actionable rows (the coverage gap, the conflict and the warning-level risk).
+// Decision-1's own picks are NOT attention rows (W3): they are the "Nostettu tälle käynnille" block, so the
+// group carries no "Decision-1." marker and no info tone.
 const withheldSentences = picture.grounding.rejected_sentences.length;
 assert(withheldSentences === 1, 'the fixture withholds exactly one sentence, against which the count is checked');
-const decisionRows = (attentionGroup(visibleBrief).match(/<strong>Decision-1\.<\/strong>/g) ?? []).length;
-assert(renderedAttention === 3 + decisionRows,
-  `withheld sentences add no attention row (${renderedAttention} rows, ${decisionRows} Decision-1 rows, ${withheldSentences} withheld)`);
+assert.equal((attentionGroup(visibleBrief).match(/<strong>Decision-1\.<\/strong>/g) ?? []).length, 0,
+  'Decision-1 picks are not rows in Tarkistettavat');
+assert(!attentionGroup(visibleBrief).includes('brief-info'), 'no info-toned row in Tarkistettavat: a model pick is not a system alert');
+assert.equal(renderedAttention, 3,
+  `withheld sentences add no attention row (${renderedAttention} rows, ${withheldSentences} withheld)`);
 assert(attentionCaption(visibleBrief) !== String(renderedAttention + withheldSentences),
   'the attention caption never counts a withheld sentence');
 const alertsPanelHtml = (() => {
@@ -2823,9 +2958,22 @@ assert(criticalRisk.indexOf('class="icon"') < criticalRisk.indexOf('<strong>Krii
 const neutralRiskBrief = renderToStaticMarkup(React.createElement(PictureBriefing, {
   picture: { ...picture, risk: { risk_level: 'matala', reason: 'Ei kohonneen riskin tunnusmerkkejä' }, conflicts: [], actions: [] },
 }));
-const neutralRiskStart = neutralRiskBrief.indexOf('<div class="brief-risk"');
-const neutralRisk = neutralRiskBrief.slice(neutralRiskStart, neutralRiskBrief.indexOf('</div>', neutralRiskStart));
+// A neutral risk is a table's proposal, so it takes the suggestion pattern (W3): the neutral Tag "Sääntöpohjainen
+// arvio", then the sentence; no `brief-risk` box, no icon, no severity colour.
+// The row is read inside the alerts section only: the rule-based assessment block uses the same pattern below it.
+const alertsSectionOf = html => html.slice(html.indexOf('<section id="section-alerts"'), html.indexOf('</section>', html.indexOf('<section id="section-alerts"')));
+const riskRowOf = (html, toned) => {
+  const panel = alertsSectionOf(html);
+  const start = panel.indexOf(toned ? '<div class="brief-risk brief-alert-row' : '<div class="brief-suggestion">');
+  return start < 0 ? '' : panel.slice(start, panel.indexOf('</p></div></div>', start) + 16);
+};
+const neutralRisk = riskRowOf(neutralRiskBrief, false);
+assert(neutralRisk.startsWith('<div class="brief-suggestion">') && neutralRisk.includes('<strong>Matala riski.</strong>'),
+  'the matala risk renders as a suggestion row');
 assert(!/brief-(?:critical|warning|info|success)/.test(neutralRisk), 'matala risk is not given a severity color');
+assert(neutralRisk.indexOf('>Sääntöpohjainen arvio<') < neutralRisk.indexOf('<strong>Matala riski.</strong>')
+  && !neutralRisk.includes('class="icon"') && !neutralRisk.includes('brief-risk'),
+  'the neutral risk row is tag, then sentence: no icon, no alert box');
 // Every `risk_level` the data carries must render as a presentation word, not as a bare data value. Two of
 // the four previously led the sentence as lowercase fragments ("matala Ei kohonneen..."). A rule that cannot
 // fail is not a rule, so this asserts the shape for all four and the absence wording for `arvioimaton`.
@@ -2834,8 +2982,9 @@ for (const [level, expected] of [['korkea', 'Kriittinen.'], ['kohtalainen', 'Var
   const rendered = renderToStaticMarkup(React.createElement(PictureBriefing, {
     picture: { ...picture, risk: { risk_level: level, reason: 'Peruste.' }, conflicts: [], actions: [] },
   }));
-  const start = rendered.indexOf('<div class="brief-risk');
-  const row = rendered.slice(start, rendered.indexOf('</div>', start));
+  const toned = level === 'korkea' || level === 'kohtalainen';
+  const row = riskRowOf(rendered, toned);
+  assert(row, `risk_level ${level} is ${toned ? 'an alert row' : 'a suggestion row'}`);
   assert(row.includes(`<strong>${expected}</strong>`),
     `risk_level ${level} renders as the presentation word ${expected}`);
   // An unassessed risk is not a low risk, and a source conflict is not a severity finding:
@@ -2882,15 +3031,116 @@ assert.equal(alertGroups(conflictOnce)[1], undefined, 'no status row remains onc
 // The rule's confidence is no longer part of the decision sentence; it is a labelled line in the disclosure.
 assert(!visibleBrief.includes('triage-signaali (ei palvelutilanne): valmistelu · high'),
   'the confidence is not appended to the clinical triage sentence');
-assert(visibleBrief.includes('Kirjauksista johdettu triage-signaali (ei palvelutilanne): valmistelu'),
-  'the triage sentence keeps its framing word for word');
+// The raw `situation_type` never shows (W3): every table value has a Finnish word, and a value the table does not
+// name (the fixture's `valmistelu`) renders capitalised, never as a bare token.
+assert(visibleBrief.includes('Kirjauksista johdettu triage-signaali (ei palvelutilanne): Valmistelu'),
+  'the triage sentence keeps its framing word for word, with the value as a capitalised word');
+assert(!visibleBrief.includes('(ei palvelutilanne): valmistelu'), 'the raw table value is not printed');
 assert(visibleTechnical.includes('<strong>Triage-signaalin luottamus:</strong> high.'),
   'the confidence is rendered once as a labelled line on the technical page');
 assert(!visibleBrief.includes('Triage-signaalin luottamus'), 'and not on the briefing');
 
-// The role is stated by the context strip and is not a second Tag in the patient pills.
-assert(visibleBrief.includes('<dt class="t-caption">Ammattirooli</dt><dd class="t-body">Sairaanhoitaja</dd>'),
-  'the role is stated by the encounter context strip');
+// The role is stated by the identity block and is not a second Tag in the patient pills.
+assert(visibleBrief.includes('<p class="t-body brief-identity-context">Sairaanhoitaja · Mielialan arviointi</p>'),
+  'the role and the purpose are stated by the identity block');
+assert(!visibleBrief.includes('brief-context-strip'), 'the loading panel\'s context strip is not part of the loaded briefing');
+// ---- W1: the page layout — identity block and strip, the Now strip, the two zones ----
+{
+  // `briefProps` carries no `identityAvailable`, so the briefing says the neutral sentence; the identity cases
+  // render with the lens identifying the person, the way the shell passes it.
+  const w1Props = { ...briefProps, identityAvailable: true };
+  const w1Brief = renderToStaticMarkup(React.createElement(PictureBriefing, w1Props));
+  const briefDocument = new JSDOM(`<!doctype html><html><body>${w1Brief}</body></html>`).window.document;
+  // The identity block: the page h1 in a static render (no shell), the role · purpose line, and no basics facts
+  // because this fixture carries no basics record — nothing is invented for the missing fields.
+  const identity = briefDocument.querySelector('section.brief-identity[aria-label="Henkilö ja palvelutilanne"]');
+  assert(identity, 'the identity block is a named section');
+  assert.equal(identity.querySelector('h1.t-page-title')?.textContent, 'Aino', 'the static render names the person as the h1');
+  assert(!identity.querySelector('.brief-identity-facts'), 'no basics record, so no facts line (and no empty one)');
+  // The library IdentityStrip stands in for that block once it scrolls away: the same name, the facts that exist,
+  // Finnish label. A static render carries `hidden` — the strip appears only once the observer reports.
+  const strip = briefDocument.querySelector('[role="group"][aria-label="Henkilö ja palvelutilanne"]');
+  assert(strip && strip.hasAttribute('hidden'), 'the identity strip renders hidden in a static render, so it never covers the title');
+  assert.equal(strip.querySelector('.t-body-strong')?.textContent, 'Aino', 'the strip carries the same name');
+  assert.deepEqual([...strip.querySelectorAll('span')].map(node => node.textContent).filter(text => text !== '·'),
+    ['Aino', 'Sairaanhoitaja', 'Mielialan arviointi'], 'the strip details are the facts that exist: role and purpose only here');
+  assert(!briefDocument.querySelector('.brief-zone-now').contains(strip)
+    && strip.compareDocumentPosition(briefDocument.querySelector('.brief-zone-now')) & 4,
+  'the strip precedes the Nyt zone: it is the first thing in the briefing, outside both zones');
+  // The neutral sentence, never the demo label, when the lens does not identify the person; the strip says the same.
+  const neutral = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps, identityAvailable: false, exampleLabel: 'Elias Korhonen' }));
+  const neutralDocument = new JSDOM(`<!doctype html><html><body>${neutral}</body></html>`).window.document;
+  assert.equal(neutralDocument.querySelector('.brief-identity h1')?.textContent, 'Henkilöllisyystieto ei saatavilla');
+  assert.equal(neutralDocument.querySelector('[role="group"] .t-body-strong')?.textContent, 'Henkilöllisyystieto ei saatavilla');
+  assert(!neutral.includes('Elias Korhonen'), 'the demo label is not an identity');
+  // With a basics record the block and the strip carry the birth year, the identifier and the municipality — and
+  // only those fields the record has. The identifier is left out when it is already the name.
+  const withBasics = { ...picture, records: { ...picture.records, accessible_other: [...picture.records.accessible_other,
+    { record_id: 'basics-1', record_type: 'perustieto', topic: 'demografia', source: 'Perustieto', recorded_at: '1980-11-25T00:00:00Z',
+      payload: { näyttötunniste: 'SYN-ASI-1', syntymävuosi: 1980, kotikunta: 'Espoo' }, selection_reasons: [] }] },
+    selection: { ...picture.selection, additional_record_ids: ['source-b', 'basics-1'] } };
+  const basicsHtml = renderToStaticMarkup(React.createElement(PictureBriefing, { ...w1Props, picture: withBasics }));
+  assert(basicsHtml.includes('<p class="t-caption brief-identity-facts">s. 1980 · Tunniste SYN-ASI-1 · Kotikunta Espoo</p>'),
+    'the identity block lists the basics facts that exist');
+  const basicsDocument = new JSDOM(`<!doctype html><html><body>${basicsHtml}</body></html>`).window.document;
+  assert.deepEqual([...basicsDocument.querySelector('[role="group"]').querySelectorAll('span')].map(node => node.textContent).filter(text => text !== '·'),
+    ['Aino', 'Sairaanhoitaja', 'Mielialan arviointi', 's. 1980', 'Tunniste SYN-ASI-1', 'Kotikunta Espoo'], 'and so does the strip');
+  const sameName = renderToStaticMarkup(React.createElement(PictureBriefing, { ...w1Props, picture: withBasics, personName: 'SYN-ASI-1' }));
+  assert(sameName.includes('<p class="t-caption brief-identity-facts">s. 1980 · Kotikunta Espoo</p>'),
+    'the identifier is not repeated when it is the name');
+  const onlyYear = renderToStaticMarkup(React.createElement(PictureBriefing, { ...w1Props, picture: { ...withBasics,
+    records: { ...withBasics.records, accessible_other: withBasics.records.accessible_other.map(record => record.record_id === 'basics-1'
+      ? { ...record, payload: { syntymävuosi: 1980 } } : record) } } }));
+  assert(onlyYear.includes('<p class="t-caption brief-identity-facts">s. 1980</p>'), 'only the fields the record has');
+  // The Now strip: exactly four cells, every one with a real value computed from the presentation. This fixture has
+  // no medication and no diagnosis (0 is a value), its newest source is source-b (29.9.2026), its risk is kohtalainen.
+  const cells = [...briefDocument.querySelectorAll('.brief-now-strip > *')];
+  assert.equal(cells.length, 4, 'the Now strip has exactly four cells');
+  const cellText = node => [node.querySelector('.t-body').textContent, (node.querySelector('.t-metric') ?? node.querySelector('.t-title-lg')).textContent];
+  assert.deepEqual(cells.map(cellText), [
+    ['Aktiiviset lääkkeet', '0'], ['Aktiiviset diagnoosit', '0'], ['Viimeisin kirjaus', '29.9.2026'], ['Riskiarvio', 'Varoitus'],
+  ], 'the four cells and their values');
+  assert(cells[0].querySelector('.t-metric') && cells[1].querySelector('.t-metric'), 'the counts are number cells (metric role)');
+  assert(cells[2].querySelector('.t-title-lg') && cells[3].querySelector('.t-title-lg'), 'the date and the risk word are word cells');
+  assert.equal(cells[3].querySelector('.t-caption')?.textContent, 'Sääntöpohjainen peruste.', 'the risk cell\'s detail is the rule\'s own reason');
+  assert(!w1Brief.includes('Hidden information in'), 'no cell says something is hidden: hiddenIn is never set');
+  // Counts are of distinct substances and names in view: two records of one drug are one, an ended one is not counted.
+  const counted = { ...withBasics, records: { ...withBasics.records, accessible_other: [...withBasics.records.accessible_other,
+    { record_id: 'med-1', record_type: 'lääkitys', topic: 'lääkitys', source: 'Lääkitys', recorded_at: '2026-10-01T00:00:00Z', payload: { lääke: 'metformiini', tila: 'aktiivinen' }, selection_reasons: [] },
+    { record_id: 'med-2', record_type: 'lääkitys', topic: 'lääkitys', source: 'Lääkitys', recorded_at: '2026-08-01T00:00:00Z', payload: { lääke: 'metformiini', tila: 'aktiivinen' }, selection_reasons: [] },
+    { record_id: 'med-3', record_type: 'lääkitys', topic: 'lääkitys', source: 'Lääkitys', recorded_at: '2026-07-01T00:00:00Z', payload: { lääke: 'amlodipiini', tila: 'päättynyt' }, selection_reasons: [] },
+    { record_id: 'dg-1', record_type: 'diagnoosi', topic: 'hoito', source: 'Diagnoosi', recorded_at: '2026-06-01T00:00:00Z', payload: { nimi: 'Kohonnut verenpaine', tila: 'aktiivinen' }, selection_reasons: [] },
+    { record_id: 'dg-2', record_type: 'diagnoosi', topic: 'hoito', source: 'Diagnoosi', recorded_at: '2026-05-01T00:00:00Z', payload: { nimi: 'Kohonnut verenpaine', tila: 'aktiivinen' }, selection_reasons: [] },
+    { record_id: 'dg-3', record_type: 'diagnoosi', topic: 'hoito', source: 'Diagnoosi', recorded_at: '2026-04-01T00:00:00Z', payload: { nimi: 'Vanha diagnoosi', tila: 'ei_aktiivinen' }, selection_reasons: [] },
+  ] }, selection: { ...withBasics.selection, additional_record_ids: ['source-b', 'basics-1', 'med-1', 'med-2', 'med-3', 'dg-1', 'dg-2', 'dg-3'] },
+  risk: null };
+  const countedDocument = new JSDOM(`<!doctype html><html><body>${renderToStaticMarkup(React.createElement(PictureBriefing, { ...w1Props, picture: counted }))}</body></html>`).window.document;
+  assert.deepEqual([...countedDocument.querySelectorAll('.brief-now-strip > *')].map(cellText), [
+    ['Aktiiviset lääkkeet', '1'], ['Aktiiviset diagnoosit', '1'], ['Viimeisin kirjaus', '1.10.2026'], ['Riskiarvio', 'Riskiä ei ole arvioitu'],
+  ], 'distinct active substances and names; the newest source date; the absence word for an absent risk');
+  // No source at all: the date cell says so in words, never an empty cell.
+  const emptyDocument = new JSDOM(`<!doctype html><html><body>${renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
+    picture: { ...picture, records: { priority: [], accessible_other: [] }, citations: [], selection: { ...picture.selection, baseline_record_ids: [], additional_record_ids: [], emphasized_record_ids: [] } } }))}</body></html>`).window.document;
+  assert.deepEqual([...emptyDocument.querySelectorAll('.brief-now-strip > *')].map(cellText).slice(2, 3), [['Viimeisin kirjaus', 'Ei kirjauksia']]);
+  // The zones: "Nyt" over the identity block, the Now strip and the summary; "Kirjaukset" over the record section.
+  const zoneHeadings = [...briefDocument.querySelectorAll('.brief-zone > .t-overline.brief-zone-heading')].map(node => node.textContent);
+  assert.deepEqual(zoneHeadings, ['Nyt', 'Kirjaukset'], 'two zone lines, in reading order');
+  const now = briefDocument.querySelector('.brief-zone-now');
+  assert(now.contains(identity) && now.contains(briefDocument.querySelector('.brief-now-strip')) && now.contains(briefDocument.querySelector('.brief-narrative')),
+    'the Nyt zone holds the identity block, the Now strip and the summary');
+  const records = briefDocument.querySelector('.brief-zone-records');
+  assert(records.contains(briefDocument.querySelector('.brief-sections')) && records.contains(briefDocument.querySelector('#section-alerts')),
+    'the Kirjaukset zone holds the record sections');
+  assert.equal(now.firstElementChild.textContent, 'Nyt', 'the zone line leads its zone');
+  assert.equal(records.firstElementChild.textContent, 'Kirjaukset');
+  // The record section is the library MainSide: main column first, the side an aside landmark with a Finnish name.
+  const columns = briefDocument.querySelector('.brief-record-columns');
+  assert(columns && /(^|\s)_mainSide_[a-z0-9]+_\d+(\s|$)/.test(columns.className), 'the record columns are the library MainSide');
+  const side = columns.querySelector('aside[aria-label="Ammattilaisen tilanne ja tarkistettavat asiat"]');
+  assert(side && columns.lastElementChild === side && columns.children.length === 2, 'the side column is the named aside after the main column');
+  assert(columns.firstElementChild.contains(briefDocument.querySelector('#section-records')) && side.contains(briefDocument.querySelector('#section-alerts')),
+    'the reading column carries the records, the side the attention panel');
+}
 const pillsHtml = visibleBrief.match(/<section class="brief-patient-pills"[\s\S]*?<\/section>/)?.[0] ?? '';
 assert(!pillsHtml.includes('Sairaanhoitaja'), 'the role is no longer a Tag in PatientPills');
 
@@ -2957,8 +3207,9 @@ assert(sourceFactBrief.includes('<strong>Valinnan peruste:</strong>'),
 // Defect 1: the conflict rule's own risk row (risk_level 'ristiriita') must carry no severity
 // word ("Kriittinen"/"Varoitus"/etc.) and no critical-severity styling. It states a disagreement
 // between sources, not a judgement about the patient.
-const conflictRiskStart = sourceFactBrief.indexOf('<div class="brief-risk');
-const conflictRiskRow = sourceFactBrief.slice(conflictRiskStart, sourceFactBrief.indexOf('</div>', conflictRiskStart));
+// A ristiriita risk without conflicts is a neutral level, so it is the suggestion row (W3), read inside the panel.
+const conflictRiskRow = riskRowOf(sourceFactBrief, false);
+assert(conflictRiskRow, 'the conflict risk row renders as a suggestion row');
 assert(!/Kriittinen|Korkea|Varoitus/.test(conflictRiskRow),
   'the conflict risk row renders no severity word');
 assert(!/brief-(?:critical|warning|info|success)/.test(conflictRiskRow),
@@ -3211,8 +3462,15 @@ const CARD_ANCHORS = {
   assessments: 'section-assessments', measurements: 'section-measurements', labs: 'section-labs',
   status: 'section-diagnoses', medications: 'section-medications', records: 'section-records',
 };
-const railStart = provenanceHtml.indexOf('class="brief-record-side"');
-const mainStart = provenanceHtml.indexOf('class="brief-record-main"');
+// The columns are the library MainSide (W1): the main column is the first child of the `.brief-record-columns`
+// element, the side column the `aside` named for the professional. The slices are bounded by those marks.
+const SIDE_COLUMN_LABEL = 'aria-label="Ammattilaisen tilanne ja tarkistettavat asiat"';
+const columnMarks = html => {
+  const mainStart = html.indexOf('brief-record-columns');
+  const railStart = html.lastIndexOf('<aside', html.indexOf(SIDE_COLUMN_LABEL));
+  return { mainStart, railStart };
+};
+const { railStart, mainStart } = columnMarks(provenanceHtml);
 assert(mainStart >= 0 && railStart > mainStart, 'content column precedes the right rail');
 const readingColumn = provenanceHtml.slice(mainStart, railStart);
 assert(readingColumn.includes('id="section-records"'),
@@ -3278,7 +3536,7 @@ assert(sideBody.startsWith('<section') && sideBody.slice(0, sideBody.indexOf('>'
   assert(sectionsAt > proposalAt, 'the proposal leads the body: the rail precedes the reading sections');
   assert(!railHtml.includes('stub-assistant') && !railHtml.includes('LUVN-avustaja'),
     'the briefing renders no assistant of its own; the assistant is the shell\'s side pane');
-  assert(!railHtml.slice(railHtml.indexOf('class="brief-record-main"'), railHtml.indexOf('class="brief-record-side"'))
+  assert(!railHtml.slice(columnMarks(railHtml).mainStart, columnMarks(railHtml).railStart)
     .includes('brief-proposal'), 'the proposal is not in the reading column');
 }
 // The purpose's order, behaviourally: the rendered cards follow `briefingOrder` for every purpose.
@@ -3289,8 +3547,8 @@ for (const purpose of ['medication_follow_up', 'functioning_service_needs', 'men
   }));
   // Medications is the side column's card (work order L), so the reading column's cards are checked in order
   // against the same `briefingOrder` with that one id left out.
-  const reading = html.slice(html.indexOf('class="brief-record-main"'), html.indexOf('class="brief-record-side"'));
-  const side = html.slice(html.indexOf('class="brief-record-side"'));
+  const reading = html.slice(columnMarks(html).mainStart, columnMarks(html).railStart);
+  const side = html.slice(columnMarks(html).railStart);
   const readingIds = briefingOrder(purpose).filter(id => CARD_ANCHORS[id] && id !== 'medications');
   // A card with no rows renders nothing (the empty "Ei kirjauksia." cards are gone), so the cards that DO render
   // are checked: the records card always has rows here, and whichever others have rows follow `briefingOrder`.
@@ -3353,13 +3611,11 @@ for (const purpose of ['medication_follow_up', 'functioning_service_needs', 'men
       'a functioning/service-needs picture leads with the assessments, ahead of the measurements');
   }
 }
-// The split is proportional (2:1) with a measured floor under the rail: 360px is the first track width
-// whose 326px content box holds all three medication columns — 146px of drug name, 91px of dose, 87px of
-// status — with the fixture's longest name (`hydroklooritiatsidi`) unbroken. A fixed slab starved the main
-// column instead, so the ratio and the floor are both pinned here.
-assert(readFileSync(fileURLToPath(new URL('./styles.css', import.meta.url)), 'utf8')
-  .includes('.brief-record-columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr); gap: var(--space-lg); align-items: start; }'),
-  'the two-column layout is a real grid rule whose rail is wide enough for its table');
+// The split is the library MainSide's (2fr / 1fr from 1280px, one column below): the app sheet defines no
+// column grid of its own any more, so there is one layout, not two that can disagree. (The former 360px floor
+// under the rail is not reproduced; the W1 report records why.)
+assert(!/\.brief-record-(?:columns|main|side)\s*\{/.test(readFileSync(fileURLToPath(new URL('./styles.css', import.meta.url)), 'utf8')),
+  'the app keeps no column grid rule: the layout is the library MainSide\'s');
 assert(provenanceHtml.includes('Synteettinen diagnoosi') && provenanceHtml.includes('brief-diagnosis-tag'));
 assert(provenanceHtml.includes('Kirjaaja</span> terveydenhoitaja') && provenanceHtml.includes('Terveydenhoitaja'));
 assert(entryACard.includes('Luonnos') && entryACard.includes('Kirjaaja')
@@ -3367,8 +3623,40 @@ assert(entryACard.includes('Luonnos') && entryACard.includes('Kirjaaja')
 assert(entryACard.includes('brief-record-draft'), 'draft is visibly marked for its separate style');
 assert(!provenanceHtml.includes('Yhteydenotot') && !provenanceHtml.includes('Vastaanottaja A · Vastaanottaja B'),
   'entry recipients never become contact history or a cross-entry list');
-assert(provenanceHtml.includes('Tulkinta') && provenanceHtml.includes('poikkeava'));
-assert(provenanceHtml.includes('Viitearvo') && !provenanceHtml.includes('viitearvo'), 'the lab header is Finnish and the payload key never prints');
+// Laboratory results are one library `GroupedRecordRow` per test (W5), not a six-column table whose unit,
+// reference and interpretation columns stand empty for the corpus. The closed row carries the newest value
+// exactly as the source writes it; the unit, the reference range and the interpretation are on the record
+// line inside the opened row, only where the source has them. The payload key never prints.
+const provenanceDocument = new JSDOM(provenanceHtml).window.document;
+const labGroupsOf = document => [...document.querySelectorAll('#section-labs button[aria-expanded]')];
+assert.equal(labGroupsOf(provenanceDocument).length, 1, 'one grouped row for the one test the fixture carries');
+assert(labGroupsOf(provenanceDocument)[0].textContent.includes('Viimeisin 3.4 mmol/l · 30.9.2026'),
+  'the closed row summarises the newest value as the source writes it, with its unit and date');
+assert(!provenanceHtml.includes('viitearvo') && !provenanceHtml.includes('Tulkinta</th>'), 'the payload key never prints and no empty column header remains');
+// A mounted briefing whose grouped rows can be clicked open: the rows are closed by default, and a static
+// render cannot open them. `fn` receives the live document and a `click` that dispatches inside `act`.
+async function withLiveBriefing(props, fn) {
+  const dom = new JSDOM('<!doctype html><div id="root"></div>', { url: 'http://localhost' });
+  const keys = ['window', 'document', 'HTMLElement', 'navigator', 'IS_REACT_ACT_ENVIRONMENT', 'ResizeObserver'];
+  const previous = new Map(keys.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  for (const [key, value] of Object.entries({
+    window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
+    navigator: dom.window.navigator, IS_REACT_ACT_ENVIRONMENT: true,
+    ResizeObserver: class { observe() {} disconnect() {} unobserve() {} },
+  })) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value });
+  const root = createRoot(dom.window.document.getElementById('root'));
+  const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+  const click = async element => { await React.act(async () => { element.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); await tick(); }); };
+  try {
+    await React.act(async () => { root.render(React.createElement(PictureBriefing, props)); await tick(); });
+    await fn({ document: dom.window.document, click });
+  } finally {
+    await React.act(async () => { root.unmount(); });
+    for (const [key, descriptor] of previous) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
+    }
+  }
+}
 const labRecord = (record_id, payload) => ({ record_id, record_type: 'tutkimustulos', topic: 'tutkimus',
   source: 'Synteettinen laboratorio', recorded_at: '2026-09-30T08:00:00Z', payload, selection_reasons: [] });
 const rangePicture = {
@@ -3380,14 +3668,18 @@ const rangePicture = {
     labRecord('lab-without-range', { tutkimus: 'HDL', arvo: 1.2, yksikkö: 'mmol/l', tulkinta: 'viitearvo' }),
   ] },
 };
-const rangeHtml = renderToStaticMarkup(React.createElement(PictureBriefing, { picture: rangePicture }));
-// The library header cell wraps its label in two spans (label + optional sort chevron slot); the cell itself is
-// still a `th scope="col"`.
-assert(/<th scope="col"[^>]*>(?:<span[^>]*>){2}Viitearvo(?:<\/span>){2}<\/th>/.test(rangeHtml) && /<td[^>]*>&lt; 3\.0<\/td>/.test(rangeHtml),
-  'a source-supplied reference range renders verbatim');
-const missingRangeRow = rangeHtml.match(/<tr id="source-lab-without-range"[^>]*>([\s\S]*?)<\/tr>/)?.[1] ?? '';
-assert(/<td[^>]*><\/td>/.test(missingRangeRow) && !missingRangeRow.includes('range')
-  && !missingRangeRow.includes('Reference unavailable'), 'an absent range has no value or placeholder');
+await withLiveBriefing({ picture: rangePicture }, async ({ document, click }) => {
+  for (const button of labGroupsOf(document)) await click(button);
+  const withRange = document.getElementById('source-lab-with-range');
+  assert.equal(withRange?.tagName, 'LI', 'an opened record line carries its own anchor');
+  assert(withRange.textContent.includes('30.9.2026 · 3.4 mmol/l · viitearvo < 3.0 · poikkeava'),
+    'a source-supplied reference range and interpretation render verbatim on the record line');
+  const withoutRange = document.getElementById('source-lab-without-range');
+  assert(withoutRange.textContent.includes('30.9.2026 · 1.2 mmol/l · viitearvo')
+    && !withoutRange.textContent.includes('viitearvo ·') && !withoutRange.textContent.includes('Reference unavailable'),
+    'an absent range has no value or placeholder; the interpretation the source writes stays');
+  assert.equal(document.querySelectorAll('#source-lab-with-range').length, 1, 'anchored exactly once while open');
+});
 // Work order D put the selection rationale behind a disclosure and B2 made the audit cards the technical
 // page's. What stays on the briefing is the disclosure's own summary; the audit cards are on the other page.
 assert(provenanceHtml.includes('Valinnan perusteet'), 'the selection rationale is offered as a visible disclosure summary');
@@ -3809,28 +4101,33 @@ const measurementPicture = {
 const measurementHtml = renderToStaticMarkup(React.createElement(PictureBriefing, {
   picture: measurementPicture, personName: 'Aino', roleLabel: 'Sairaanhoitaja', purposeLabel: 'Lääkityksen seuranta',
 }));
-const tileFor = label => {
-  const at = measurementHtml.indexOf(`>${label}</h3>`);
-  if (at < 0) return '';
-  const start = measurementHtml.lastIndexOf('<div class="brief-measurement-value"', at);
-  return measurementHtml.slice(start, measurementHtml.indexOf('</div>', at));
-};
-// The label is written in sentence case and uppercased by the `t-overline` role, so the markup carries
-// `Paino`, not `PAINO` — the browser shows the transformed text.
+// The readings are the library `MetricRow`/`Metric` (W5): the value exactly as the source writes it, the unit only
+// where the payload key carries one, the label under the value, and no `status` (a trend arrow would be a
+// clinical reading no rule here makes). The per-source line with the date and the anchor is the app's own.
+const measurementDocument = new JSDOM(measurementHtml).window.document;
+const metricFor = label => [...measurementDocument.querySelectorAll('#section-measurements div')]
+  .find(element => element.textContent === label && element.className.includes('t-body'))?.parentElement;
 for (const [label, value] of [['Paino', '72.5'], ['Pituus', '178'], ['Verenpaine', '158/92'], ['Syke', '78']]) {
-  assert(tileFor(label).includes(value),
+  const metric = metricFor(label);
+  assert(metric, `a ${label} measurement renders as a Metric`);
+  assert.equal(metric.querySelector('.t-metric')?.textContent, value,
     `a ${label} measurement reaches the view with its source-supplied value (${value})`);
 }
+assert(measurementDocument.querySelector('#section-measurements .t-metric')?.closest('[class]')
+  && metricFor('Paino').parentElement === metricFor('Syke').parentElement, 'the Metrics share one MetricRow');
+assert(metricFor('Paino').parentElement.className.includes('brief-measurement-metrics'),
+  'the row carries the app class whose flex override drops MetricRow\'s fixed four columns');
 // The unit is rendered only where the payload key carries one. `paino_kg`/`pituus_cm` do; `verenpaine` and
-// `syke` do not, and the tile must not invent one — a unit is a source fact like any other.
-assert(tileFor('Paino').includes('<span>kg</span>') && tileFor('Pituus').includes('<span>cm</span>'),
-  'the tile renders the unit the payload key carries');
-assert(!/<span>\s*<\/span>/.test(tileFor('Verenpaine')) && !tileFor('Verenpaine').includes('<span>'),
-  'a blood-pressure tile renders no unit: the source supplies none and none is invented');
-assert(!tileFor('Syke').includes('<span>'),
-  'a pulse tile renders no unit, for the same reason');
-assert.equal([...measurementHtml.matchAll(/class="brief-measurement-value"/g)].length, 4,
-  'one tile per measurement the source carries');
+// `syke` do not, and the Metric must not invent one — a unit is a source fact like any other.
+assert.equal(metricFor('Paino').querySelector('.t-caption span')?.textContent, 'kg');
+assert.equal(metricFor('Pituus').querySelector('.t-caption span')?.textContent, 'cm');
+assert(!metricFor('Verenpaine').querySelector('.t-caption') && !metricFor('Syke').querySelector('.t-caption'),
+  'a blood-pressure or pulse Metric renders no unit: the source supplies none and none is invented');
+assert(!measurementDocument.querySelector('#section-measurements svg'), 'no trend arrow: no status is set');
+assert.equal(measurementDocument.querySelectorAll('#section-measurements .t-metric').length, 4,
+  'one Metric per measurement the source carries');
+assert.equal(measurementDocument.querySelector('#section-measurements a#source-source-m')?.textContent, '22.9.2026',
+  'the source line under the row anchors the record and names its date');
 
 // ---- Nothing is fetched that is not shown ----
 //
@@ -3897,7 +4194,8 @@ for (const [type, payload] of coverageRecords.map(r => [r.record_type, r.payload
 // Rendered from the coverage fixture above, which carries one record of every type and therefore every
 // table the briefing can draw — including the medications one whose provenance row was malformed.
 const spanTables = [...coverageHtml.matchAll(/<table[^>]*>([\s\S]*?)<\/table>/g)].map(m => m[1]);
-assert(spanTables.length >= 3, `expected the record tables in the markup, found ${spanTables.length}`);
+// The medications, status and lab cards are grouped rows now (W5), so the assessments table is the one left.
+assert(spanTables.length >= 1, `expected the record tables in the markup, found ${spanTables.length}`);
 for (const table of spanTables) {
   const header = (table.match(/<thead>[\s\S]*?<\/thead>/) || [''])[0];
   const columns = [...header.matchAll(/<th\b[^>]*>/g)]
@@ -3946,13 +4244,16 @@ assert.deepEqual(rejected.narration.inputRecordIds, ['source-a', 'source-b']);
 assert.deepEqual(rejected.narration.citedRecordIds, []);
 
 // Heavy-size render: the evaluator-only shortlist fixture renders 20 sources, one of them a
-// pathologically long synthetic note. The briefing must hold at that size and the long excerpt
-// must be collapsed behind a keyboard-accessible disclosure without being removed from the DOM.
+// pathologically long synthetic note. The briefing must hold at that size: the list is cut at four rows
+// (Thin record pattern) behind a Finnish disclosure button, the sixteen rows past the cut keep their
+// `source-<id>` anchors in the DOM, and the long excerpt is collapsed behind a keyboard-accessible
+// disclosure without being removed from the DOM. The short rows are distinct on purpose: identical rows
+// would fold into one, which the W4 block below pins separately.
 const heavySources = Array.from({ length: 20 }, (_, index) => ({
   record_id: `heavy-${String(index).padStart(3, '0')}`,
   record_type: 'vapaateksti', topic: 'lääkitys', source: 'kotihoidon kirjaus',
   recorded_at: '2026-09-20T00:00:00Z', selection_reasons: [],
-  payload: { otsikko: 'Kirjaus', teksti: index === 0 ? 'pitkä kirjaus '.repeat(800).trim() : 'Lyhyt kirjaus.' },
+  payload: { otsikko: 'Kirjaus', teksti: index === 0 ? 'pitkä kirjaus '.repeat(800).trim() : `Lyhyt kirjaus ${index}.` },
 }));
 const heavyBrief = renderToStaticMarkup(React.createElement(PictureBriefing, {
   picture: { ...picture, records: { priority: [], accessible_other: heavySources },
@@ -3961,13 +4262,167 @@ const heavyBrief = renderToStaticMarkup(React.createElement(PictureBriefing, {
       additional_record_ids: [], emphasized_record_ids: [] } },
   personName: 'Aino', roleLabel: 'Sairaanhoitaja', purposeLabel: 'Mielialan arviointi',
 }));
-assert.equal([...heavyBrief.matchAll(/<article[^>]*class="brief-selected-record"/g)].length, 20,
-  'heavy fixture renders 20 selected record cards');
+assert.equal([...heavyBrief.matchAll(/<article[^>]*class="brief-selected-record"/g)].length, 4,
+  'heavy fixture draws four selected record cards: the list is cut at four rows');
+assert(heavyBrief.includes('>20 kirjausta<'), 'the count caption stays honest about the records in the list');
+assert(/<button[^>]*aria-expanded="false"[^>]*aria-controls="section-records-list"[^>]*><span>Näytä kaikki \(20\)<\/span><\/button>/.test(heavyBrief),
+  'the cut is a Finnish library Button with the aria-expanded / aria-controls contract, counting the rows in view');
+assert(!heavyBrief.includes('Show all') && !heavyBrief.includes('Show fewer'), 'the library ShowAllButton\'s English never renders');
+for (const source of heavySources) {
+  assert(heavyBrief.includes(`id="source-${source.record_id}"`), `${source.record_id} keeps its anchor past the cut`);
+}
 assert.equal([...heavyBrief.matchAll(/class="brief-source-more"/g)].length, 1,
   'only the pathological excerpt is collapsed behind a disclosure');
 assert(heavyBrief.includes('Näytä koko kirjaus'), 'the disclosure is labelled for keyboard users');
 assert(heavyBrief.includes('pitkä kirjaus '.repeat(50)),
   'the full long excerpt is present in the DOM inside the disclosure');
+
+// ---- W4: selected records fold, raw values and markdown, Esitiedot states ----
+{
+  // Eight identical same-day home-care rows (client 13801) are ONE library GroupedRecordRow: the shared text
+  // once, every record under it newest first with its own anchor, and the count caption of the records.
+  const homeCare = Array.from({ length: 8 }, (_, index) => ({
+    record_id: `home-${index}`, record_type: 'vapaateksti', topic: 'kotihoito', source: 'delivery',
+    recorded_at: `2026-09-${String(10 + index).padStart(2, '0')}T00:00:00Z`, selection_reasons: [],
+    payload: { otsikko: 'Kotihoidon käynti', teksti: 'Käynti sujui suunnitellusti.' },
+  }));
+  const other = { record_id: 'other-1', record_type: 'vapaateksti', topic: 'kotihoito', source: 'Potilastietojärjestelmä',
+    recorded_at: '2026-09-01T00:00:00Z', selection_reasons: [], payload: { otsikko: 'Kotihoidon käynti', teksti: 'Eri teksti.' } };
+  const withFold = (records = [...homeCare, other]) => renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
+    picture: { ...picture, records: { priority: [], accessible_other: records },
+      selection: { ...picture.selection, baseline_record_ids: records.map(source => source.record_id),
+        additional_record_ids: [], emphasized_record_ids: [] } } }));
+  const folded = withFold();
+  assert.equal([...folded.matchAll(/class="[^"]*brief-record-fold[" ]/g)].length, 1, 'identical repeats fold into one grouped row');
+  assert.equal([...folded.matchAll(/<article[^>]*class="brief-selected-record"/g)].length, 1, 'the differing record stays a card of its own');
+  assert(folded.includes('>9 kirjausta<'), 'the count caption counts records, not rows');
+  assert(!folded.includes('Näytä kaikki'), 'two rows in view need no cut');
+  assert(folded.includes('Viimeisin 17.9.2026') && folded.includes('8 kirjausta · ensimmäinen 10.9.2026'),
+    'the grouped row says the latest date, and the open list the count and the first date');
+  for (const source of homeCare) assert(folded.includes(`id="source-${source.record_id}"`), `${source.record_id} keeps its anchor inside the fold`);
+  assert(folded.indexOf('id="source-home-7"') < folded.indexOf('id="source-home-0"'), 'the folded records list newest first');
+  assert(!folded.includes('Long-term') && !folded.includes('Pitkaaikainen') && !folded.includes('Pitkäaikainen'),
+    'longTerm is never set: a count is not a duration');
+  assert(!/>delivery</.test(folded) && !folded.includes(' delivery') && !folded.includes('delivery ·'),
+    'the delivery stack\'s own source key is never printed under a record');
+  assert(folded.includes('Potilastietojärjestelmä'), 'a vendor label the record carries still renders');
+  assert.deepEqual(foldSelectedRecords([]), [], 'no rows fold to nothing');
+  const foldedRows = foldSelectedRecords([
+    { id: 'a', title: 'T', excerpt: 'X', date: '2026-01-01', heading: { national: 'H' } },
+    { id: 'b', title: 'T', excerpt: 'X', date: '2026-02-01', heading: { national: 'H' } },
+    { id: 'c', title: 'T', excerpt: 'Y', date: '2026-03-01', heading: { national: 'H' } },
+    { id: 'd', title: 'T', excerpt: 'X', date: '2026-04-01', heading: { national: 'Other' } },
+  ]);
+  assert.deepEqual(foldedRows.map(group => [group.heading, group.entries.map(entry => entry.records.map(row => row.id))]),
+    [['H', [['b', 'a'], ['c']]], ['Other', [['d']]]], 'same title, headings and excerpt fold; a different excerpt or heading does not');
+
+  // Source label: `delivery` is omitted, anything else renders as it came.
+  assert.equal(sourceLabel({ source: 'delivery' }), '');
+  assert.equal(sourceLabel({ source: ' delivery ' }), '');
+  assert.equal(sourceLabel({ source: 'Kotihoidon kirjaus' }), 'Kotihoidon kirjaus');
+  assert.equal(sourceLabel({ source: '' }), '');
+  assert.equal(sourceLabel({}), '');
+  assert.equal(sourceLabel(null), '');
+
+  // Decision validity in words. The helper is exported for the status table (another owner, whose block below
+  // imports it at module level; this binding is block-scoped so the two do not collide); the excerpt adapter
+  // applies it to a decision's `voimassa` itself.
+  const { validityText } = await import('./challenge-demo.mjs');
+  assert.equal(validityText('2026-12-31'), '31.12.2026');
+  assert.equal(validityText('2026-12-31T00:00:00Z'), '31.12.2026');
+  assert.equal(validityText('toistaiseksi'), 'Toistaiseksi');
+  assert.equal(validityText('määräaikainen'), 'Määräaikainen');
+  assert.equal(validityText('Toistaiseksi'), 'Toistaiseksi');
+  assert.equal(validityText('voimassa 2027 loppuun'), 'voimassa 2027 loppuun', 'an unknown string is the data and stays as recorded');
+  assert.equal(validityText(''), '');
+  assert.equal(validityText(null), null);
+  const decisionExcerpt = picturePresentation({ ...picture, records: { priority: [{ record_id: 'dec-1', record_type: 'päätös', topic: 'päätös',
+    source: 'delivery', recorded_at: '2025-08-14T00:00:00Z', payload: { päätös: 'Aikuissosiaalityö', voimassa: 'toistaiseksi' } }], accessible_other: [] },
+    selection: { ...picture.selection, baseline_record_ids: ['dec-1'], additional_record_ids: [], emphasized_record_ids: [] } });
+  assert.equal(decisionExcerpt.sources.find(row => row.id === 'dec-1').excerpt, 'Päätös: Aikuissosiaalityö · Tila: Toistaiseksi');
+
+  // Markdown in excerpts: heading lines become their own strong lines without the marks; paragraphs stay;
+  // the draft marking is data and stays visible, as a heading.
+  assert.deepEqual(excerptBlocks('Otsikko: Myönteinen · Kirjaus: # PÄÄTÖSLUONNOS\n\n## PERUSTIEDOT\n- Päätöspäivämäärä: 14.8.2025\nTeksti jatkuu. · Käyntityyppi: päätös'), [
+    { kind: 'paragraph', text: 'Otsikko: Myönteinen · Kirjaus:' },
+    { kind: 'heading', text: 'PÄÄTÖSLUONNOS' },
+    { kind: 'heading', text: 'PERUSTIEDOT' },
+    { kind: 'paragraph', text: '- Päätöspäivämäärä: 14.8.2025' },
+    { kind: 'paragraph', text: 'Teksti jatkuu. · Käyntityyppi: päätös' },
+  ]);
+  assert.deepEqual(excerptBlocks('### Otsikko ###'), [{ kind: 'heading', text: 'Otsikko' }], 'closing marks go too');
+  assert.deepEqual(excerptBlocks('Otsikko: Vastaanotto · Kirjaus: Asiakas kuvaa mielialan vaihtelua.'),
+    [{ kind: 'paragraph', text: 'Otsikko: Vastaanotto · Kirjaus: Asiakas kuvaa mielialan vaihtelua.' }], 'a plain excerpt is one paragraph');
+  assert.deepEqual(excerptBlocks('Tulos: #5 ei otsikko'), [{ kind: 'paragraph', text: 'Tulos: #5 ei otsikko' }], 'a hash without a space after it is text');
+  assert.deepEqual(excerptBlocks(''), []);
+  assert.deepEqual(excerptBlocks(null), []);
+  const markdownNote = { record_id: 'md-1', record_type: 'vapaateksti', topic: 'päätös', source: 'delivery', recorded_at: '2025-08-14T00:00:00Z',
+    selection_reasons: [], payload: { otsikko: 'Myönteinen', teksti: `# PÄÄTÖSLUONNOS\n\n## PERUSTIEDOT\n- Kotikunta: Espoo\n${'Perustelut jatkuvat. '.repeat(30)}` } };
+  const rendered = withFold([markdownNote]);
+  assert(!/#{1,3}\s/.test(rendered.replace(/&#\d+;/g, '')), 'no markdown heading marks reach the rendered excerpt');
+  assert(rendered.includes('<p class="brief-excerpt-heading"><strong>PÄÄTÖSLUONNOS</strong></p>')
+    && rendered.includes('<p class="brief-excerpt-heading"><strong>PERUSTIEDOT</strong></p>'), 'heading lines render as their own strong lines');
+  assert(rendered.includes('<p>- Kotikunta: Espoo</p>'), 'the paragraphs stay');
+  assert(rendered.includes('Näytä koko kirjaus'), 'a long markdown note still sits behind the disclosure');
+  assert(!/>delivery</.test(rendered), 'the delivery key is not printed under the note either');
+
+  // Esitiedot: the headings nothing permitted answers are one not-on-record line at the top of the block, in
+  // block order; the per-heading "Kysy vastaanotolla" rows are gone, so the block holds answered headings only.
+  const sections = [
+    { key: 'palvelutarve', heading: 'Palvelutarve', status: 'answered', items: [{ text: 'Arjen hallinnan tuki', source_record_ids: [], recorded_at: '2025-08-01T00:00:00Z' }] },
+    { key: 'kotihoito', heading: 'Kotihoito', status: 'unknown', items: [] },
+    { key: 'toimintakyky', heading: 'Toimintakyky', status: 'answered', items: [{ text: 'Asiointi onnistuu itsenäisesti', source_record_ids: [] }] },
+    { key: 'laakehoito', heading: 'Lääkehoito', status: 'unknown', items: [] },
+  ];
+  const withSections = (esitiedot, extra = {}) => renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
+    picture: { ...picture, esitiedot, ...extra } }));
+  const partial = withSections(sections);
+  assert(/<p id="section-esitiedot-not-on-record" class="t-body-strong brief-not-on-record-label">Ei kirjauksia:<\/p><ul class="brief-not-on-record-kinds" aria-labelledby="section-esitiedot-not-on-record">(<li class="brief-not-on-record-kind"><span class="[^"]*">[^<]*<span class="[^"]*">(Kotihoito|Lääkehoito)<\/span><\/span><\/li>){2}<\/ul>/.test(partial),
+    'the open headings are one not-on-record line of neutral tags');
+  assert(partial.indexOf('>Kotihoito<') < partial.indexOf('>Lääkehoito<'), 'the tags keep block order');
+  assert.equal([...partial.matchAll(/class="brief-esitieto-section"/g)].length, 2, 'only answered headings are rows');
+  assert(!partial.includes('brief-esitieto-open') && !/<dt[^>]*>Kotihoito<\/dt>/.test(partial), 'no near-empty row for an open heading');
+  assert(partial.includes('2 / 4 otsikkoa täytetty sallituista kirjauksista'), 'the count caption stays honest');
+  assert(!partial.includes('Kaikki otsikot täytetty'), 'the complete form is not claimed while headings are open');
+  const complete = withSections(sections.filter(section => section.status === 'answered'));
+  assert(complete.includes('<p class="t-caption brief-not-on-record-complete">Kaikki otsikot täytetty sallituista kirjauksista</p>')
+    && complete.includes('class="brief-not-on-record-check" aria-hidden="true"') && complete.includes('<svg'),
+    'every heading answered renders the complete form with a check icon');
+  assert(!complete.includes('Ei kirjauksia:'), 'the complete form carries no missing label');
+  assert(!partial.includes('Not on record') && !complete.includes('Every kind of record'), 'the library line\'s English never renders');
+
+  // The pre-filled form's generation failure is a block error state with a Finnish retry, and the form's own
+  // content stays under the alert. The open-questions disclosure stays. The state is the library BlockState's
+  // shape from the library's Alert and Button: the pinned BlockState's inner Alert says "Warning." whatever
+  // labels it gets, and English must not render.
+  const form = { form_id: 'f-fail', name: 'Palvelutarpeen arviointi', form_role: 'official', generation_status: 'timed_out', verified: 1, total_questions: 2,
+    items: [{ question_id: 'q1', question_text: 'Asuminen', status: 'answered', answer_text: 'Yksin', source_record_ids: [] },
+      { question_id: 'q2', question_text: 'Tuen tarve', status: 'unknown' }] };
+  let retried = 0;
+  const failed = withSections(sections, { prefilled_forms: [form] });
+  const failedWithRetry = renderToStaticMarkup(React.createElement(PictureBriefing, { ...briefProps,
+    picture: { ...picture, esitiedot: sections, prefilled_forms: [form] }, onRetryPrefill: () => { retried += 1; }, prefillRetrying: false }));
+  assert(failed.includes('Esitäyttö ei ehtinyt valmistua.'), 'the Finnish message is the alert');
+  assert(/<section[^>]*class="[^"]*brief-prefilled-form[^"]*"[^>]*>[\s\S]*Esitäyttö ei ehtinyt valmistua\./.test(failed), 'the form block itself is in the error state');
+  assert(!failed.includes('>Yritä uudelleen<'), 'without a retry handler no retry button is drawn');
+  assert(/<button[^>]*>(?:(?!<\/button>).)*lucide-refresh-cw(?:(?!<\/button>).)*<span>Yritä uudelleen<\/span><\/button>/.test(failedWithRetry),
+    'the retry button is the library Button with the refresh icon and the Finnish label');
+  assert(!failedWithRetry.includes('Try again') && !failedWithRetry.includes('Warning.') && !failedWithRetry.includes('Loading…'),
+    'none of the library\'s English copy renders');
+  assert(failedWithRetry.includes('<strong class="t-body-strong">Varoitus.</strong> Esitäyttö ei ehtinyt valmistua.')
+    && failedWithRetry.includes('<div role="status" class="visually-hidden">Varoitus. Esitäyttö ei ehtinyt valmistua.</div>'),
+    'the alert keyword is Finnish, visibly and in the live region');
+  assert(failedWithRetry.includes('>Yksin<') && failedWithRetry.includes('Kysy vastaanotolla: 1 kysymystä'),
+    'the answered item and the open-questions disclosure stay under the alert');
+  assert(failedWithRetry.includes('Kopioi esitäytetty lomake'), 'the copy button stays');
+  for (const status of ['failed', 'unavailable']) {
+    assert(withSections(sections, { prefilled_forms: [{ ...form, generation_status: status }] }).includes('class="brief-prefill-error"'),
+      `${status} is a block error state too`);
+  }
+  const generated = withSections(sections, { prefilled_forms: [{ ...form, generation_status: 'generated' }] });
+  assert(!generated.includes('brief-prefill-error') && !generated.includes('Yritä uudelleen'), 'a generated form is a plain block');
+  assert.equal(retried, 0, 'rendering does not retry');
+}
 
 // The URL selects state but cannot widen it: an encounter id the API did not return is ignored, and an
 // unknown mode falls back to normal rather than being forwarded to the picture route.
@@ -4249,7 +4704,7 @@ assert(anchorHtml.includes('Lääkelista') && anchorHtml.includes('Kirjaus'),
   assert(proposalCard, 'the proposal card renders');
   const rail = placedDocument.querySelector('.brief-rail-section');
   assert(rail && rail.contains(proposalCard), 'the proposal card is in the rail (.brief-rail-section)');
-  assert(!placedDocument.querySelector('.brief-record-main')?.contains(proposalCard), 'and not in the reading column');
+  assert(!placedDocument.querySelector('.brief-record-columns')?.contains(proposalCard), 'and not in the record columns');
   assert.equal(proposalCard.parentElement, rail, 'as a direct child of the rail');
   assert.equal(rail.firstElementChild, proposalCard, 'it is the first thing in the rail, before the assistant');
   assert.equal([...placedDocument.querySelectorAll('.brief-proposal.brief-card')].length, 1,
@@ -4482,7 +4937,8 @@ for (const label of URGENCY_UI_LABELS) {
 // its `source-<id>` anchor in the DOM so a citation still has a target.
 const { describe, it } = await import('node:test');
 const {
-  LAB_LABELS, labLabel, foldStatusRows, statusCountText, splitMedicationRows, medicationCountText, medicationIsHistorical,
+  LAB_LABELS, labLabel, labName, foldStatusRows, statusCountText, splitMedicationRows, medicationCountText, medicationIsHistorical,
+  groupMedicationRows, groupLabRows, medicationStatusText, recordStatusText, validityText,
 } = await import('./challenge-demo.mjs');
 
 const foldRecord = (record_id, record_type, recorded_at, payload) => ({
@@ -4497,10 +4953,12 @@ const foldRecords = [
   foldRecord('dx-j06-ended', 'diagnoosi', '2025-03-15T00:00:00Z', { nimi: 'Ylähengitystieinfektio', icd10: 'J06.9', tila: 'ei_aktiivinen' }),
   foldRecord('decision-a', 'päätös', '2025-09-01T00:00:00Z', { päätös: 'Kotihoidon palvelupäätös', voimassa: 'toistaiseksi' }),
   foldRecord('med-metformin', 'lääkitys', '2026-01-10T00:00:00Z', { lääke: 'metformiini', annos: '1 g x 2', tila: 'aktiivinen' }),
+  foldRecord('med-metformin-old', 'lääkitys', '2024-01-12T00:00:00Z', { lääke: 'metformiini', annos: '500 mg', tila: 'päättynyt', puuttuneet_annokset_30d: 2 }),
   foldRecord('med-parasetamol', 'lääkitys', '2025-06-14T00:00:00Z', { lääke: 'parasetamoli', annos: 'tarvittaessa', tila: 'päättynyt' }),
   foldRecord('med-ramipril', 'lääkitys', '2026-02-01T00:00:00Z', { lääke: 'ramipriili', annos: '5 mg x 1', tila: 'aktiivinen' }),
   foldRecord('med-diklofenak', 'lääkitys', '2025-11-14T00:00:00Z', { lääke: 'diklofenaakki', annos: 'tarvittaessa', tila: 'päättynyt' }),
-  foldRecord('lab-hba1c', 'tutkimustulos', '2026-02-20T00:00:00Z', { tutkimus: 'B-HbA1c', arvo: 52, yksikkö: 'mmol/mol', tulkinta: 'koholla' }),
+  foldRecord('lab-hba1c', 'tutkimustulos', '2026-02-20T00:00:00Z', { tutkimus: 'B-HbA1c', arvo: '52.104', yksikkö: 'mmol/mol', tulkinta: 'koholla' }),
+  foldRecord('lab-hba1c-old', 'tutkimustulos', '2025-11-07T00:00:00Z', { tutkimus: 'B-HbA1c', arvo: '47.993' }),
   foldRecord('lab-krea', 'tutkimustulos', '2026-02-20T00:00:00Z', { tutkimus: 'P-Krea', arvo: 78, yksikkö: 'µmol/l', tulkinta: 'viitearvo' }),
   foldRecord('lab-unknown', 'tutkimustulos', '2026-02-20T00:00:00Z', { tutkimus: 'X-Tuntematon', arvo: 1, yksikkö: '', tulkinta: 'viitearvo' }),
 ];
@@ -4520,39 +4978,60 @@ const foldProps = { picture: foldPicture, personName: 'Aino', roleLabel: 'Sairaa
 const foldHtml = renderToStaticMarkup(React.createElement(PictureBriefing, foldProps));
 const foldDocument = new JSDOM(foldHtml).window.document;
 const sectionOf = id => foldDocument.getElementById(id);
-const rowsOf = section => [...section.querySelectorAll('tbody tr')].filter(row => !row.classList.contains('brief-source-metadata'));
+// The grouped rows of a card: the library `GroupedRecordRow` renders its row as a `button[aria-expanded]`; the
+// medications fold toggle is the other such button and is told apart by its `aria-controls`.
+const groupRowsOf = section => [...section.querySelectorAll('button[aria-expanded]')]
+  .filter(button => button.getAttribute('aria-controls') !== 'section-medications-history');
+const groupNamesOf = section => groupRowsOf(section).map(button => button.querySelector('.t-body-strong')?.textContent);
+const foldToggleOf = section => section.querySelector('button[aria-controls="section-medications-history"]');
+// The raw corpus words a row must never print (lower case is the raw form; `Ei aktiivinen` is the word) and the
+// library's English copy the page must never render.
+const RAW_STATUS_WORDS = ['ei_aktiivinen', 'päättynyt', 'toistaiseksi', '· aktiivinen', 'Long-term', 'Draft', 'Show all', 'Show fewer'];
 
-describe('N3a: the diagnoses table folds one row per code and status', () => {
+describe('N3a: the diagnoses card draws one grouped row per code and status', () => {
   const section = sectionOf('section-diagnoses');
-  it('draws one row per (ICD-10 code, status), from the newest record', () => {
-    const rows = rowsOf(section);
-    assert.equal(rows.length, 4, 'E11.9 aktiivinen, I10 aktiivinen, J06.9 ei_aktiivinen and the decision: four rows for six records');
-    const e11 = rows.find(row => row.textContent.includes('Tyypin 2 diabetes'));
-    assert.equal(e11.id, 'source-dx-e11-new', 'the drawn row is the newest record of the group and carries its anchor');
-    assert(e11.textContent.includes('20.2.2026'), 'the row shows the newest date');
-    assert(e11.textContent.includes('×3 kirjausta'), 'a folded row says how many records it stands for');
-    const i10 = rows.find(row => row.textContent.includes('Verenpainetauti'));
-    assert(!i10.textContent.includes('kirjausta'), 'a row that stands for one record carries no fold tag');
-    assert.equal(section.querySelectorAll('tr#source-dx-e11-new').length, 1);
+  it('draws one GroupedRecordRow per (ICD-10 code, status), summarised from the newest record', () => {
+    assert.deepEqual(groupNamesOf(section), ['Tyypin 2 diabetes', 'Verenpainetauti', 'Ylähengitystieinfektio', 'Kotihoidon palvelupäätös'],
+      'E11.9 aktiivinen, I10 aktiivinen, J06.9 ei_aktiivinen and the decision: four rows for six records');
+    const e11 = groupRowsOf(section)[0];
+    assert(e11.textContent.includes('E11.9'), 'the code slot carries the ICD-10 code');
+    assert(e11.textContent.includes('Aktiivinen · Viimeisin 20.2.2026'), 'the summary is the status word and the newest date');
+    const j06 = groupRowsOf(section)[2];
+    assert(j06.textContent.includes('Ei aktiivinen · Viimeisin 15.3.2025'), 'the corpus status word is never raw');
+    const decision = groupRowsOf(section)[3];
+    assert(decision.textContent.includes('Päätös') && decision.textContent.includes('Voimassa: Toistaiseksi · Viimeisin 1.9.2025'),
+      'a decision without a code says its record type, and its validity in words');
+    for (const raw of RAW_STATUS_WORDS) assert(!section.textContent.includes(raw), `no raw status word or English copy: ${raw}`);
   });
-  it('keeps every folded record anchored in the DOM, inside the drawn row', () => {
-    for (const id of ['dx-e11-old', 'dx-e11-mid']) {
+  it('keeps every record anchored exactly once while the rows are closed', () => {
+    for (const id of ['dx-e11-old', 'dx-e11-mid', 'dx-e11-new', 'dx-i10', 'dx-j06-ended', 'decision-a']) {
       const anchor = section.querySelector(`#source-${id}`);
-      assert(anchor, `the folded record ${id} still has its #source- anchor`);
-      assert.equal(anchor.closest('ul').className, 'visually-hidden', 'the folded anchors sit in a visually-hidden list');
-      assert.equal(anchor.closest('tr').id, 'source-dx-e11-new', 'inside the row that stands for them');
+      assert(anchor, `the record ${id} still has its #source- anchor`);
+      assert.equal(anchor.closest('ul').className, 'visually-hidden', 'the closed row keeps its anchors in a visually-hidden list');
     }
     assert.equal([...foldHtml.matchAll(/id="source-dx-e11-/g)].length, 3, 'each record of the group is anchored exactly once');
+    assert(!section.querySelector('.brief-selection-evidence'), 'a closed row shows no record-level selection evidence');
   });
-  it('shows the newest record\'s Decision-1 chip, not the oldest\'s', () => {
-    // The drawn row and its provenance row (the `brief-source-metadata` sibling) are the group's whole surface.
-    const row = section.querySelector('tr#source-dx-e11-new');
-    const provenance = row.nextElementSibling;
-    assert(provenance.classList.contains('brief-source-metadata'), 'the drawn row carries a provenance row');
-    const e11Block = row.textContent + provenance.textContent;
-    assert(e11Block.includes('Olennainen tälle käynnille') && e11Block.includes('Ajankohtainen'), 'the newest record\'s chips');
-    assert(!e11Block.includes('Taustatieto tälle käynnille') && !e11Block.includes('Aiempi (mallin mukaan)'), 'and not the oldest\'s');
-    assert(!section.textContent.includes('Taustatieto tälle käynnille'), 'the folded record\'s chip is nowhere in the table');
+  it('opens to the records newest first, with the newest record\'s Decision-1 evidence, not the oldest\'s', async () => {
+    await withLiveBriefing(foldProps, async ({ document, click }) => {
+      const live = document.getElementById('section-diagnoses');
+      const e11 = groupRowsOf(live)[0];
+      await click(e11);
+      assert.equal(e11.getAttribute('aria-expanded'), 'true');
+      const records = [...document.getElementById(e11.getAttribute('aria-controls')).querySelectorAll('li')];
+      assert.deepEqual(records.map(item => item.id), ['source-dx-e11-new', 'source-dx-e11-mid', 'source-dx-e11-old'], 'newest first, each line its own anchor');
+      assert(live.textContent.includes('3 kirjausta · ensimmäinen 1.3.2024'), 'the detail line counts the records and names the first date');
+      assert.equal(live.querySelectorAll('#source-dx-e11-new').length, 1, 'an opened record is anchored once: the hidden list is gone');
+      // `SelectionEvidence` is rendered unchanged on each record line; its wording is that component's own, so
+      // the assertion is on the outcome text helper it renders, not on a chip label.
+      assert(records[0].textContent.includes('20.2.2026') && records[0].querySelector('.brief-selection-evidence')?.textContent.includes(decisionOutcomeText('relevant')),
+        'the newest record carries its own Decision-1 outcome');
+      assert(!records[1].querySelector('.brief-selection-evidence') && !records[2].querySelector('.brief-selection-evidence'),
+        'the older records are date and anchor only: the provenance is the newest record\'s, as before the fold');
+      assert(!live.textContent.includes(decisionOutcomeText('irrelevant')), 'the oldest record\'s outcome is nowhere in the card');
+      await click(e11);
+      assert(live.querySelector('ul.visually-hidden #source-dx-e11-old'), 'closed again, the anchors are back in the hidden list');
+    });
   });
   it('counts rendered rows and the records they fold', () => {
     assert(section.textContent.includes('3 diagnoosia · 1 päätöstä · 6 kirjausta'), section.querySelector('.t-caption')?.textContent);
@@ -4570,32 +5049,48 @@ describe('N3a: the diagnoses table folds one row per code and status', () => {
     assert.deepEqual(foldStatusRows([{ id: 'x', type: 'diagnoosi', payload: {} }, { id: 'y', type: 'diagnoosi', payload: {} }])
       .map(group => group.count), [1, 1], 'a record with neither code nor name is its own row');
   });
+  it('writes a status or validity word, never the raw value', () => {
+    assert.equal(recordStatusText('aktiivinen'), 'Aktiivinen');
+    assert.equal(recordStatusText('ei_aktiivinen'), 'Ei aktiivinen');
+    assert.equal(recordStatusText('sairastettu'), 'Sairastettu');
+    assert.equal(recordStatusText('jokin_uusi_tila'), 'Jokin uusi tila');
+    assert.equal(recordStatusText(undefined), 'Tila puuttuu');
+    // `validityText` is the decision card's helper; the status row relies on these two behaviours of it.
+    assert.equal(validityText('toistaiseksi'), 'Toistaiseksi');
+    assert.equal(validityText('2026-12-31'), '31.12.2026');
+  });
 });
 
-describe('N3b: the medications table puts current medications first and folds the ended ones', () => {
+describe('N3b: the medications card draws one grouped row per substance, current substances first', () => {
   const section = sectionOf('section-medications');
-  it('renders the active rows, in order, and no ended row while collapsed', () => {
-    const names = rowsOf(section).map(row => row.querySelector('th')?.textContent).filter(Boolean);
-    assert.deepEqual(names, ['metformiini', 'ramipriili']);
+  it('renders one GroupedRecordRow per current substance, in order, and no ended substance while collapsed', () => {
+    assert.deepEqual(groupNamesOf(section), ['metformiini', 'ramipriili']);
     assert(!section.textContent.includes('parasetamoli') && !section.textContent.includes('diklofenaakki'));
+    const metformin = groupRowsOf(section)[0];
+    assert(metformin.textContent.includes('1 g x 2'), 'the code slot carries the current dose: the payload has no ATC code');
+    assert(metformin.textContent.includes('Alkaen 10.1.2026'), 'a current substance says since when: the earliest active record');
+    for (const raw of RAW_STATUS_WORDS) assert(!section.textContent.includes(raw), `no raw status word or English copy: ${raw}`);
   });
-  it('offers the ended rows behind a labelled disclosure', () => {
-    const toggle = section.querySelector('button[aria-expanded]');
+  it('offers the ended substances behind a labelled disclosure', () => {
+    const toggle = foldToggleOf(section);
     assert.equal(toggle.textContent, 'Näytä aiemmat (2)');
     assert.equal(toggle.getAttribute('aria-expanded'), 'false');
     assert(foldDocument.getElementById(toggle.getAttribute('aria-controls')), 'aria-controls points at an element in the DOM');
   });
-  it('keeps the collapsed rows anchored in the DOM', () => {
-    for (const id of ['med-parasetamol', 'med-diklofenak']) {
+  it('keeps every record anchored in the DOM while closed and collapsed', () => {
+    for (const id of ['med-metformin', 'med-metformin-old', 'med-ramipril', 'med-parasetamol', 'med-diklofenak']) {
       const anchor = section.querySelector(`#source-${id}`);
-      assert(anchor, `the collapsed record ${id} still has its #source- anchor`);
+      assert(anchor, `the record ${id} still has its #source- anchor`);
       assert.equal(anchor.closest('ul').className, 'visually-hidden');
+      assert.equal(foldDocument.querySelectorAll(`#source-${id}`).length, 1, 'anchored exactly once');
     }
   });
-  it('counts current and ended rows', () => {
-    assert(section.textContent.includes('2 käytössä · 2 aiempaa'), section.querySelector('.t-caption')?.textContent);
-    assert.equal(medicationCountText(splitMedicationRows([{ payload: { tila: 'aktiivinen' } }])), '1 käytössä');
-    assert.equal(medicationCountText(splitMedicationRows([{ payload: { tila: 'päättynyt' } }])), '1 aiempaa');
+  it('counts substances and records', () => {
+    assert(section.textContent.includes('2 lääkettä käytössä · 2 aiempaa · 5 kirjausta'), section.querySelector('.t-caption')?.textContent);
+    assert.equal(medicationCountText(groupMedicationRows([{ payload: { lääke: 'a', tila: 'aktiivinen' } }])), '1 lääke käytössä');
+    assert.equal(medicationCountText(groupMedicationRows([{ payload: { lääke: 'a', tila: 'päättynyt' } }])), '1 aiempi lääke');
+    assert.equal(medicationCountText({ ...groupMedicationRows([{ id: 1, payload: { lääke: 'a', tila: 'päättynyt' } }, { id: 2, payload: { lääke: 'b', tila: 'päättynyt' } }]), records: 2 }),
+      '2 aiempaa lääkettä · 2 kirjausta');
   });
   it('splits on the corpus status words and keeps an unknown status in view', () => {
     assert(medicationIsHistorical({ payload: { tila: 'päättynyt' } }));
@@ -4605,38 +5100,47 @@ describe('N3b: the medications table puts current medications first and folds th
     const { active, historical } = splitMedicationRows([{ id: 1, payload: { tila: 'päättynyt' } }, { id: 2, payload: { tila: 'aktiivinen' } }, { id: 3, payload: {} }]);
     assert.deepEqual([active.map(row => row.id), historical.map(row => row.id)], [[2, 3], [1]]);
   });
-  it('expands to the ended rows on click, as rows of their own', async () => {
-    const dom = new JSDOM('<!doctype html><div id="root"></div>', { url: 'http://localhost' });
-    const keys = ['window', 'document', 'HTMLElement', 'navigator', 'IS_REACT_ACT_ENVIRONMENT', 'ResizeObserver'];
-    const previous = new Map(keys.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
-    for (const [key, value] of Object.entries({
-      window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
-      navigator: dom.window.navigator, IS_REACT_ACT_ENVIRONMENT: true,
-      ResizeObserver: class { observe() {} disconnect() {} unobserve() {} },
-    })) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value });
-    const root = createRoot(dom.window.document.getElementById('root'));
-    const tick = () => new Promise(resolve => setTimeout(resolve, 0));
-    try {
-      await React.act(async () => { root.render(React.createElement(PictureBriefing, foldProps)); await tick(); });
-      const live = dom.window.document.getElementById('section-medications');
-      const toggle = live.querySelector('button[aria-expanded]');
-      await React.act(async () => { toggle.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); await tick(); });
+  it('groups by substance in the pure helper: one active record makes the substance current', () => {
+    const { active, historical } = groupMedicationRows([
+      { id: 'a', date: '2026-01-10', payload: { lääke: 'metformiini', annos: '1 g x 2', tila: 'aktiivinen' } },
+      { id: 'b', date: '2024-01-12', payload: { lääke: 'Metformiini', annos: '500 mg', tila: 'päättynyt' } },
+      { id: 'c', date: '2025-06-14', payload: { lääke: 'parasetamoli', annos: 'tarvittaessa', tila: 'päättynyt' } },
+      { id: 'd', date: '2024-06-14', payload: { lääke: 'parasetamoli', annos: 'tarvittaessa', tila: 'lopetettu' } },
+    ]);
+    assert.deepEqual(active.map(group => [group.name, group.records.map(row => row.id), group.since, group.ended, group.count, group.first.id]),
+      [['metformiini', ['a', 'b'], '2026-01-10', null, 2, 'b']], 'newest first; since is the earliest active date; the name is the first record\'s');
+    assert.deepEqual(historical.map(group => [group.name, group.records.map(row => row.id), group.since, group.ended]),
+      [['parasetamoli', ['c', 'd'], null, '2025-06-14']], 'an ended substance says the latest ended date');
+    assert.equal(medicationStatusText('ei_aktiivinen'), 'Ei aktiivinen');
+    assert.equal(medicationStatusText('keskeytetty'), 'Keskeytetty');
+    assert.equal(medicationStatusText('lopetettu'), 'Lopetettu');
+  });
+  it('expands to the ended substances on click, as grouped rows of their own, and opens a row to its records', async () => {
+    await withLiveBriefing(foldProps, async ({ document, click }) => {
+      const live = document.getElementById('section-medications');
+      const toggle = foldToggleOf(live);
+      await click(toggle);
       assert.equal(toggle.textContent, 'Piilota aiemmat');
       assert.equal(toggle.getAttribute('aria-expanded'), 'true');
-      const names = rowsOf(live).map(row => row.querySelector('th')?.textContent).filter(Boolean);
-      assert.deepEqual(names, ['metformiini', 'ramipriili', 'parasetamoli', 'diklofenaakki'], 'current first, then the ended rows');
-      assert.equal(live.querySelector('tr#source-med-parasetamol')?.tagName, 'TR', 'an expanded row carries the anchor itself');
-      assert.equal(live.querySelectorAll('#source-med-parasetamol').length, 1, 'and the hidden anchor is gone: anchored exactly once');
-      assert(live.textContent.includes('2 käytössä · 2 aiempaa'), 'the count line does not change with the fold');
-      await React.act(async () => { toggle.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true })); await tick(); });
+      assert.deepEqual(groupNamesOf(live), ['metformiini', 'ramipriili', 'parasetamoli', 'diklofenaakki'], 'current first, then the ended substances');
+      const parasetamol = groupRowsOf(live)[2];
+      assert(parasetamol.textContent.includes('Päättynyt 14.6.2025'), 'an ended substance says when it ended');
+      assert(live.querySelector('ul.visually-hidden #source-med-parasetamol'), 'an unfolded but closed row still keeps its anchor in a hidden list');
+      assert(live.textContent.includes('2 lääkettä käytössä · 2 aiempaa · 5 kirjausta'), 'the count line does not change with the fold');
+      const metformin = groupRowsOf(live)[0];
+      await click(metformin);
+      const records = [...document.getElementById(metformin.getAttribute('aria-controls')).querySelectorAll('li')];
+      assert.deepEqual(records.map(item => item.id), ['source-med-metformin', 'source-med-metformin-old'], 'the records newest first, each line its own anchor');
+      assert(records[0].textContent.includes('10.1.2026 · 1 g x 2 · Aktiivinen'), 'date · dose · status word');
+      assert(records[1].textContent.includes('12.1.2024 · 500 mg · Päättynyt'), 'the ended record of a current substance, in words');
+      assert(records[1].textContent.includes('Puuttuneet annokset / 30 vrk: 2'), 'the missed-dose line stays where the payload has it');
+      assert(live.textContent.includes('2 kirjausta · ensimmäinen 12.1.2024'), 'the detail line');
+      assert.equal(live.querySelectorAll('#source-med-metformin').length, 1, 'anchored exactly once while open');
+      for (const raw of RAW_STATUS_WORDS) assert(!live.textContent.includes(raw), `no raw status word or English copy: ${raw}`);
+      await click(toggle);
       assert.equal(toggle.textContent, 'Näytä aiemmat (2)');
       assert(live.querySelector('ul.visually-hidden #source-med-parasetamol'), 'collapsed again, the anchor is back in the hidden list');
-    } finally {
-      await React.act(async () => { root.unmount(); });
-      for (const [key, descriptor] of previous) {
-        if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
-      }
-    }
+    });
   });
 });
 
@@ -4649,62 +5153,209 @@ describe('N3c: a lab row names the abbreviation in plain Finnish without hiding 
     assert.equal(labLabel('X-Tuntematon'), 'X-Tuntematon');
     assert.equal(labLabel(undefined), undefined);
     assert.equal(labLabel(''), '');
+    assert.equal(labName('B-HbA1c'), 'Pitkäaikaissokeri');
+    assert.equal(labName('X-Tuntematon'), 'X-Tuntematon');
+    assert.equal(labName(undefined), 'Nimetön tutkimus');
     for (const [abbreviation, label] of Object.entries(LAB_LABELS)) {
       assert(labLabel(abbreviation).includes(abbreviation) && labLabel(abbreviation).includes(label), `${abbreviation} keeps both the label and the source value`);
     }
     for (const corpus of ['P-Krea', 'fP-Gluk', 'B-HbA1c', 'P-TSH']) assert(LAB_LABELS[corpus], `${corpus} is what the Veil import writes`);
   });
-  it('renders the label with the abbreviation in the row header', () => {
+  it('draws one GroupedRecordRow per test with the plain name and the abbreviation beside it', () => {
     const section = sectionOf('section-labs');
-    const headers = [...section.querySelectorAll('tbody th')].map(cell => cell.textContent);
-    assert.deepEqual(headers, ['Pitkäaikaissokeri (B-HbA1c)', 'Kreatiniini (P-Krea)', 'X-Tuntematon']);
-    assert.equal(section.textContent.match(/3 tutkimusta/)?.[0], '3 tutkimusta', 'the lab count is unchanged');
+    assert.deepEqual(groupNamesOf(section), ['Pitkäaikaissokeri', 'Kreatiniini', 'X-Tuntematon']);
+    const rows = groupRowsOf(section);
+    assert(rows[0].textContent.includes('B-HbA1c') && rows[1].textContent.includes('P-Krea'), 'the abbreviation stays visible in the code slot');
+    assert.equal([...rows[2].textContent.matchAll(/X-Tuntematon/g)].length, 1, 'an unknown abbreviation is its own name and is not repeated as a code');
+    assert(rows[0].textContent.includes('Viimeisin 52.104 mmol/mol · 20.2.2026'), 'the summary is the newest value exactly as the source writes it');
+    assert.equal(section.textContent.match(/3 tutkimusta · 4 tulosta/)?.[0], '3 tutkimusta · 4 tulosta', 'the count line counts tests and results');
+    for (const id of ['lab-hba1c', 'lab-hba1c-old', 'lab-krea', 'lab-unknown']) {
+      assert.equal(section.querySelector(`#source-${id}`)?.closest('ul')?.className, 'visually-hidden', `${id} is anchored while closed`);
+    }
+    assert.deepEqual(groupLabRows([{ id: 'n', date: '2026-02-20', payload: { tutkimus: 'B-HbA1c', arvo: '52.104' } },
+      { id: 'o', date: '2025-11-07', payload: { tutkimus: 'B-HbA1c', arvo: '47.993' } }]).map(group => [group.abbreviation, group.records.map(row => row.id), group.first.id, group.count]),
+    [['B-HbA1c', ['n', 'o'], 'o', 2]]);
+  });
+  it('opens a test to every result newest first, the value exactly as the source writes it', async () => {
+    await withLiveBriefing(foldProps, async ({ document, click }) => {
+      const live = document.getElementById('section-labs');
+      const hba1c = groupRowsOf(live)[0];
+      await click(hba1c);
+      const records = [...document.getElementById(hba1c.getAttribute('aria-controls')).querySelectorAll('li')];
+      assert.deepEqual(records.map(item => item.id), ['source-lab-hba1c', 'source-lab-hba1c-old']);
+      assert(records[0].textContent.includes('20.2.2026 · 52.104 mmol/mol · koholla'), 'the newest result with its unit and interpretation');
+      assert(records[1].textContent.includes('7.11.2025 · 47.993') && !records[1].textContent.includes('mmol/mol'),
+        'an older result with three decimals as the source writes it, and no unit the source does not carry');
+      assert(live.textContent.includes('2 tulosta · ensimmäinen 7.11.2025'), 'the detail line');
+      assert(!live.textContent.includes('Viitearvo') && !live.textContent.includes('Tulkinta'), 'no empty column headings');
+    });
   });
 });
 
-// ---- Decision-1's findings as blue information rows in the attention panel (owner, 2026-10-14) ----
+// ---- W3: what Decision-1 lifted, shown once, neutrally, and coherently ----
 {
   const { describe, it } = await import('node:test');
-  const { decisionHighlights, DECISION_HIGHLIGHT_LIMIT, picturePresentation } = await import('./challenge-demo.mjs');
+  const { decisionHighlights, liftedRecordIds, DECISION_HIGHLIGHT_LIMIT, picturePresentation, situationWord } = await import('./challenge-demo.mjs');
+  const note = (record_id, status, time_sensitivity, confidence, urgency) => ({
+    record_id, status, time_sensitivity, relevance_confidence: confidence,
+    gate_probabilities: urgency ? { urgency } : {},
+  });
+  const record = (record_id, record_type, payload, topic = 'hoito') => ({
+    record_id, record_type, topic, payload, recorded_at: '2026-06-01T00:00:00Z', temporal_status: 'current', selection_reasons: [],
+  });
+  const base = {
+    records: { priority: [record('dx-1', 'diagnoosi', { nimi: 'Kohonnut verenpaine', icd10: 'I10' }),
+                          record('med-1', 'lääkitys', { lääke: 'amlodipiini' }),
+                          record('lab-1', 'tutkimustulos', { tutkimus: 'B-HbA1c' }),
+                          record('note-1', 'vapaateksti', { otsikko: 'Käynti' })], accessible_other: [] },
+    selection: {
+      decision_status: 'complete',
+      baseline_record_ids: ['dx-1', 'med-1', 'lab-1'], additional_record_ids: ['note-1'], emphasized_record_ids: ['dx-1', 'med-1'],
+      decision_notes: [note('dx-1', 'relevant', 'current', 0.9, { 0: 0.1, 1: 0.2, 2: 0.7 }),
+                       note('med-1', 'relevant', 'current', 0.6, { 0: 0.8, 1: 0.2 }),
+                       note('lab-1', 'unclear', 'current', 0.4, {}),
+                       note('note-1', 'relevant', 'historical', 0.8, { 0: 0.5, 1: 0.5 })],
+    },
+  };
   describe('decisionHighlights', () => {
-    const note = (record_id, status, time_sensitivity, confidence, urgency) => ({
-      record_id, status, time_sensitivity, relevance_confidence: confidence,
-      gate_probabilities: urgency ? { urgency } : {},
-    });
-    const record = (record_id, record_type, payload, topic = 'hoito') => ({
-      record_id, record_type, topic, payload, recorded_at: '2026-06-01T00:00:00Z', temporal_status: 'current', selection_reasons: [],
-    });
-    const base = {
-      records: { priority: [record('dx-1', 'diagnoosi', { nimi: 'Kohonnut verenpaine', icd10: 'I10' }),
-                            record('med-1', 'lääkitys', { lääke: 'amlodipiini' }),
-                            record('lab-1', 'tutkimustulos', { tutkimus: 'B-HbA1c' }),
-                            record('note-1', 'vapaateksti', { otsikko: 'Käynti' })], accessible_other: [] },
-      selection: {
-        decision_status: 'complete',
-        baseline_record_ids: ['dx-1', 'med-1', 'lab-1'], additional_record_ids: ['note-1'], emphasized_record_ids: ['dx-1', 'med-1'],
-        decision_notes: [note('dx-1', 'relevant', 'current', 0.9, { 0: 0.1, 1: 0.2, 2: 0.7 }),
-                         note('med-1', 'relevant', 'current', 0.6, { 0: 0.8, 1: 0.2 }),
-                         note('lab-1', 'unclear', 'current', 0.4, {}),
-                         note('note-1', 'relevant', 'historical', 0.8, { 0: 0.5, 1: 0.5 })],
-      },
-    };
-    it('names what Decision-1 added, what it put first and what it called relevant and current, titled by the record', () => {
+    it('names what Decision-1 added, what it put first and what it called relevant and current, titled by the record, with the verdict', () => {
       const items = decisionHighlights(picturePresentation(base));
       assert.deepEqual(items.map(i => [i.kind, i.id, i.title]), [
         ['added', 'note-1', 'Käynti'], ['lead', 'dx-1', 'Kohonnut verenpaine'], ['relevant', 'med-1', 'amlodipiini']]);
-      assert(items[1].text.includes('selvitä tällä käynnillä'), 'the lead carries the urgency legend word');
+      assert.equal(items[1].text, 'Decision-1 asetti ensimmäiseksi: selvitä tällä käynnillä', 'the lead carries the urgency legend word');
+      assert.equal(items[0].text, 'Decision-1 nosti esiin kirjauksen, jota sääntöpohjainen valinta ei valinnut');
+      assert.equal(items[2].text, 'Decision-1: olennainen tälle käynnille ja ajankohtainen');
+      assert.deepEqual(items.map(i => [i.status, i.timeSensitivity, i.urgencyLabel, i.date]), [
+        ['relevant', 'historical', 'ei vaikuta ajoitukseen', '2026-06-01T00:00:00Z'],
+        ['relevant', 'current', 'selvitä tällä käynnillä', '2026-06-01T00:00:00Z'],
+        ['relevant', 'current', 'ei vaikuta ajoitukseen', '2026-06-01T00:00:00Z']],
+      'each item carries the note it is about, so the UI writes the verdict and never derives a second one');
       assert(items.length <= DECISION_HIGHLIGHT_LIMIT);
+    });
+    it('chooses the lead only among notes Decision-1 called relevant (the live contradiction: fP-Gluk on 4293)', () => {
+      // An irrelevant note with the highest expected urgency used to become the lead: the block said "asetti
+      // ensimmäiseksi", the row said "Taustatieto", the closed panel said "epäolennainen". Never again.
+      const contradiction = { ...base, selection: { ...base.selection, additional_record_ids: [],
+        decision_notes: [note('lab-1', 'irrelevant', 'current', 0.9, { 3: 0.1, 4: 0.9 }),
+                         note('dx-1', 'relevant', 'historical', 0.9, { 0: 0.4, 1: 0.6 }),
+                         note('med-1', 'unclear', 'current', 0.5, { 4: 1 })] } };
+      const items = decisionHighlights(picturePresentation(contradiction));
+      assert.deepEqual(items.map(i => [i.kind, i.id]), [['lead', 'dx-1']], 'the only relevant note leads; irrelevant and unclear never do');
+      assert.equal(items[0].text, 'Decision-1 asetti ensimmäiseksi: tavanomainen käynti');
+      assert.deepEqual([...liftedRecordIds(picturePresentation(contradiction))], ['dx-1']);
+      const noneRelevant = { ...contradiction, selection: { ...contradiction.selection,
+        decision_notes: contradiction.selection.decision_notes.filter(n => n.record_id !== 'dx-1') } };
+      assert.deepEqual(decisionHighlights(picturePresentation(noneRelevant)), [], 'no relevant note, no lead at all');
     });
     it('is empty when Decision-1 did not answer, and never names a record the picture does not render', () => {
       assert.deepEqual(decisionHighlights(picturePresentation({ ...base, selection: { ...base.selection, decision_status: 'not_run' } })), []);
       const withheld = { ...base, selection: { ...base.selection, additional_record_ids: ['note-1', 'withheld-9'] } };
       assert(!decisionHighlights(picturePresentation(withheld)).some(i => i.id === 'withheld-9'));
     });
-    it('renders as blue information rows in the attention panel with a source link', () => {
+    it('marks the lifted sources in the presentation from the same list, so a row and the block cannot disagree', () => {
+      const presentation = picturePresentation(base);
+      assert.deepEqual(presentation.sources.filter(s => s.lifted).map(s => s.id).sort(), ['dx-1', 'med-1', 'note-1']);
+      assert.equal(presentation.sources.find(s => s.id === 'lab-1').lifted, false);
+    });
+  });
+  describe('LiftedItems', () => {
+    const render = picture => renderToStaticMarkup(React.createElement(LiftedItems, { presentation: picturePresentation(picture) }));
+    it('is the block "Nostettu tälle käynnille": one neutral Ehdotus item per pick, first pick first, the verdict in words, a source link', () => {
+      const html = render(base);
+      const doc = new JSDOM(html).window.document;
+      assert.equal(doc.querySelector('#section-lifted h2')?.textContent, 'Nostettu tälle käynnille');
+      assert.equal(doc.querySelector('.brief-lifted-basis')?.textContent, 'Järjestysperuste, ei hoidon kiireellisyys · Decision-1 arvioi 4 kirjausta');
+      const items = [...doc.querySelectorAll('.brief-lifted-item')];
+      assert.deepEqual(items.map(item => item.querySelector('.t-body-strong').textContent),
+        ['Käynti · 1.6.2026', 'Kohonnut verenpaine · 1.6.2026', 'amlodipiini · 1.6.2026'], 'fact = title · d.m.yyyy, first pick first');
+      assert.deepEqual(items.map(item => item.querySelector('.brief-lifted-lines .t-caption').textContent), [
+        'Decision-1 nosti esiin kirjauksen, jota sääntöpohjainen valinta ei valinnut',
+        'Decision-1 asetti ensimmäiseksi: selvitä tällä käynnillä',
+        'Decision-1: olennainen tälle käynnille ja ajankohtainen']);
+      for (const item of items) {
+        assert.equal(item.querySelector('.brief-lifted-slot span span')?.textContent, 'Ehdotus', 'the tag is the neutral Tag reading Ehdotus');
+        assert(!item.querySelector('.icon, [class*="status"], [class*="brief-info"], [class*="brief-warning"], [class*="brief-critical"]'),
+          'no icon, no status tag, no tone anywhere in the item');
+      }
+      assert.deepEqual(items.map(item => item.querySelector('a')?.getAttribute('href')), ['#source-note-1', '#source-dx-1', '#source-med-1'],
+        'each item links Lähde to its record');
+      assert(items.every(item => item.querySelector('a').textContent === 'Lähde'));
+      assert.equal(doc.querySelector('.brief-lifted-footer button')?.textContent, 'Hylkää ehdotukset');
+      assert(doc.querySelector('.brief-lifted-footer')?.textContent.includes('Kaikki kirjaukset alla'));
+      assert(!html.includes('brief-info') && !html.includes('_caution'), 'never the info tone, never the CautionItem');
+    });
+    it('says, in words, when the assessment is not available for this view, and when nothing was lifted', () => {
+      for (const status of ['unavailable', 'disabled', 'no_input', 'not_run']) {
+        const doc = new JSDOM(render({ ...base, selection: { ...base.selection, decision_status: status } })).window.document;
+        assert.equal(doc.querySelector('#section-lifted h2')?.textContent, 'Nostettu tälle käynnille', `${status}: the block is still there`);
+        assert.equal(doc.querySelector('.brief-lifted-note')?.textContent,
+          'Decision-1:n arvio ei ole saatavilla tässä näkymässä; kirjaukset näytetään sääntöpohjaisen valinnan mukaan.', status);
+        assert(!doc.querySelector('.brief-lifted-item, .brief-lifted-basis, .brief-lifted-footer'), `${status}: no items, no count, no footer`);
+      }
+      const nothing = new JSDOM(render({ ...base, selection: { ...base.selection, additional_record_ids: [],
+        decision_notes: base.selection.decision_notes.map(n => ({ ...n, status: 'unclear' })) } })).window.document;
+      assert.equal(nothing.querySelector('.brief-lifted-note')?.textContent, 'Decision-1 ei nostanut kirjauksia esiin.');
+      // note-1 is no longer an addition, so it is not rendered and its note is not counted: N is the notes over rendered records.
+      assert.equal(nothing.querySelector('.brief-lifted-basis')?.textContent, 'Järjestysperuste, ei hoidon kiireellisyys · Decision-1 arvioi 3 kirjausta');
+      assert(!nothing.querySelector('.brief-lifted-item, .brief-lifted-footer'), 'nothing to dismiss when nothing was lifted');
+      const one = new JSDOM(render({ ...base, selection: { ...base.selection, decision_notes: [base.selection.decision_notes[0]] } })).window.document;
+      assert(one.querySelector('.brief-lifted-basis').textContent.endsWith('Decision-1 arvioi 1 kirjauksen'), 'the singular is a Finnish singular');
+    });
+    it('is mounted in the briefing near the top, before the record columns', () => {
       const html = renderToStaticMarkup(React.createElement(PictureBriefing, { picture: base }));
-      assert(html.includes('brief-info') && html.includes('Decision-1.'), 'the rows use the info tone and the Decision-1 keyword');
-      assert(html.includes('nosti esiin kirjauksen') && html.includes('#source-note-1'), 'the added record is linked');
-      assert(!html.includes('(järjestysperuste, ei hoidon kiireellisyys)'), 'no ordering caveat on the briefing');
+      assert(html.indexOf('id="section-lifted"') > 0 && html.indexOf('id="section-lifted"') < html.indexOf('brief-record-columns'),
+        'the lifted block precedes the record columns');
+      assert(!html.includes('<strong>Decision-1.</strong>'), 'the blue Decision-1 rows are gone from the attention panel');
+    });
+    it('"Hylkää ehdotukset" collapses the items to one line, client-side only, and "Näytä uudelleen" restores them', async () => {
+      await withLiveBriefing({ picture: base }, async ({ document, click }) => {
+        const block = document.getElementById('section-lifted');
+        assert.equal(block.querySelectorAll('.brief-lifted-item').length, 3);
+        await click([...block.querySelectorAll('button')].find(b => b.textContent === 'Hylkää ehdotukset'));
+        assert.equal(block.querySelectorAll('.brief-lifted-item').length, 0, 'the items are collapsed');
+        assert(block.querySelector('.brief-lifted-note')?.textContent.startsWith('Ehdotukset hylätty tältä käynniltä ·'), 'to one line');
+        assert(!block.querySelector('.brief-lifted-footer button'), 'the dismiss button is gone while dismissed');
+        assert(block.querySelector('.brief-lifted-footer')?.textContent.includes('Kaikki kirjaukset alla'), 'the footer line stays');
+        await click([...block.querySelectorAll('button')].find(b => b.textContent === 'Näytä uudelleen'));
+        assert.equal(block.querySelectorAll('.brief-lifted-item').length, 3, 'restored');
+      });
+    });
+  });
+  describe('RuleBasedAssessment and the neutral risk row (the suggestion pattern)', () => {
+    it('maps every situation_type in situation.json to a Finnish word and capitalises an unknown one', () => {
+      assert.deepEqual(['ei_arvioitavissa', 'akuutti', 'mielenterveys', 'sosiaalipalvelut', 'krooninen', 'ikääntyminen', 'yleinen'].map(situationWord),
+        ['Ei arvioitavissa', 'Akuutti', 'Mielenterveys', 'Sosiaalipalvelut', 'Pitkäaikaissairaus', 'Ikääntyminen', 'Yleinen']);
+      assert.equal(situationWord('valmistelu'), 'Valmistelu');
+      assert.equal(situationWord(undefined), 'Ei arvioitavissa');
+      assert.equal(situationWord(''), 'Ei arvioitavissa');
+    });
+    it('renders the tag, the sentence, the basis caption and the actions as a library task list', () => {
+      const html = renderToStaticMarkup(React.createElement(PictureBriefing, { picture: { ...base,
+        situation: { situation_type: 'krooninen', confidence: 'medium' }, risk: { risk_level: 'matala', reason: 'Ei kohonneen riskin tunnusmerkkejä' },
+        actions: ['Tarkista lääkitys.', 'Sovi seuranta.'] } }));
+      const doc = new JSDOM(html).window.document;
+      const block = doc.getElementById('section-decision');
+      assert.equal(block.querySelector('h2')?.textContent, 'Sääntöpohjainen arvio');
+      const suggestion = block.querySelector('.brief-suggestion');
+      assert.equal(suggestion.querySelector('span span')?.textContent, 'Sääntöpohjainen arvio', 'the neutral tag names who proposes');
+      assert.equal(suggestion.querySelector('.brief-suggestion-copy p')?.textContent, 'Kirjauksista johdettu triage-signaali (ei palvelutilanne): Pitkäaikaissairaus');
+      assert.equal(suggestion.querySelector('.brief-suggestion-copy .t-caption')?.textContent, 'Perustuu 4 kirjaukseen');
+      assert(!block.textContent.includes('krooninen'), 'the raw value never shows');
+      const tasks = [...block.querySelectorAll('ul.brief-suggestion-tasks li')];
+      assert.deepEqual(tasks.map(li => li.querySelector('input[type="checkbox"]') !== null), [true, true], 'each action is a task with a checkbox');
+      assert.deepEqual(tasks.map(li => li.querySelector('.t-caption')?.textContent), ['Sääntöpohjainen ehdotus', 'Sääntöpohjainen ehdotus']);
+      assert(block.textContent.includes('Tarkista lääkitys.') && block.textContent.includes('Sovi seuranta.'));
+      assert(!tasks.some(li => li.querySelector('input').hasAttribute('checked')), 'uncontrolled, unchecked by default');
+      // The neutral risk row in the attention panel uses the same pattern, in the status group.
+      const status = [...doc.querySelectorAll('#section-alerts .brief-alert-group')].at(-1);
+      assert.equal(status.querySelector('h3')?.textContent, 'Tilanne');
+      assert.equal(status.querySelector('.brief-suggestion span span')?.textContent, 'Sääntöpohjainen arvio');
+      assert(status.querySelector('.brief-suggestion')?.textContent.includes('Matala riski. Ei kohonneen riskin tunnusmerkkejä'));
+      assert(!status.querySelector('.icon, .brief-risk'), 'no icon and no alert box on a neutral risk');
+    });
+    it('keeps the yleinen rule: the general row renders no block', () => {
+      const html = renderToStaticMarkup(React.createElement(PictureBriefing, { picture: { ...base, situation: { situation_type: 'yleinen', confidence: 'low' } } }));
+      assert(!html.includes('id="section-decision"'));
     });
   });
 }

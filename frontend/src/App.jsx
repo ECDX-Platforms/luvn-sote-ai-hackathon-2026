@@ -143,6 +143,10 @@ export default function App() {
   });
   const [picture, setPicture] = useState(null);
   const [loading, setLoading] = useState(false);
+  // Bumped by the pre-fill block's retry: the picture effect re-runs and fetches the same route again. The
+  // backend has no refresh parameter, so this is a plain re-fetch of `(encounter, mode)`; the picture on
+  // screen stays until the new one arrives.
+  const [pictureAttempt, setPictureAttempt] = useState(0);
   const [error, setError] = useState("");
   // The address named an encounter this catalogue does not carry. The briefing says so; it loads nothing.
   const [unknownEncounter, setUnknownEncounter] = useState(false);
@@ -422,7 +426,13 @@ export default function App() {
       window.clearTimeout(deadline);
       controller.abort();
     };
-  }, [encounterId, mode]);
+  }, [encounterId, mode, pictureAttempt]);
+
+  function retryPrefill() {
+    setLoading(true);
+    setError("");
+    setPictureAttempt(attempt => attempt + 1);
+  }
 
   // What this professional already decided on this encounter, so a reload renders a decided proposal as
   // decided instead of offering the same three buttons again. It is a separate route from the Picture on
@@ -905,6 +915,8 @@ export default function App() {
             prefillReviews={prefillReviews}
             onPrefillReview={submitPrefillReview}
             onRetryPrefillReview={retryPrefillReview}
+            onRetryPrefill={retryPrefill}
+            prefillRetrying={loading}
             onOpenTechnical={openTechnical}
           />}
           {/* The technical page renders from the same Picture and the same catalogue row as the briefing. */}

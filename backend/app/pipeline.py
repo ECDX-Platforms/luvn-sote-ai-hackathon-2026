@@ -29,8 +29,8 @@ from .encounters import Encounter, resolve_encounter
 from .intended_use import INTENDED_USE, INTENDED_USE_VERSION
 from . import llm
 from .narration import Preparation, narrate, narration_fields
-from .picture import (DuplicateFact, FormCatalogueEntry, DecisionNoteOutcome, GroundingOutcome, Picture,
-                      PipelineStageTrace, RecordView, Records, SelectionProvenance)
+from .picture import (DuplicateFact, FormCatalogueEntry, DecisionNoteOutcome, GroundingOutcome, NarrativeSentence,
+                      Picture, PipelineStageTrace, RecordView, Records, SelectionProvenance)
 from .policy import Scoped, cut_for_encounter
 from .proposals import proposals_for_encounter
 from .selection import RULE_VERSION, apply_decision, baseline
@@ -143,7 +143,9 @@ async def _build_resolved_picture(
     started_at = time.monotonic() if started_at is None else started_at
     preparation_deadline = started_at + PREPARATION_WINDOW_S if preparation_deadline is None else preparation_deadline
     policy_started = time.monotonic()
-    permitted = cut_for_encounter(persona, encounter)
+    # One cut, with the day the picture is built for: permission, and then the date. Nothing below reads a
+    # record dated after `today`; the count of those travels on the picture, never their ids.
+    permitted = cut_for_encounter(persona, encounter, today)
     telemetry_record("policy.cut", policy_started, status="complete")
     baseline_records, reasons = baseline(permitted, today)
     # Selection changes the briefing input only; deterministic outputs continue
@@ -244,6 +246,12 @@ async def _build_resolved_picture(
         conflicts=decision["conflicts"],
         narrative=grounding.narrative,
         citations=citation_views,
+        # Per-sentence sources keep only ids the picture renders, the same cut `citation_views` takes.
+        narrative_sentences=[
+            NarrativeSentence(sentence_id=row.sentence_id, text=row.text,
+                              record_ids=[record_id for record_id in row.record_ids if record_id in selected_by_id])
+            for row in grounding.narrative_sentences
+        ],
         records=Records(
             priority=priority_views,
             accessible_other=[row for row in selected_views if row.record_id not in priority_ids],
@@ -269,6 +277,7 @@ async def _build_resolved_picture(
             decision_status=selection.decision_status,
             decision_notes=note_outcomes,
             decision_elapsed_ms=decision_elapsed_ms,
+            future_dated_count=permitted.future_dated_count,
             **coverage,
         ),
         assessments=assessments,

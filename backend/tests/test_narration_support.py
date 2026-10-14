@@ -313,6 +313,8 @@ def test_pipeline_accepts_only_complete_supported_output_and_reports_each_stage(
     outcome = asyncio.run(narration.narrate(scoped, [source_id], today=TODAY, preparation=_preparation()))
     fields = narration.narration_fields(outcome)
     assert outcome.grounding.narrative == "Asiakas kertoo tarvitsevansa tukea."
+    assert [(row.sentence_id, row.text, row.record_ids) for row in outcome.grounding.narrative_sentences] == [
+        ("s1", "Asiakas kertoo tarvitsevansa tukea.", [source_id])]
     assert fields["narration_generation_status"] == "generated"
     assert fields["narration_generation_path"] == "direct_chat_completions"
     assert fields["narration_support_status"] == "supported"
@@ -896,3 +898,48 @@ def test_a_citation_that_resolves_to_nothing_is_an_invalid_candidate_not_a_verif
     source_id = scoped.ids[0]
     repointed = validate_fresh_candidate(scoped, candidate, [source_id])
     assert repointed.reason == "invalid_membership" and repointed.retry_feedback == (("s1", (source_id,)),)
+
+
+def test_accepted_sentences_carry_their_own_verified_sources_in_order():
+    """`narrative_sentences` is the per-sentence view of the accepted text: each row keeps only the ids the
+    verifier affirmed for that sentence, a withheld sentence has no row, and `narrative` is unchanged."""
+    scoped = cut(PERSONA, "laakari")
+    first, second, third = scoped.ids[0], scoped.ids[1], scoped.ids[2]
+    candidate = llm.FreshNarration(sentences=[
+        llm.NarrationSentence(sentence_id="s1", text=" Ensimmäinen lause. ", source_ids=[first, second]),
+        llm.NarrationSentence(sentence_id="s2", text="Hylätty lause.", source_ids=[second]),
+        llm.NarrationSentence(sentence_id="s3", text="Kolmas lause.", source_ids=[third]),
+    ])
+    validation = validate_fresh_candidate(scoped, candidate, [first, second, third])
+    result, status, _ = accept_supported_candidate(validation, {
+        "verdicts": [
+            {"sentence_id": "s1", "verdict": "supported", "supporting_record_ids": [first]},
+            {"sentence_id": "s2", "verdict": "unsupported", "supporting_record_ids": [second]},
+            {"sentence_id": "s3", "verdict": "supported", "supporting_record_ids": [third]},
+        ]
+    })
+    assert status == "partial"
+    assert result.narrative == "Ensimmäinen lause. Kolmas lause."
+    assert [(row.sentence_id, row.text, row.record_ids) for row in result.narrative_sentences] == [
+        ("s1", "Ensimmäinen lause.", [first]),
+        ("s3", "Kolmas lause.", [third]),
+    ]
+    assert second not in {record_id for row in result.narrative_sentences for record_id in row.record_ids}
+    assert "Hylätty lause." not in result.model_dump_json()
+
+
+def test_rejected_candidate_has_no_narrative_sentences():
+    scoped, source_id, validation = _scoped_and_candidate()
+    result, _status, _ = accept_supported_candidate(validation, {
+        "verdicts": [{"sentence_id": "s1", "verdict": "unsupported", "supporting_record_ids": [source_id]}],
+    })
+    assert result.narrative is None and result.narrative_sentences == []
+
+
+def test_a_cache_row_without_narrative_sentences_still_reads_back():
+    """Cache rows written before the field existed carry no `narrative_sentences`; the Picture must still
+    validate so the client can fall back to the flat narrative with the citations as its sources."""
+    from app.picture import Picture
+    schema_keys = set(Picture.model_json_schema()["properties"])
+    assert "narrative_sentences" in schema_keys
+    assert Picture.model_fields["narrative_sentences"].default_factory is not None

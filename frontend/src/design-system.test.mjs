@@ -1,7 +1,7 @@
 // Design-system gate, vendored half.
 //
 // The design authority is the Swiss 1 baseline styleguide as implemented by the vendored
-// `@luvn/component-library` at 014b02a (ADR-0026, which supersedes ADR-0016's vendor choice). This file makes
+// `@luvn/component-library` at f505b9b (ADR-0026 and ADR-0029, which supersedes ADR-0016's vendor choice). This file makes
 // the vendored copy *enforced* rather than trusted:
 // every pinned file is checked against the SHA-256 recorded in PROVENANCE.md, and the token names the
 // product depends on must exist. A hand-edit of a generated token is therefore a test failure, not a
@@ -91,7 +91,7 @@ assert.deepEqual(Object.keys(PINNED).filter(path => !VENDORED.includes(path)), [
 
 // Every vendored file must be copied from the one pinned revision. A checksum proves the bytes are unchanged;
 // this proves each file's recorded source is that revision, and that no file is left without one.
-const CURRENT_LIBRARY = '014b02a';
+const CURRENT_LIBRARY = 'f505b9b';
 assert.deepEqual([...new Set(Object.values(SOURCES))], [CURRENT_LIBRARY],
   'every PROVENANCE row must name the pinned library revision (ADR-0026)');
 assert.deepEqual(VENDORED.filter(path => !(path in SOURCES)), [],
@@ -119,8 +119,8 @@ assert(PINNED['tokens/figma-export.json'], 'the Figma export is pinned — it is
 // revision, fails here rather than in a review.
 assert(/^\|\s*Repository\s*\|\s*\*\*`ECDX-Platforms\/LUVN-Component-Library`\*\*/m.test(provenance),
   'PROVENANCE names ECDX-Platforms/LUVN-Component-Library as the repository (ADR-0026)');
-assert(/^\|\s*Revision\s*\|\s*\*\*`014b02a`\*\*/m.test(provenance),
-  'PROVENANCE pins the revision to the commit 014b02a, not a branch (ADR-0026)');
+assert(/^\|\s*Revision\s*\|\s*\*\*`f505b9b`\*\*/m.test(provenance),
+  'PROVENANCE pins the revision to the commit f505b9b, not a branch (ADR-0026)');
 assert(/^\|\s*Package\s*\|\s*`@luvn\/component-library`/m.test(provenance),
   'PROVENANCE names the package @luvn/component-library');
 assert(provenance.includes('`fileKey P8E4RKubznUkk8vi9765oW`'),
@@ -761,6 +761,10 @@ const LIBRARY_CLASSES = new Set(['icon', 'visually-hidden', 'muted', 'prose']);
 const SEMANTIC_HOOKS = new Set([
   'brief-form-overview', 'brief-selected-records', 'brief-heading-group', 'brief-omission-fact',
   'brief-decision-assessed',
+  // The library MainSide's marker on the record section (W1): the component owns its layout; the class only names it.
+  'brief-record-columns',
+  // Markers on the library SourceReference and Dialog (W2): the components own their styling; the classes name them.
+  'brief-source-reference', 'brief-source-dialog',
 ]);
 const appliedClasses = new Set();
 for (const { source } of JSX_SOURCES) {

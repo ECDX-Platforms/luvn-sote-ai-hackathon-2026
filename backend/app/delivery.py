@@ -249,7 +249,7 @@ USEFUL_PAYLOAD_KEYS = {
     source.MEDICATION: {"lääke"}, source.FREE_TEXT: {"teksti"},
     # `mittaus` is the one type whose useful keys are read as an INTERSECTION rather than a subset
     # (see the call sites): a measurement row is useful when it carries ANY of the four things the tiles
-    # render, because one row is one measurement. The useful set was once
+    # render, because one row is one measurement. Before 2026-10-09 the useful set was
     # `{"verenpaine", "syke"}` while the render set was `{"paino_kg", "pituus_cm"}` — disjoint, so no
     # measurement row could ever reconcile clean, and a delivery containing measurements could never reach
     # `status: ready`. The fix is that all four are now rendered; the useful set is therefore the render
@@ -259,6 +259,31 @@ USEFUL_PAYLOAD_KEYS = {
     source.LAB_RESULT: {"tutkimus"}, source.APPOINTMENT: {"kanava"},
     source.DECISION: {"päätös"},
 }
+
+
+# A decision text that announces itself as a draft. The VEIL social-work export carries decision drafts whose
+# text begins with a `# PÄÄTÖSLUONNOS` heading and no envelope `state`, so the briefing showed them as settled
+# decisions (seen in the live app 2026-10-14). Leading `#`s and whitespace are allowed; the word must stand alone.
+_DRAFT_DECISION_HEADING = re.compile(r"^\s*#*\s*PÄÄTÖSLUONNOS(?![\w])", re.IGNORECASE)
+# Where a decision text lives: the `päätös` payload of a decision record, and the `teksti` of the social-work note
+# the VEIL builder writes from the `decision_text` source field (`scripts/build_veil_corpus.py`, `_social_note`).
+_DECISION_TEXT_KEYS = {source.DECISION: ("päätös", "teksti"), source.FREE_TEXT: ("teksti", "päätös")}
+
+
+def derived_record_state(record: Record) -> Record:
+    """The record with `state = "draft"` derived from its own text, when the envelope stated no state.
+
+    A stated state always wins; the text is never altered. Applied where a record is built from a delivery
+    row (`_bind_record`, so the file import and the SQL loader derive the same state) and where a stored
+    record is read back, so a corpus loaded before the rule carries the mark without a reload.
+    """
+    if record.state is not None:
+        return record
+    for key in _DECISION_TEXT_KEYS.get(record.record_type, ()):
+        text = record.payload.get(key)
+        if isinstance(text, str) and _DRAFT_DECISION_HEADING.match(text):
+            return record.model_copy(update={"state": "draft"})
+    return record
 
 
 class DeliveryShapeError(ValueError):
@@ -601,9 +626,9 @@ def _bind_record(row: dict, profiles: dict[str, dict]) -> Record:
                                  code="invalid_payload", record_id=record_id)
     normalized, _used = _normalize_payload(RECORD_TYPE_ALIASES[record_type], payload)
     try:
-        return Record.model_validate({**row, "record_type": RECORD_TYPE_ALIASES[record_type],
-                                      "payload": normalized, "source": "delivery",
-                                      "source_person_id": key})
+        return derived_record_state(Record.model_validate({**row, "record_type": RECORD_TYPE_ALIASES[record_type],
+                                                           "payload": normalized, "source": "delivery",
+                                                           "source_person_id": key}))
     except ValidationError as exc:
         # A Pydantic failure is a refusal with the same shape as every other one, so a quarantine load can
         # stage it by code and the report can name the field and the offending value.
@@ -1497,7 +1522,7 @@ class DeliveryIndex(Mapping[str, Persona]):
                 f"there; rebuild the index with "
                 f"`python backend/scripts/reconcile_delivery.py import <corpus> --out {self._dir}`",
                 code="missing_person_file", values={"path": str(person_path)})
-        records = [Record.model_validate_json(line) for line in
+        records = [derived_record_state(Record.model_validate_json(line)) for line in
                    person_path.read_text(encoding="utf-8").splitlines() if line.strip()]
         # The index's binding and the file's own records must name the same source person. A file can be
         # pointed at from a foreign `persona_id` row even when the path itself is legal, which would serve

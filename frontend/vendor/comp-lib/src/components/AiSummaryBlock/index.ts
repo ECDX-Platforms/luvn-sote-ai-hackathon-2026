@@ -6,4 +6,5 @@ export type {
   AiSummaryFeedback,
   AiSummaryReason,
   AiSummaryHeadingLevel,
+  AiSummaryBlockLabels,
 } from './AiSummaryBlock';

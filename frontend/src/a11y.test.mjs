@@ -11,6 +11,7 @@ import { JSDOM } from 'jsdom';
 import { createServer } from 'vite';
 import { fileURLToPath } from 'node:url';
 import postcss from '../node_modules/postcss/lib/postcss.mjs';
+import { picturePresentation } from './challenge-demo.mjs';
 
 const AXE_SOURCE = fs.readFileSync(
   fileURLToPath(new URL('../node_modules/axe-core/axe.min.js', import.meta.url)),
@@ -246,13 +247,14 @@ let ChatPanel;
 let ChatRail;
 let PictureBriefing;
 let AssistantPane;
+let SourceRecordDialog;
 let LENS_SCOPE_NOTE;
 let TechnicalView;
 let App;
 let RolePicker;
 let CasePicker;
 try {
-  ({ PictureBriefing, AssistantPane, LENS_SCOPE_NOTE } = await vite.ssrLoadModule('/src/ChallengeDemo.jsx'));
+  ({ PictureBriefing, AssistantPane, LENS_SCOPE_NOTE, SourceRecordDialog } = await vite.ssrLoadModule('/src/ChallengeDemo.jsx'));
   ({ TechnicalView } = await vite.ssrLoadModule('/src/TechnicalView.jsx'));
   ({ ChatPanel, ChatRail } = await vite.ssrLoadModule('/src/ChatPanel.jsx'));
   ({ default: App, RolePicker, CasePicker } = await vite.ssrLoadModule('/src/App.jsx'));
@@ -336,14 +338,38 @@ assert(briefingHtml.includes('brief-record-state') && briefingHtml.includes('Hyv
   'the audited briefing includes a lifecycle badge');
 assert(briefingHtml.includes('brief-record-draft') && briefingHtml.includes('Luonnos'),
   'the audited briefing includes a draft record and its lifecycle badge');
-assert(briefingHtml.includes('brief-record-side') && briefingHtml.includes('Tilanne ja hälytykset')
+assert(briefingHtml.includes('aria-label="Ammattilaisen tilanne ja tarkistettavat asiat"') && briefingHtml.includes('Tilanne ja hälytykset')
   && briefingHtml.includes('Lääkitykset') && briefingHtml.includes('Synteettinen lääke'),
   'the audited briefing includes the populated right rail');
-// This fixture withholds one generated sentence, so the audited render must carry the occurrence caption
-// beside the summary — axe audits it here, and the panel it used to appear in no longer names a sentence.
-assert(briefingHtml.includes('Osa tämän koosteen koneellisesti tuotetusta tekstistä jätettiin näyttämättä,'
-  + ' koska sitä ei voitu vahvistaa lähteisiin.'),
-'the audited render includes the withheld-occurrence caption');
+// W2: the summary is the library AiSummaryBlock. This fixture withholds one generated sentence, so the audited
+// render carries the block's withheld count in Finnish; every fixed word is Finnish and no library default
+// (English) renders. The one accepted sentence carries one SourceReference (the fixture has no per-sentence
+// rows, so the flat narrative is one sentence whose source is the citation).
+assert(briefingHtml.includes('jätettiin näyttämättä: 1 lause (sitä ei voitu vahvistaa lähteisiin)'),
+  'the audited render includes the withheld count in the block footer');
+assert(briefingHtml.includes('Ehdotus') && briefingHtml.includes('Perustuu') && briefingHtml.includes('1 kirjaukseen')
+  && briefingHtml.includes('Pidä tällä käynnillä') && briefingHtml.includes('Ei hyödyllinen')
+  && briefingHtml.includes('Millainen mielialan tilanne on?'),
+'the audited summary block renders its Finnish labels and the purpose question');
+for (const english of ['Suggestion', 'Keep for this visit', 'Based on', 'Not useful', 'withheld:', 'Draft', 'Source record']) {
+  assert(!briefingHtml.includes(english), `no library default renders in English: ${english}`);
+}
+assert((briefingHtml.match(/aria-haspopup="dialog"/g) ?? []).length === 1,
+  'one SourceReference per accepted sentence');
+// The source dialog, rendered open for the record the fixture marks as a draft: Finnish title, subtitle, the
+// draft tag, the excerpt fields, the jump link and the close action. The static render cannot call showModal,
+// so the `open` attribute is set here for the audit; the markup is otherwise the shipped markup.
+const sourceDialogHtml = renderToStaticMarkup(React.createElement(SourceRecordDialog, {
+  presentation: picturePresentation(presentationPicture, { personName: 'Aino Esimerkki' }),
+  dialog: { openId: 'source-b', open: () => {}, close: () => {} },
+})).replace('<dialog ', '<dialog open ');
+assert(sourceDialogHtml.includes('Kirjaus · 29.9.2026') && sourceDialogHtml.includes('Lähdekirjaus · Aino Esimerkki')
+  && sourceDialogHtml.includes('Luonnos') && sourceDialogHtml.includes('Otsikko') && sourceDialogHtml.includes('Vastaanotto')
+  && sourceDialogHtml.includes('href="#source-source-b"') && sourceDialogHtml.includes('Siirry kirjaukseen')
+  && sourceDialogHtml.includes('Sulje'),
+'the audited source dialog carries its Finnish title, subtitle, draft tag, fields, jump link and close action');
+assert(!sourceDialogHtml.includes('Draft') && !sourceDialogHtml.includes('Source record'),
+  'the source dialog never renders the library\'s English words');
 assert(!briefingHtml.includes('Hylätty lause: Lause s2 pidätettiin'),
   'the audited render no longer presents the withheld sentence as a clinical alert row');
 assert(SKIN_CSS.includes('.brief-selected-record.brief-record-draft')
@@ -764,7 +790,7 @@ assert(!chatStateHtml['withheld model arm'].includes('Vastaus on koottu lähteis
 // Every component sheet the shipped markup actually used, concatenated into ONE argument that every audit
 // below receives. Previously only the briefing got the Button's sheet, so the comparison, lens and
 // worklist renders audited components with no component CSS at all.
-const RENDERED_FOR_AUDIT = briefingHtml + comparisonHtml + lensHtml + worklistHtml + appShellHtml
+const RENDERED_FOR_AUDIT = briefingHtml + comparisonHtml + lensHtml + worklistHtml + appShellHtml + sourceDialogHtml
   + Object.values(chatStateHtml).join('');
 const COMPONENT_CSS = componentModuleCss(RENDERED_FOR_AUDIT);
 assert(COMPONENT_CSS, 'the component sheets are recovered from the rendered markup, so their styles are audited');
@@ -773,14 +799,18 @@ assert(COMPONENT_CSS.includes('min-height: var(--control-h)'),
 // The render must have exercised more than one component, or "every adopted component is audited" would
 // be satisfied by auditing one of them.
 const usedModules = usedComponentModules(briefingHtml + comparisonHtml + lensHtml + worklistHtml + appShellHtml
-  + Object.values(chatStateHtml).join(''));
+  + sourceDialogHtml + Object.values(chatStateHtml).join(''));
 assert(usedModules.size >= 8, `the renders used ${usedModules.size} component sheets (expected the adopted set)`);
 for (const required of ['Button/Button.module.css', 'Tag/Tag.module.css',
   'Metric/Metric.module.css', 'NavItem/NavItem.module.css', 'Sidebar/Sidebar.module.css',
   'Header/Header.module.css', 'Search/Search.module.css', 'KeyValueList/KeyValueList.module.css',
+  // W1: the layout components, so their sheets (the column rule, the sticky strip, the cell rules) are audited.
+  'MainSide/MainSide.module.css', 'IdentityStrip/IdentityStrip.module.css', 'NowStrip/NowStrip.module.css', 'NowCell/NowCell.module.css',
   // The chat rail is the only surface that adopts the Link; without the populated renders its sheet
   // would be audited nowhere, which is the failure this file's header describes.
-  'Link/Link.module.css']) {
+  'Link/Link.module.css',
+  // W2: the summary block, its inline source references and the app-side source dialog on the library Dialog.
+  'AiSummaryBlock/AiSummaryBlock.module.css', 'SourceReference/SourceReference.module.css', 'Dialog/Dialog.module.css']) {
   assert(usedModules.has(required), `the rendered markup used ${required}, so its CSS is in the audit`);
 }
 // Per-module non-vacuity, one probe per used module: each must contribute CSS carrying its OWN hash, in
@@ -843,6 +873,7 @@ assert(stampedHtml.includes('<p class="t-caption" data-build="rev-a11y0001"'),
   'the audited stamped render carries the [data-build] element');
 const stampedResults = await audit(shell(stampedHtml, 'light', COMPONENT_CSS));
 const briefingResults = await audit(shell(briefingHtml, 'light', COMPONENT_CSS));
+const sourceDialogResults = await audit(shell(sourceDialogHtml, 'light', COMPONENT_CSS));
 const technicalResults = await audit(shell(technicalHtml, 'light', COMPONENT_CSS));
 const comparisonResults = await audit(shell(comparisonHtml, 'light', COMPONENT_CSS));
 const lensResults = await audit(shell(lensHtml, 'light', COMPONENT_CSS));
@@ -860,6 +891,7 @@ for (const [view, results] of [['briefing', briefingResults], ['technical page',
   ['technical page with build stamp', stampedResults],
   ['comparison', comparisonResults],
   ['lens comparison', lensResults], ['worklist', worklistResults],
+  ['source dialog', sourceDialogResults],
   ['chat panel', chatResults],
   ...Object.entries(chatStateResults).map(([label, results]) => [`chat rail (${label})`, results])]) {
   assert.deepEqual(
@@ -958,8 +990,22 @@ assert.equal(new Set([...SECTION_HEADINGS, ...TECHNICAL_SECTION_HEADINGS]).size,
   'the four sections are four distinct sections');
 assert.equal(briefingDocument.querySelectorAll('[role="tablist"], [role="tab"], [role="tabpanel"]').length, 0,
   'no tab strip remains: the four sections are stacked, not picked');
-assert.equal(briefingDocument.querySelectorAll('[hidden]').length, 0,
-  'nothing is hidden with the `hidden` attribute, which would remove it from the accessibility tree');
+// No section, Block or landmark is hidden with the `hidden` attribute, which would remove it from the accessibility
+// tree. The library IdentityStrip IS hidden in a static render — until its observer reports that the identity block
+// has scrolled away (W1) — and a library row may fold its own records behind a disclosure; neither hides a section.
+{
+  const hiddenNodes = [...briefingDocument.querySelectorAll('[hidden]')];
+  assert.deepEqual(hiddenNodes.filter(node => node.matches('section, aside, main, nav, [class*="_block_"], .brief-section')), [],
+    'no section, Block or landmark is hidden with the `hidden` attribute');
+  assert(hiddenNodes.some(node => node.matches('[role="group"][aria-label="Henkilö ja palvelutilanne"]')),
+    'the identity strip is hidden in a static render, so it never covers the title on load');
+}
+// W1: the identity block, the Now strip and the MainSide columns are in the audited render.
+assert(briefingDocument.querySelector('section.brief-identity[aria-label="Henkilö ja palvelutilanne"] h1'),
+  'the identity block is a named section carrying the static render\'s h1');
+assert.equal(briefingDocument.querySelectorAll('.brief-now-strip > *').length, 4, 'the Now strip has four cells');
+assert.equal(briefingDocument.querySelectorAll('.brief-zone > .t-overline').length, 2, 'two zone lines');
+assert.equal(briefingDocument.querySelectorAll('.brief-record-columns > aside').length, 1, 'the side column is one aside landmark');
 assert(!briefingHtml.includes('brief-tab-panel') && !briefingHtml.includes('brief-section-tabs'),
   'the classes that hid three of the four sections are gone from the markup, so nothing can re-hide them');
 

@@ -1,12 +1,39 @@
-import { forwardRef, type HTMLAttributes, type LiHTMLAttributes, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, type HTMLAttributes, type LiHTMLAttributes, type ReactNode } from 'react';
 import { CirclePause } from 'lucide-react';
 import styles from './ProcessSteps.module.css';
 
 export type ProcessStepState = 'done' | 'current' | 'upcoming' | 'paused';
 
+/** The fixed copy of a step, for another language. Each key defaults to the English (Figma) word. */
+export interface ProcessStepLabels {
+  /** Read out before the label of a Done step. */
+  done: string;
+  /** Read out before the label of an Upcoming step. */
+  upcoming: string;
+  /** The default Detail word of a Paused step. */
+  paused: string;
+  /** Paused: the word in front of the date ("Started 22 Sep 2026"). */
+  started: string;
+  /** Read out instead of the "–" of a step without a date. */
+  noDate: string;
+}
+
+const DEFAULT_LABELS: ProcessStepLabels = {
+  done: 'Done',
+  upcoming: 'Upcoming',
+  paused: 'Paused',
+  started: 'Started',
+  noDate: 'No date',
+};
+
+/** Labels set once on ProcessSteps reach every step inside it; a step's own `labels` override them. */
+const LabelsContext = createContext<Partial<ProcessStepLabels> | undefined>(undefined);
+
 export interface ProcessStepsProps extends HTMLAttributes<HTMLOListElement> {
   /** The steps: ProcessStep elements, in process order. Leave out steps the process does not have. */
   children: ReactNode;
+  /** Every fixed word the steps render, for another language, set once for the list. Each key defaults to the English copy. */
+  labels?: Partial<ProcessStepLabels>;
 }
 
 /**
@@ -14,12 +41,12 @@ export interface ProcessStepsProps extends HTMLAttributes<HTMLOListElement> {
  * vertically. Figma: Data display / Process steps (174:563).
  */
 export const ProcessSteps = forwardRef<HTMLOListElement, ProcessStepsProps>(function ProcessSteps(
-  { className, children, ...rest },
+  { className, children, labels, ...rest },
   ref,
 ) {
   return (
     <ol {...rest} ref={ref} className={[styles.steps, className].filter(Boolean).join(' ')}>
-      {children}
+      <LabelsContext.Provider value={labels}>{children}</LabelsContext.Provider>
     </ol>
   );
 });
@@ -45,26 +72,25 @@ export interface ProcessStepProps extends Omit<LiHTMLAttributes<HTMLLIElement>, 
    * Caption, text colour. Paused defaults to "Paused": keep it, the word carries the state.
    */
   detail?: ReactNode;
-  /** Read out before the label for Done and Upcoming steps (default "Done" / "Upcoming"). The current step is announced through `aria-current="step"`; a paused step through its Detail word. */
+  /** Read out before the label for Done and Upcoming steps (default `labels.done` / `labels.upcoming`). The current step is announced through `aria-current="step"`; a paused step through its Detail word. */
   stateText?: string;
+  /** The fixed words of this step, for another language. Overrides the list's `labels`; each key defaults to the English copy. */
+  labels?: Partial<ProcessStepLabels>;
 }
-
-const defaultStateText: Record<'done' | 'upcoming', string> = {
-  done: 'Done',
-  upcoming: 'Upcoming',
-};
 
 const isEmpty = (node: ReactNode) => node === undefined || node === null || node === '';
 
 /** One step of a process: a 2px top rule, then label, date and detail. Renders an `<li>`: put it in ProcessSteps. Not interactive. */
 export const ProcessStep = forwardRef<HTMLLIElement, ProcessStepProps>(function ProcessStep(
-  { state = 'done', label, date, dateTime, detail, stateText, className, ...rest },
+  { state = 'done', label, date, dateTime, detail, stateText, labels, className, ...rest },
   ref,
 ) {
+  const listLabels = useContext(LabelsContext);
+  const t: ProcessStepLabels = { ...DEFAULT_LABELS, ...listLabels, ...labels };
   const paused = state === 'paused';
   // Done and Upcoming get a hidden state word; Current has aria-current, Paused its visible Detail word.
-  const hiddenState = state === 'done' || state === 'upcoming' ? stateText ?? defaultStateText[state] : undefined;
-  const shownDetail = paused && isEmpty(detail) ? 'Paused' : detail;
+  const hiddenState = state === 'done' || state === 'upcoming' ? stateText ?? t[state] : undefined;
+  const shownDetail = paused && isEmpty(detail) ? t.paused : detail;
   const dateNode = dateTime ? <time dateTime={dateTime}>{date}</time> : date;
 
   return (
@@ -89,10 +115,10 @@ export const ProcessStep = forwardRef<HTMLLIElement, ProcessStepProps>(function 
         {isEmpty(date) ? (
           <>
             <span aria-hidden>–</span>
-            <span className="visually-hidden">No date</span>
+            <span className="visually-hidden">{t.noDate}</span>
           </>
         ) : paused ? (
-          <>Started {dateNode}</>
+          <>{t.started} {dateNode}</>
         ) : (
           dateNode
         )}

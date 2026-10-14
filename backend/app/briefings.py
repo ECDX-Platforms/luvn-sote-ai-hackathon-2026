@@ -97,10 +97,16 @@ def attention_summary(picture: Picture) -> dict[str, Any]:
     risk_rule = next((entry.rule_id for entry in picture.trace if entry.table == "risk"), None)
     active_medications = sum(1 for view in views
                              if view.record_type == "lääkitys" and (view.payload or {}).get("tila") == "aktiivinen")
+    # The lead is chosen only among notes Decision-1 called `relevant`, the same rule as the client view's
+    # `decisionHighlights`: a record the model called irrelevant can carry the highest expected urgency, and
+    # naming it "Ensin:" on the day row while the briefing writes it as background would be the same record read
+    # two ways. Irrelevant and unclear notes never lead.
     lead: dict[str, Any] | None = None
     if picture.selection is not None:
         best: tuple[float, str] | None = None
         for note in picture.selection.decision_notes:
+            if note.status != "relevant":
+                continue
             distribution = (note.gate_probabilities or {}).get("urgency") or {}
             expected = 0.0
             weight = 0.0

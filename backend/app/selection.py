@@ -14,7 +14,7 @@ RULE_VERSION = "challenge-1.1-decision-selection-v8"
 # The deterministic baseline's own version, folded into the briefing cache key beside RULE_VERSION: a change
 # to what the baseline selects (not to the Decision-1 contract) must rebuild every cached briefing, or a
 # deploy serves the previous rule's pictures until the warm-up happens to reach them (seen 2026-10-14).
-BASELINE_VERSION = "baseline-2026-10-14-current-results"
+BASELINE_VERSION = "baseline-2026-10-14-today-cut"
 
 @dataclass(frozen=True)
 class Selection:

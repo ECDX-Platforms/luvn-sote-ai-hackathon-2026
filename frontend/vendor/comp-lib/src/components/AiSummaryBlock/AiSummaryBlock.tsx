@@ -25,18 +25,56 @@ export interface AiSummarySentence {
 interface AiSummaryBlockBaseProps extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'children'> {
   /** Figma: Question. The title: the one question this role asks, in title-sm. The sentences answer it. Shown in every state. */
   question: string;
-  /** How the text was made, in caption next to the Suggestion tag. Shown in every state except Withheld. */
+  /** How the text was made, in caption next to the Suggestion tag. Shown in every state except Withheld. Default `labels.method`. */
   method?: ReactNode;
   /** Sentences, at most 4 (only the first 4 are shown). Only records the role is allowed to see. Ignored in Withheld and Loading. With no sentences, Shown and Partly withheld fall back to Withheld (fail-closed). */
   sentences?: AiSummarySentence[];
   /** Sentences that failed the check against their own sources and are not shown. Shown in the footer ("withheld: N sentences"). Default 0 in Shown, 1 in Partly withheld. Never counts records the role may not see. */
   withheldCount?: number;
-  /** Withheld: the sentence shown instead of the summary. Default "No summary is shown. Read the records below." */
+  /** Withheld: the sentence shown instead of the summary. Default `labels.withheldText`. */
   withheldText?: ReactNode;
   /** Where "Based on <n> records" goes: the full source list, one tap away. */
   sourcesHref: string;
   /** Heading level of the question. Default 2, like a Block. Use 3 inside a Block. */
   headingLevel?: AiSummaryHeadingLevel;
+  /** Every fixed word the block renders, for another language. Each key defaults to the English (Figma) copy; `reasons` merges per reason. */
+  labels?: Partial<AiSummaryBlockLabels>;
+}
+
+/** The fixed copy of the block. Defaults word for word from Figma (180:1229, 234:2326, 234:2409, 234:2477). */
+export interface AiSummaryBlockLabels {
+  /** The neutral tag in the head. */
+  suggestion: string;
+  /** Default of the `method` prop. */
+  method: ReactNode;
+  /** Default of the `withheldText` prop. */
+  withheldText: ReactNode;
+  /** Read out instead of the Loading skeleton bars. */
+  loading: string;
+  /** Start of the footer line, before the record count link. */
+  basedOn: string;
+  /** The record count link text ("1 record", "3 records"). */
+  records: (count: number) => string;
+  /** The withheld count after the "·" ("withheld: 1 sentence (its sources did not support it)"). */
+  withheld: (count: number) => string;
+  /** The Keep button. */
+  keep: string;
+  /** The Not useful button. */
+  notUseful: string;
+  /** The caption under the two buttons. */
+  keepCaption: string;
+  /** The status line after Keep. */
+  keptStatus: string;
+  /** The status line after a reason. */
+  hiddenStatus: string;
+  /** The question after Not useful. */
+  ask: string;
+  /** The caption after the question ("(optional, one tap)"). */
+  askHint: string;
+  /** The four reason buttons. */
+  reasons: Record<AiSummaryReason, string>;
+  /** The Undo button. */
+  undo: string;
 }
 
 /**
@@ -79,24 +117,36 @@ export type AiSummaryBlockProps = AiSummaryWithTextProps | AiSummaryWithoutTextP
 
 const MAX_SENTENCES = 4;
 
+const AI_SUMMARY_REASONS: readonly AiSummaryReason[] = ['wrong', 'not-relevant', 'already-known', 'too-long'];
+
 // Fixed copy: word for word from Figma (180:1229, 234:2326, 234:2409, 234:2477).
-const defaultMethod = 'AI-written · each sentence checked against its sources';
-const defaultWithheldText = 'No summary is shown. Read the records below.';
-const keepCaption = 'Keep adds it to your visit preparation. It never writes to the record.';
-const keptStatus = 'Kept for your visit preparation. Nothing was written to the record.';
-const hiddenStatus = 'Reason saved. The summary is hidden for this visit.';
-const aiSummaryReasons: { value: AiSummaryReason; label: string }[] = [
-  { value: 'wrong', label: 'Wrong' },
-  { value: 'not-relevant', label: 'Not relevant for my role' },
-  { value: 'already-known', label: 'Already known' },
-  { value: 'too-long', label: 'Too long' },
-];
-const recordsLabel = (n: number) => (n === 1 ? '1 record' : `${n} records`);
-// Figma shows 0 and 1. The plural reason wording for 2 or more is ours.
-const withheldLabel = (n: number) =>
-  n === 0 ? 'withheld: 0 sentences'
-    : n === 1 ? 'withheld: 1 sentence (its sources did not support it)'
-      : `withheld: ${n} sentences (their sources did not support them)`;
+const DEFAULT_LABELS: AiSummaryBlockLabels = {
+  suggestion: 'Suggestion',
+  method: 'AI-written · each sentence checked against its sources',
+  withheldText: 'No summary is shown. Read the records below.',
+  loading: 'Loading summary…',
+  basedOn: 'Based on',
+  records: (n) => (n === 1 ? '1 record' : `${n} records`),
+  // Figma shows 0 and 1. The plural reason wording for 2 or more is ours.
+  withheld: (n) =>
+    n === 0 ? 'withheld: 0 sentences'
+      : n === 1 ? 'withheld: 1 sentence (its sources did not support it)'
+        : `withheld: ${n} sentences (their sources did not support them)`,
+  keep: 'Keep for this visit',
+  notUseful: 'Not useful',
+  keepCaption: 'Keep adds it to your visit preparation. It never writes to the record.',
+  keptStatus: 'Kept for your visit preparation. Nothing was written to the record.',
+  hiddenStatus: 'Reason saved. The summary is hidden for this visit.',
+  ask: 'Thanks. Why was it not useful?',
+  askHint: '(optional, one tap)',
+  reasons: {
+    wrong: 'Wrong',
+    'not-relevant': 'Not relevant for my role',
+    'already-known': 'Already known',
+    'too-long': 'Too long',
+  },
+  undo: 'Undo',
+};
 
 type FocusTarget = 'keep' | 'notUseful' | 'firstReason' | 'undo';
 
@@ -110,10 +160,10 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
   {
     state = 'shown',
     question,
-    method = defaultMethod,
+    method,
     sentences = [],
     withheldCount,
-    withheldText = defaultWithheldText,
+    withheldText,
     sourcesHref,
     feedback: feedbackProp,
     defaultFeedback = 'none',
@@ -122,11 +172,15 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
     onReason,
     onUndo,
     headingLevel = 2,
+    labels,
     className,
     ...rest
   },
   ref,
 ) {
+  const t: AiSummaryBlockLabels = { ...DEFAULT_LABELS, ...labels, reasons: { ...DEFAULT_LABELS.reasons, ...labels?.reasons } };
+  const shownMethod = method ?? t.method;
+  const shownWithheldText = withheldText ?? t.withheldText;
   const questionId = useId();
   const askId = useId();
   const Heading = `h${headingLevel}` as const;
@@ -183,7 +237,7 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
     onUndo?.(feedback);
   };
 
-  const status = feedback === 'kept' ? keptStatus : feedback === 'hidden' ? hiddenStatus : null;
+  const status = feedback === 'kept' ? t.keptStatus : feedback === 'hidden' ? t.hiddenStatus : null;
 
   return (
     <section
@@ -194,8 +248,8 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
       aria-busy={effectiveState === 'loading' || undefined}
     >
       <div className={styles.head}>
-        <Tag>Suggestion</Tag>
-        {effectiveState === 'withheld' ? null : <p className={[styles.method, 't-caption'].join(' ')}>{method}</p>}
+        <Tag>{t.suggestion}</Tag>
+        {effectiveState === 'withheld' ? null : <p className={[styles.method, 't-caption'].join(' ')}>{shownMethod}</p>}
       </div>
 
       <Heading id={questionId} className={[styles.question, 't-title-sm'].join(' ')}>{question}</Heading>
@@ -216,16 +270,16 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
           ))}
         </ol>
       ) : null}
-      {effectiveState === 'withheld' ? <p className={[styles.withheld, 't-body', 'muted'].join(' ')}>{withheldText}</p> : null}
-      {effectiveState === 'loading' ? <Skeleton lines={3} label="Loading summary…" /> : null}
+      {effectiveState === 'withheld' ? <p className={[styles.withheld, 't-body', 'muted'].join(' ')}>{shownWithheldText}</p> : null}
+      {effectiveState === 'loading' ? <Skeleton lines={3} label={t.loading} /> : null}
 
       {withText ? (
         <div className={styles.footer}>
           {showSentences ? (
             <p className={[styles.basedOn, 't-caption'].join(' ')}>
-              Based on{' '}
-              <Link href={sourcesHref} size="sm">{recordsLabel(recordCount)}</Link>
-              {' '}<span aria-hidden>·</span> {withheldLabel(withheld)}
+              {t.basedOn}{' '}
+              <Link href={sourcesHref} size="sm">{t.records(recordCount)}</Link>
+              {' '}<span aria-hidden>·</span> {t.withheld(withheld)}
             </p>
           ) : null}
 
@@ -243,30 +297,30 @@ export const AiSummaryBlock = forwardRef<HTMLElement, AiSummaryBlockProps>(funct
 
             {feedback === 'none' ? (
               <>
-                <Button ref={keepRef} variant="secondary" size="sm" onClick={keep}>Keep for this visit</Button>
-                <Button ref={notUsefulRef} variant="secondary" size="sm" onClick={notUseful}>Not useful</Button>
-                <p className={[styles.caption, 't-caption'].join(' ')}>{keepCaption}</p>
+                <Button ref={keepRef} variant="secondary" size="sm" onClick={keep}>{t.keep}</Button>
+                <Button ref={notUsefulRef} variant="secondary" size="sm" onClick={notUseful}>{t.notUseful}</Button>
+                <p className={[styles.caption, 't-caption'].join(' ')}>{t.keepCaption}</p>
               </>
             ) : null}
 
             {feedback === 'not-useful' ? (
               <>
                 <p id={askId} className={styles.ask}>
-                  <span className="t-body">Thanks. Why was it not useful?</span>{' '}
-                  <span className="t-caption">(optional, one tap)</span>
+                  <span className="t-body">{t.ask}</span>{' '}
+                  <span className="t-caption">{t.askHint}</span>
                 </p>
                 {/* The group is named by the question, so focus on the first reason reads it out. */}
                 <div className={styles.reasons} role="group" aria-labelledby={askId}>
-                  {aiSummaryReasons.map((r, i) => (
-                    <Button key={r.value} ref={i === 0 ? firstReasonRef : undefined} variant="secondary" size="sm" onClick={() => reason(r.value)}>
-                      {r.label}
+                  {AI_SUMMARY_REASONS.map((value, i) => (
+                    <Button key={value} ref={i === 0 ? firstReasonRef : undefined} variant="secondary" size="sm" onClick={() => reason(value)}>
+                      {t.reasons[value]}
                     </Button>
                   ))}
                 </div>
               </>
             ) : null}
 
-            {status ? <Button ref={undoRef} variant="secondary" size="sm" onClick={undo}>Undo</Button> : null}
+            {status ? <Button ref={undoRef} variant="secondary" size="sm" onClick={undo}>{t.undo}</Button> : null}
           </div>
         </div>
       ) : null}

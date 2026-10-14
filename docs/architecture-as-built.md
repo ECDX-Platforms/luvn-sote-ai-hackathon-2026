@@ -29,7 +29,7 @@ is reachable by Decision-1, by the generator, or by the browser.
 
 ### One construction seam for permission
 
-`policy.cut_for_encounter(persona, encounter) -> Scoped` (`backend/app/policy.py`) is the single place a
+`policy.cut_for_encounter(persona, encounter, today=None) -> Scoped` (`backend/app/policy.py`) is the single place a
 permission context is built, and it is what makes the boundary rule enforceable rather than merely intended.
 Its callers and guard coverage are enumerated in
 [Resolution seam, Record provenance and delivery adapter](#resolution-seam-record-provenance-and-delivery-adapter).
@@ -64,7 +64,10 @@ it**, so the restriction never fired until the seam wired it.
    supplies one**; it is never derived. `legal_basis` is **absent from `RecordView` entirely** — not empty,
    not defaulted — and no candidate statute is UI-reachable.
 6. **A draft is never narrated as settled.** Drafts are excluded from generation input, remain
-   policy-visible, and render grey and italic.
+   policy-visible, and render grey and italic. A decision whose text opens with `PÄÄTÖSLUONNOS` is a draft
+   (`state: draft`) when the envelope supplied no state, and **the cut to `today` applies to every record**,
+   so a future-dated record cannot read as a settled fact (`test_decision_draft_state.py`,
+   `test_future_dated_cut.py`).
 7. **0 clicks** to sources, why-relevant, coverage and impact.
 
 ### What the wire carries
@@ -81,6 +84,21 @@ section below links back to this list rather than repeating it — and [`CONTEXT
 domain vocabulary.
 
 Absent `form` and `concept_key` are now omitted like other optional fields, so absence renders nothing.
+
+The summary's provenance travels with it: `Picture.narrative_sentences` carries each accepted sentence
+beside the record ids that verified it, so a sentence can cite its own source rather than the whole set the
+turn consulted. The flat `narrative` stays for every reader that has it (ADR-0029).
+
+### Presentation: the record-display patterns
+
+The briefing is built from the vendored library's own components rather than app-side lookalikes: `MainSide`
+for the record section, an identity strip, a Now strip and `MetricRow` for the day's numbers, and one neutral
+block for everything Decision-1 lifted — so the lifted block, the row marker and the closed reasoning are
+rendered from one chosen lead record and cannot disagree. Medicine, diagnosis, lab and grouped-record rows use
+`GroupedRecordRow`, and the summary is the library's `AiSummaryBlock`. Every fixed word these components
+render is replaced through their `labels` prop with Finnish, and a rendered English default is a test failure
+(ADR-0029). Components the library still renders with no label escape are declined rather than wrapped, each
+for a stated reason (ADR-0029).
 
 Document kinds: `source.DOCUMENT_KINDS = ("todistus", "lausunto", "ilmoitus")` is **source vocabulary only** —
 a constant, zero record instances, no rendering, and no participation in coverage counts.

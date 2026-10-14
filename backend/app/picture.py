@@ -213,6 +213,21 @@ class GroundingResult(BaseModel):
     dropped_citations: list[str]
     dropped_actions: list[str]
     rejected_sentences: list["RejectedSentence"] = Field(default_factory=list)
+    # One row per ACCEPTED sentence, in order, with the record ids the verifier actually affirmed for it.
+    narrative_sentences: list["NarrativeSentence"] = Field(default_factory=list)
+
+
+class NarrativeSentence(BaseModel):
+    """An accepted narration sentence with its own verified sources.
+
+    `narrative` stays the flat joined string; this is the per-sentence view of the same accepted text, so a
+    reader can show which record supports which sentence. `record_ids` are the verifier's
+    `supporting_record_ids` for that sentence, never a record outside the permitted and selected set.
+    """
+
+    sentence_id: str
+    text: str
+    record_ids: list[str] = Field(default_factory=list)
 
 
 class RejectedSentence(BaseModel):
@@ -304,6 +319,9 @@ class SelectionProvenance(BaseModel):
     decision_baseline_attempted_count: int = 0
     decision_missed_candidate_count: int = 0
     decision_missed_attempted_count: int = 0
+    # Permitted records held back by the date cut (effective date after the day the picture is built for):
+    # how many are not shown and why, never which. Counted over the permitted set only (ADR-0004).
+    future_dated_count: int = 0
 
 
 class ProposalEvidence(BaseModel):
@@ -421,6 +439,10 @@ class Picture(BaseModel):
     conflicts: list[Conflict]
     narrative: str | None
     citations: list[RecordView]
+    # The accepted narration sentence by sentence, each with its verified sources. Empty when there is no
+    # accepted narrative, and absent from cache rows written before the field existed: a reader then falls
+    # back to `narrative` as one sentence with `citations` as its sources.
+    narrative_sentences: list[NarrativeSentence] = Field(default_factory=list)
     records: Records
     duplicate_facts: list[DuplicateFact] = Field(default_factory=list)
     form_catalogue: list[FormCatalogueEntry] = Field(default_factory=list)

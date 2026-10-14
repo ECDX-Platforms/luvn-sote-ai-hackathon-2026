@@ -33,11 +33,77 @@ export interface TimePeriodProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
   visits?: TimePeriodVisits;
   /** Paused, Full only: what the source says, word for word, without quote marks. Caption, text-muted, under `pausedSourceTitle`. */
   pausedSource?: ReactNode;
-  /** Paused, Full only: the heading of the source line (body-strong). Default "Marked temporarily interrupted". */
+  /** Paused, Full only: the heading of the source line (body-strong). Default `labels.pausedSourceTitle`. */
   pausedSourceTitle?: ReactNode;
+  /** Every fixed word the component renders, for another language. Each key defaults to the English (Figma) copy. */
+  labels?: Partial<TimePeriodLabels>;
+  /**
+   * Shows a parsed date your way ("4.9.2026"). Gets the ISO date. Default: the Content format with `labels.months`
+   * ("4 Sep 2026"). With it, the visits range shows both dates in full (no year is dropped).
+   */
+  formatDate?: (iso: string) => string;
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** The fixed copy of the component. Defaults from Figma and the styleguide's Content rules. */
+export interface TimePeriodLabels {
+  /** Month abbreviations for the default date format, January first. */
+  months: readonly string[];
+  /** Shown as the end when the source has none. */
+  noEndDate: string;
+  /** Figma: Status words. Upcoming says "Starts later"; Open-ended that has started says "Ongoing". */
+  ongoing: string;
+  ended: string;
+  upcoming: string;
+  openEnded: string;
+  paused: string;
+  /** The today marker's caption, and the start of the "Today: <date>" caption. */
+  today: string;
+  /** "Today: <date>" under the track. */
+  todayIs: (date: ReactNode) => ReactNode;
+  /** Upcoming: "Starts in 20 days", from the day count text (`days`). */
+  startsIn: (days: string) => string;
+  todayBeforeStart: string;
+  /** Open-ended: "Day 60, until further notice". */
+  dayUntilFurtherNotice: (day: number) => string;
+  todayAfterEnd: string;
+  /** Ongoing: "Day 43 of 91". */
+  dayOf: (day: number, total: number) => string;
+  /** A day count ("1 day", "91 days"). */
+  days: (count: number) => string;
+  /** Paused: the caption under the hatched track. */
+  servicePeriod: string;
+  /** Paused: the visits caption, from the range ("4 Mar – 12 Aug 2026") and the count. */
+  visitsRecorded: (range: ReactNode, count: number) => ReactNode;
+  /** Paused: default of the `pausedSourceTitle` prop. */
+  pausedSourceTitle: ReactNode;
+  /** Paused: the heading and text of the second source line. */
+  notInSource: string;
+  notInSourceText: string;
+}
+
+const DEFAULT_LABELS: TimePeriodLabels = {
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  noEndDate: 'no end date',
+  ongoing: 'Ongoing',
+  ended: 'Ended',
+  upcoming: 'Starts later',
+  openEnded: 'Ongoing',
+  paused: 'Paused',
+  today: 'Today',
+  todayIs: (date) => <>Today: {date}</>,
+  startsIn: (days) => `Starts in ${days}`,
+  todayBeforeStart: 'Today is before the start',
+  dayUntilFurtherNotice: (day) => `Day ${day}, until further notice`,
+  todayAfterEnd: 'Today is after the end',
+  dayOf: (day, total) => `Day ${day} of ${total}`,
+  days: (count) => `${count} ${count === 1 ? 'day' : 'days'}`,
+  servicePeriod: 'Service period · pause start not in the source',
+  visitsRecorded: (range, count) => <>Visits recorded {range} ({count}), none after</>,
+  pausedSourceTitle: 'Marked temporarily interrupted',
+  notInSource: 'Not in the source',
+  notInSourceText: 'When the pause started, why, and when it ends. None is shown or guessed.',
+};
+
 const DAY_MS = 86_400_000;
 
 /** Parses "YYYY-MM-DD" as a calendar day (UTC, so time zones and daylight saving never shift it). Null when invalid. */
@@ -52,15 +118,27 @@ function parseDay(iso: string): number | null {
 }
 
 /** Content format: "21 Oct 2024" (styleguide Content). */
-function formatDay(day: number): string {
+function formatDay(day: number, months: readonly string[]): string {
   const date = new Date(day * DAY_MS);
-  return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+  return `${date.getUTCDate()} ${months[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 }
 
 /** "4 Mar": the year is dropped when the range ends in the same year (styleguide Content). */
-function formatDayMonth(day: number): string {
+function formatDayMonth(day: number, months: readonly string[]): string {
   const date = new Date(day * DAY_MS);
-  return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]}`;
+  return `${date.getUTCDate()} ${months[date.getUTCMonth()]}`;
+}
+
+/** How dates are shown: the caller's `formatDate`, or the Content format with the month abbreviations. */
+interface DateFormat {
+  full: (iso: string, day: number) => string;
+  /** The year-less form for the first date of a same-year range; absent with a caller's `formatDate`. */
+  dayMonth?: (day: number) => string;
+}
+
+function dateFormat(formatDate: ((iso: string) => string) | undefined, months: readonly string[]): DateFormat {
+  if (formatDate) return { full: (iso) => formatDate(iso) };
+  return { full: (_iso, day) => formatDay(day, months), dayMonth: (day) => formatDayMonth(day, months) };
 }
 
 /** A missing, null or empty end means "no end date in the source". */
@@ -69,11 +147,9 @@ function hasEnd(end: string | null | undefined): end is string {
 }
 
 /** A parsed date goes in a time element; one that cannot be parsed is shown as given in a span (no invalid dateTime). */
-function DateText({ iso, day }: { iso: string; day: number | null }) {
-  return day === null ? <span className={styles.date}>{iso}</span> : <time className={styles.date} dateTime={iso}>{formatDay(day)}</time>;
+function DateText({ iso, day, format }: { iso: string; day: number | null; format: DateFormat }) {
+  return day === null ? <span className={styles.date}>{iso}</span> : <time className={styles.date} dateTime={iso}>{format.full(iso, day)}</time>;
 }
-
-const days = (count: number) => `${count} ${count === 1 ? 'day' : 'days'}`;
 
 /** Figma: Status. Derived from the dates, so the word never contradicts them. Open-ended = no end date in the source and already started. Paused comes from the source (`paused`), never from the dates. Null when a date is invalid or the end is before the start. */
 export function getTimePeriodStatus(start: string, end: string | null | undefined, today: string, paused = false): TimePeriodStatus | null {
@@ -88,29 +164,29 @@ export function getTimePeriodStatus(start: string, end: string | null | undefine
   return t > e ? 'ended' : 'ongoing';
 }
 
-/** Status words (Figma): Upcoming says "Starts later"; Open-ended that has started says "Ongoing". */
-const WORDS: Record<TimePeriodStatus, string> = {
-  ongoing: 'Ongoing',
-  ended: 'Ended',
-  upcoming: 'Starts later',
-  'open-ended': 'Ongoing',
-  paused: 'Paused',
+/** The status word's key in the labels. */
+const WORD_KEY: Record<TimePeriodStatus, 'ongoing' | 'ended' | 'upcoming' | 'openEnded' | 'paused'> = {
+  ongoing: 'ongoing',
+  ended: 'ended',
+  upcoming: 'upcoming',
+  'open-ended': 'openEnded',
+  paused: 'paused',
 };
 
 /** A range of two parsed days; the first drops its year when both are in the same year ("4 Mar – 12 Aug 2026"). */
-function DayRange({ first, last }: { first: TimePeriodVisits['first']; last: TimePeriodVisits['last'] }) {
+function DayRange({ first, last, format }: { first: TimePeriodVisits['first']; last: TimePeriodVisits['last']; format: DateFormat }) {
   const f = parseDay(first);
   const l = parseDay(last);
   const year = (day: number) => new Date(day * DAY_MS).getUTCFullYear();
   return (
     <span className={styles.dates}>
-      {f !== null && l !== null && year(f) === year(l) ? (
-        <time className={styles.date} dateTime={first}>{formatDayMonth(f)}</time>
+      {f !== null && l !== null && format.dayMonth && year(f) === year(l) ? (
+        <time className={styles.date} dateTime={first}>{format.dayMonth(f)}</time>
       ) : (
-        <DateText iso={first} day={f} />
+        <DateText iso={first} day={f} format={format} />
       )}
       {' – '}
-      <DateText iso={last} day={l} />
+      <DateText iso={last} day={l} format={format} />
     </span>
   );
 }
@@ -128,23 +204,28 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
     paused = false,
     visits,
     pausedSource,
-    pausedSourceTitle = 'Marked temporarily interrupted',
+    pausedSourceTitle,
+    labels,
+    formatDate,
     className,
     ...rest
   },
   ref,
 ) {
+  const t: TimePeriodLabels = { ...DEFAULT_LABELS, ...labels };
+  const format = dateFormat(formatDate, t.months);
+  const shownPausedSourceTitle = pausedSourceTitle ?? t.pausedSourceTitle;
   const s = parseDay(start);
-  const t = parseDay(today);
+  const td = parseDay(today);
   const endGiven = hasEnd(end);
   const e = endGiven ? parseDay(end) : undefined;
   const status = getTimePeriodStatus(start, end, today, paused);
 
   const dates = (
     <span className={styles.dates}>
-      <DateText iso={start} day={s} />
+      <DateText iso={start} day={s} format={format} />
       {' – '}
-      {endGiven ? <DateText iso={end} day={e ?? null} /> : <span className={styles.date}>no end date</span>}
+      {endGiven ? <DateText iso={end} day={e ?? null} format={format} /> : <span className={styles.date}>{t.noEndDate}</span>}
     </span>
   );
 
@@ -154,14 +235,14 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
       <span className={styles.icon} aria-hidden>
         <CirclePause size={16} strokeWidth={1.5} />
       </span>
-      <span className={[styles.word, 't-body-strong'].join(' ')}>{WORDS.paused}</span>
+      <span className={[styles.word, 't-body-strong'].join(' ')}>{t.paused}</span>
     </span>
   );
 
   // Invalid dates (or an end before the start): show them as given and compute nothing (never guess a status).
   // Paused still says Paused: that comes from the source, not from the dates.
   // Paused uses the one-line layout so the word sits beside the dates; otherwise the layout is unchanged.
-  if (status === null || s === null || t === null || e === null) {
+  if (status === null || s === null || td === null || e === null) {
     return (
       <div {...rest} ref={ref} className={[styles.timePeriod, paused ? styles.compact : styles[layout], 't-body', className].filter(Boolean).join(' ')}>
         {dates}
@@ -175,7 +256,7 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
     );
   }
 
-  const word = status === 'paused' ? pausedWord : <span className={[styles.word, 't-body-strong'].join(' ')}>{WORDS[status]}</span>;
+  const word = status === 'paused' ? pausedWord : <span className={[styles.word, 't-body-strong'].join(' ')}>{t[WORD_KEY[status]]}</span>;
 
   if (layout === 'compact') {
     return (
@@ -190,7 +271,7 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
   if (status === 'paused') {
     // Both tracks run from the start to today (records after today are cut). The hatch covers all of it: the pause start is not in the source.
     // Days are counted inclusively: day d fills [d − start, d − start + 1) of the span.
-    const span = t - s + 1;
+    const span = td - s + 1;
     const first = visits ? parseDay(visits.first) : null;
     const last = visits ? parseDay(visits.last) : null;
     const from = first === null ? null : Math.min(Math.max(first - s, 0), span) / span;
@@ -210,8 +291,8 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
               <span className={[styles.today, styles.todayEnd].join(' ')} />
             </div>
             <div className={[styles.bottom, 't-caption'].join(' ')}>
-              <span className={styles.text}>Service period · pause start not in the source</span>
-              <span className={styles.text}>Today</span>
+              <span className={styles.text}>{t.servicePeriod}</span>
+              <span className={styles.text}>{t.today}</span>
             </div>
           </>
         ) : null}
@@ -225,18 +306,18 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
               </div>
             ) : null}
             <p className={[styles.caption, 't-caption'].join(' ')}>
-              Visits recorded <DayRange first={visits.first} last={visits.last} /> ({visits.count}), none after
+              {t.visitsRecorded(<DayRange first={visits.first} last={visits.last} format={format} />, visits.count)}
             </p>
           </>
         ) : null}
         <div className={styles.sourceLines}>
           <div className={styles.line}>
-            <p className={[styles.lineTitle, 't-body-strong'].join(' ')}>{pausedSourceTitle}</p>
+            <p className={[styles.lineTitle, 't-body-strong'].join(' ')}>{shownPausedSourceTitle}</p>
             {pausedSource ? <p className={[styles.lineText, 't-caption'].join(' ')}>{pausedSource}</p> : null}
           </div>
           <div className={styles.line}>
-            <p className={[styles.lineTitle, 't-body-strong'].join(' ')}>Not in the source</p>
-            <p className={[styles.lineText, 't-caption'].join(' ')}>When the pause started, why, and when it ends. None is shown or guessed.</p>
+            <p className={[styles.lineTitle, 't-body-strong'].join(' ')}>{t.notInSource}</p>
+            <p className={[styles.lineText, 't-caption'].join(' ')}>{t.notInSourceText}</p>
           </div>
         </div>
       </div>
@@ -244,28 +325,24 @@ export const TimePeriod = forwardRef<HTMLDivElement, TimePeriodProps>(function T
   }
 
   // Progress and the today label, computed only from the dates shown and today (days counted inclusively).
-  const todayDate = (
-    <>
-      Today: <time className={styles.date} dateTime={today}>{formatDay(t)}</time>
-    </>
-  );
+  const todayDate = t.todayIs(<time className={styles.date} dateTime={today}>{format.full(today, td)}</time>);
   let progress: string;
-  let todayLabel;
+  let todayLabel: ReactNode;
   let elapsed = 0; // share of the track, 0 to 1
   if (status === 'upcoming') {
-    progress = `Starts in ${days(s - t)}`;
-    todayLabel = 'Today is before the start';
+    progress = t.startsIn(t.days(s - td));
+    todayLabel = t.todayBeforeStart;
   } else if (status === 'open-ended') {
-    progress = `Day ${t - s + 1}, until further notice`;
+    progress = t.dayUntilFurtherNotice(td - s + 1);
     todayLabel = todayDate;
   } else if (status === 'ended') {
-    progress = days((e as number) - s + 1);
-    todayLabel = 'Today is after the end';
+    progress = t.days((e as number) - s + 1);
+    todayLabel = t.todayAfterEnd;
     elapsed = 1;
   } else {
     const total = (e as number) - s + 1;
-    const day = t - s + 1;
-    progress = `Day ${day} of ${total}`;
+    const day = td - s + 1;
+    progress = t.dayOf(day, total);
     todayLabel = todayDate;
     elapsed = day / total;
   }

@@ -237,7 +237,7 @@ def _resolve(encounter_id: str, store: Store) -> tuple[Encounter, Persona]:
 def _encounter_proposals(encounter_id: str, store: Store, today: date | None = None):
     encounter, persona = _resolve(encounter_id, store)
     today = today or date.today()
-    permitted = cut_for_encounter(persona, encounter)
+    permitted = cut_for_encounter(persona, encounter, today)
     baseline_records, _ = baseline(permitted, today)
     decision = decide(permitted)
     return encounter, persona, proposals_for_encounter(
@@ -1044,7 +1044,7 @@ async def encounter_chat_stream(
     call.
     """
     encounter, persona = _resolve(encounter_id, store)
-    scoped = cut_for_encounter(persona, encounter)
+    scoped = cut_for_encounter(persona, encounter, date.today())
     picture = await _chat_picture(store, encounter_id)
     digest = chat.seal_digest(picture, policy_version=RULE_VERSION, persona_id=persona.persona_id)
     if ask.digest_id is not None and ask.digest_id != digest.digest_id:
@@ -1257,6 +1257,6 @@ def spa(path: str):
     # The shell must revalidate. Vite hashes asset filenames, so a shell cached without revalidation
     # pins a browser to a previous build's bundle indefinitely: the page keeps rendering the old app
     # while the revision, the health check and every gate report the new one. That is not hypothetical -
-    # it cost two deploys, the second one diagnosed as a wrong image when the image was
+    # it cost two deploys on 2026-10-08, the second one diagnosed as a wrong image when the image was
     # already correct. `no-cache` still allows a 304 revalidation; it forbids reuse without asking.
     return FileResponse(index, headers={"Cache-Control": "no-cache"})

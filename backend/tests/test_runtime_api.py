@@ -322,8 +322,8 @@ def test_picture_and_feedback_use_byte_identical_encounter_scopes(monkeypatch, r
     encounter_id = "bound-encounter-012-neuvola-terveydenhoitaja"
     observed = []
 
-    def capture(persona, encounter):
-        scoped = resolve_cut(persona, encounter)
+    def capture(persona, encounter, today=None):
+        scoped = resolve_cut(persona, encounter, today)
         encoded = json.dumps({
             "records": scoped.persona.model_dump(mode="json"), "role": scoped.role,
             "purpose": scoped.purpose, "encounter_id": scoped.encounter_id,

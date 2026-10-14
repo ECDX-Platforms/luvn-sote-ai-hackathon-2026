@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
-import { X } from 'lucide-react';
-import { PICTURE_MODES, briefingOrder, decisionHighlights, decisionOutcomeText, foldStatusRows, formatDecisionTime, labLabel, leadingUrgencyLabel, medicationCountText, picturePresentation, prefillReviewKey, splitMedicationRows, statusCountText } from './challenge-demo.mjs';
-import { Block, Button, Field, IconButton, KeyValueList, StatusTag, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Tag, Textarea } from '../vendor/comp-lib/src/index.ts';
+import { Fragment, useRef, useState } from 'react';
+import { Check, RefreshCw, X } from 'lucide-react';
+import { LAB_LABELS, PICTURE_MODES, briefingOrder, decisionAnswered, decisionHighlights, decisionOutcomeText, excerptBlocks, foldSelectedRecords, foldStatusRows, formatDecisionTime, groupLabRows, groupMedicationRows, labName, leadingUrgencyLabel, medicationCountText, medicationIsHistorical, medicationStatusText, picturePresentation, prefillReviewKey, recordStatusText, recordTypeLabel, situationWord, sourceLabel, statusCountText, validityText } from './challenge-demo.mjs';
+import { AiSummaryBlock, Alert, Block, Button, Dialog, Field, GroupedRecordRow, IconButton, IdentityStrip, KeyValueList, MainSide, Metric, MetricRow, NowCell, NowStrip, SourceReference, StatusTag, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Tag, TaskItem, TaskList, Textarea } from '../vendor/comp-lib/src/index.ts';
 import './styles.css';
 
 // Gate 1: three classes of statement have to be distinguishable **where they render**, not only in the
@@ -46,12 +46,71 @@ function anchorTargets(presentation) {
   return new Set(presentation.targetRecordIds ?? []);
 }
 
-// True when the grounding verifier withheld at least one generated sentence. It drives the single plain
-// occurrence caption beside the summary; the per-sentence ids, reasons and verdicts stay in the technical
-// disclosure, which is the only place machinery is read.
-function hasWithheldSentences(presentation) {
-  return (presentation.grounding?.rejected_sentences?.length ?? 0) > 0;
+// ---- Source reference and source dialog (W2) ------------------------------------------------------------
+// The library's `SourceReference` opens one record in a dialog; the library's own `SourceDialog` hard-codes
+// English ("Source record ·", "Draft"), so the dialog here is app markup on the library `Dialog`. One hook holds
+// the open record id, one reference opens it, one dialog renders it. The pair is exported so later work can
+// replace `SourceLink` with the same reference everywhere.
+//
+// The reference's `draft` prop is never set: the library renders the English word "Draft" from it. A draft
+// record says "· Luonnos" in the label instead, and the dialog carries the neutral "Luonnos" tag.
+// eslint-disable-next-line react/only-export-components -- the hook is the pair's state; it ships with the reference
+export function useSourceDialog() {
+  const [openId, setOpenId] = useState(null);
+  return { openId, open: id => setOpenId(id), close: () => setOpenId(null) };
 }
+
+// The record a reference or dialog is about, from the presentation's visible sources; null when the id does
+// not render, so nothing is ever shown for a record the picture withheld.
+function sourceById(presentation, id) {
+  return id ? (presentation.sources ?? []).find(row => row.id === id) ?? null : null;
+}
+
+function sourceReferenceLabel(source) {
+  const type = source.typeLabel ?? recordTypeLabel(source.type);
+  return source.state === 'draft' ? `${type} · Luonnos` : type;
+}
+
+// An inline reference to one rendered record: the record type in Finnish and its date. Renders nothing when
+// the record does not render, the same rule as `SourceLink`.
+export function SourceRecordReference({ id, presentation, dialog, standalone = false }) {
+  const source = sourceById(presentation, id);
+  if (!source) return null;
+  return <SourceReference layout="inline" label={sourceReferenceLabel(source)} date={formatDate(source.date)}
+    draft={false} standalone={standalone} className="brief-source-reference" onOpen={() => dialog?.open(id)} />;
+}
+
+// The open record, on the library Dialog. Title "<type> · <date>", subtitle "Lähdekirjaus · <person>", the
+// excerpt fields as heading: content, the draft tag when the record is a draft, and a same-document link to
+// the record card the page still renders. Mounted only while open, so a closed dialog leaves no markup.
+export function SourceRecordDialog({ presentation, dialog }) {
+  const source = sourceById(presentation, dialog?.openId);
+  if (!source) return null;
+  const fields = source.excerptFields ?? [];
+  const jump = event => {
+    // Close first, then follow the anchor: a modal dialog keeps the page inert while it is open.
+    event.preventDefault();
+    dialog.close();
+    setTimeout(() => {
+      const target = document.getElementById(`source-${source.id}`);
+      if (!target) return;
+      window.location.hash = `source-${source.id}`;
+      target.scrollIntoView?.();
+    }, 0);
+  };
+  return <Dialog open onClose={dialog.close} title={`${source.typeLabel ?? recordTypeLabel(source.type)} · ${formatDate(source.date)}`}
+    className="brief-source-dialog"
+    actions={<Button variant="secondary" onClick={dialog.close}>Sulje</Button>}>
+    <p className="t-caption brief-source-dialog-subtitle">Lähdekirjaus · {presentation.personName}</p>
+    {source.state === 'draft' && <p className="brief-source-dialog-state"><Tag className="brief-record-state brief-state-draft">Luonnos</Tag></p>}
+    {fields.length > 0
+      ? <dl className="brief-source-dialog-fields">{fields.map(({ label, value }) =>
+        <div key={label}><dt className="t-caption">{label}</dt><dd className="t-body">{value}</dd></div>)}</dl>
+      : <p className="t-body">Kirjauksen sisältöä ei ole poimittavissa tähän; avaa kirjaus alta.</p>}
+    <p className="t-body brief-source-dialog-jump"><a href={sourceHref(source.id)} onClick={jump}>Siirry kirjaukseen</a></p>
+  </Dialog>;
+}
+// ---- end: source reference and source dialog ------------------------------------------------------------
 
 // Above this length an excerpt is collapsed behind a keyboard-accessible disclosure instead of
 // rendering an unbounded wall of text.
@@ -66,12 +125,13 @@ const EMPTY_RECORDS = 'Ei kirjauksia.';
 // or from the one footer line below (`onOpenTechnical`). The briefing ends at the material about the encounter.
 export function PictureBriefing({ picture, mode = 'normal', personName, roleLabel, purposeLabel, exampleLabel,
   identityAvailable, lensSiblings = [], onOpenLens, proposalReviews = {}, onProposalReview, onRetryProposalReview,
-  prefillReviews = {}, onPrefillReview, onRetryPrefillReview, hideHeading = false, onOpenTechnical }) {
+  prefillReviews = {}, onPrefillReview, onRetryPrefillReview, onRetryPrefill, prefillRetrying = false, hideHeading = false, onOpenTechnical }) {
   const presentation = picturePresentation(picture, { personName, roleLabel, purposeLabel, exampleLabel, identityAvailable });
   return <ProfessionalRecord presentation={presentation} mode={mode}
     lensSiblings={lensSiblings} onOpenLens={onOpenLens} proposalReviews={proposalReviews} onProposalReview={onProposalReview}
     onRetryProposalReview={onRetryProposalReview} prefillReviews={prefillReviews} onPrefillReview={onPrefillReview}
-    onRetryPrefillReview={onRetryPrefillReview} hideHeading={hideHeading} onOpenTechnical={onOpenTechnical} />;
+    onRetryPrefillReview={onRetryPrefillReview} onRetryPrefill={onRetryPrefill} prefillRetrying={prefillRetrying}
+    hideHeading={hideHeading} onOpenTechnical={onOpenTechnical} />;
 }
 
 // A link to the technical page. The href is the content landmark, which is where the page renders, so the link
@@ -128,31 +188,54 @@ function prefilledAnswerText(form, item, reviews = {}) {
   return edited || item.answer_text;
 }
 
-export function Esitiedot({ presentation, reviews = {}, onReview, onRetry }) {
+export function Esitiedot({ presentation, reviews = {}, onReview, onRetry, onRetryPrefill, prefillRetrying = false }) {
   const sections = presentation.esitiedot ?? [];
   const forms = presentation.prefilledForms ?? [];
   const targets = anchorTargets(presentation);
   if (!sections.length && !forms.length) return null;
-  const answered = sections.filter(section => section.status === 'answered').length;
+  const answeredSections = sections.filter(section => section.status === 'answered');
+  const openSections = sections.filter(section => section.status !== 'answered');
   return <Block title="Esitiedot" headingLevel={2} id="section-esitiedot" className="brief-data-section brief-esitiedot"
-    actions={sections.length > 0 ? <span className="t-caption">{answered} / {sections.length} otsikkoa täytetty sallituista kirjauksista</span> : undefined}>
-    {sections.length > 0 && <dl className="brief-esitieto-sections">
-      {sections.map(section => <div key={section.key} className="brief-esitieto-section" data-status={section.status}>
+    actions={sections.length > 0 ? <span className="t-caption">{answeredSections.length} / {sections.length} otsikkoa täytetty sallituista kirjauksista</span> : undefined}>
+    {sections.length > 0 && <EsitietoNotOnRecord sections={openSections} />}
+    {answeredSections.length > 0 && <dl className="brief-esitieto-sections">
+      {answeredSections.map(section => <div key={section.key} className="brief-esitieto-section" data-status={section.status}>
         <dt className="t-body-strong">{section.heading}</dt>
         <dd>
-          {section.status === 'answered'
-            ? <ul>{section.items.map((item, index) => <li key={`${section.key}-${index}`}>
-                <span>{item.text}</span>
-                {item.temporal_status === 'history' && <Tag className="brief-record-state"> aiempi</Tag>}
-                <EsitietoSources ids={item.source_record_ids} targets={targets} recordedAt={item.recorded_at} />
-              </li>)}</ul>
-            : <p className="t-caption brief-esitieto-open">{ASK_AT_VISIT}</p>}
+          <ul>{section.items.map((item, index) => <li key={`${section.key}-${index}`}>
+            <span>{item.text}</span>
+            {item.temporal_status === 'history' && <Tag className="brief-record-state"> aiempi</Tag>}
+            <EsitietoSources ids={item.source_record_ids} targets={targets} recordedAt={item.recorded_at} />
+          </li>)}</ul>
         </dd>
       </div>)}
     </dl>}
-    {forms.map(form => <PrefilledForm key={form.form_id} form={form} targets={targets} reviews={reviews} onReview={onReview} onRetry={onRetry} />)}
+    {forms.map(form => <PrefilledForm key={form.form_id} form={form} targets={targets} reviews={reviews} onReview={onReview} onRetry={onRetry}
+      onRetryPrefill={onRetryPrefill} prefillRetrying={prefillRetrying} />)}
     {forms.length > 0 && <p className="t-caption brief-small">{PREFILL_STATUS_LINE}</p>}
   </Block>;
+}
+
+// The headings nothing permitted answers, as one line at the top of the block, modelled on the library's
+// NotOnRecordLine (Thin record pattern): "Ei kirjauksia:" and one neutral tag per open heading, in block
+// order. The library component hard-codes its English copy, so the line is app markup over the same shape.
+// A heading with no answer used to render as a near-empty row saying `Kysy vastaanotolla`; now the block
+// holds only the answered headings, and the absence is said once, in words. With every heading answered
+// the line is the complete form, with a check.
+function EsitietoNotOnRecord({ sections }) {
+  const labelId = 'section-esitiedot-not-on-record';
+  if (!sections.length) {
+    return <div className="brief-not-on-record">
+      <span className="brief-not-on-record-check" aria-hidden><Check size={16} strokeWidth={1.5} aria-hidden /></span>
+      <p className="t-caption brief-not-on-record-complete">Kaikki otsikot täytetty sallituista kirjauksista</p>
+    </div>;
+  }
+  return <div className="brief-not-on-record">
+    <p id={labelId} className="t-body-strong brief-not-on-record-label">Ei kirjauksia:</p>
+    <ul className="brief-not-on-record-kinds" aria-labelledby={labelId}>
+      {sections.map(section => <li key={section.key} className="brief-not-on-record-kind"><Tag>{section.heading}</Tag></li>)}
+    </ul>
+  </div>;
 }
 
 // The sources of one esitieto line: a link for every record the page renders, numbered when there are several;
@@ -169,7 +252,7 @@ function EsitietoSources({ ids = [], targets, recordedAt = null }) {
   </span>;
 }
 
-function PrefilledForm({ form, targets, reviews = {}, onReview, onRetry }) {
+function PrefilledForm({ form, targets, reviews = {}, onReview, onRetry, onRetryPrefill, prefillRetrying = false }) {
   const [copied, setCopied] = useState(false);
   const answered = form.items.filter(item => item.status === 'answered');
   const open = form.items.filter(item => item.status !== 'answered');
@@ -185,11 +268,20 @@ function PrefilledForm({ form, targets, reviews = {}, onReview, onRetry }) {
       setCopied(true);
     } catch { /* the text is on screen */ }
   }
-  return <Block headingLevel={3} className="brief-prefilled-form"
-    title={<>{form.name} <Tag>{PREFILL_FORM_ROLE[form.form_role] ?? form.form_role}</Tag></>}
-    actions={<span className="t-caption">{form.verified} / {form.total_questions} esitäytetty</span>}>
+  // A pre-fill that did not run, failed or timed out is a block in its error state, not a sentence: the alert
+  // says what happened, the retry re-fetches the picture (`onRetryPrefill`, implemented by the shell), and
+  // whatever the form already holds — answered items with their controls, the open-questions disclosure, the
+  // copy button — stays under the alert. The shape is the library BlockState's (alert, retry, loaded data, 16
+  // apart, one polite live region carrying the keyword), composed from the library's own Alert and Button
+  // because the pinned BlockState renders its inner Alert without the keyword label: its visible text would
+  // say "Warning." whatever `labels` it is given. The keyword is the Alert's own `keyword` prop.
+  const blockProps = {
+    headingLevel: 3, className: 'brief-prefilled-form',
+    title: <>{form.name} <Tag>{PREFILL_FORM_ROLE[form.form_role] ?? form.form_role}</Tag></>,
+    actions: <span className="t-caption">{form.verified} / {form.total_questions} esitäytetty</span>,
+  };
+  const body = <>
     {form.relation_note && <p className="t-caption brief-small">{form.relation_note}</p>}
-    {generationNote && <p className="t-caption brief-small">{generationNote}</p>}
     {answered.length > 0 && categories.map(category => {
       const rows = answered.filter(item => (item.category_name ?? '') === category);
       if (!rows.length) return null;
@@ -217,8 +309,24 @@ function PrefilledForm({ form, targets, reviews = {}, onReview, onRetry }) {
       {copied && <p className="t-caption brief-inline-status" role="status">Kopioitu leikepöydälle.</p>}
       {form.source_file && <p className="t-caption brief-small">Lähde: {form.source} · {form.source_file}{form.source_sha256 ? ` · sha256 ${form.source_sha256.slice(0, 12)}` : ''}</p>}
     </div>
-  </Block>;
+  </>;
+  if (generationNote) {
+    return <Block {...blockProps}>
+      <div className="brief-prefill-error">
+        <Alert level="warning" keyword={PREFILL_ALERT_KEYWORD} live={false}>{generationNote}</Alert>
+        {onRetryPrefill && <div className="brief-button-row">
+          <Button icon={<RefreshCw size={16} strokeWidth={1.5} />} loading={prefillRetrying} onClick={onRetryPrefill}>Yritä uudelleen</Button>
+        </div>}
+        {body}
+      </div>
+      <div role="status" className="visually-hidden">{PREFILL_ALERT_KEYWORD} {generationNote}</div>
+    </Block>;
+  }
+  return <Block {...blockProps}>{body}</Block>;
 }
+
+// The keyword read before the pre-fill alert, visible and in the live region alike: the library's is English.
+const PREFILL_ALERT_KEYWORD = 'Varoitus.';
 
 // The verdicts in the past tense the recorded state needs, one per literal the write route accepts. `hylätty`
 // is not offered here — the form is a proposal and an answer the professional does not confirm stays a
@@ -285,25 +393,90 @@ function PrefillAnswerReview({ form, item, review, onReview, onRetry }) {
 
 // The source-backed summary: the one prose block on the page, and the first thing a professional reads after the
 // context. It renders nothing when the narration was not accepted, so the page never shows unsupported text.
-function PreparationOverview({ presentation }) {
-  return <>
-  {presentation.summary && <Block title="Lähteisiin perustuva kooste" headingLevel={2} className="brief-narrative">
-    <p>{presentation.summary}</p>
-    <p className="t-caption">Koosteen teksti on koneellisesti tuotettu (tekoäly) vain sallituista lähteistä, ja jokainen lause on tarkistettu lähdeviitteisiinsä — tukematon teksti jää näyttämättä. Ammattilainen tekee päätökset.</p>
-    {/* The one place the reader is told that something was withheld, and why. The wording is chosen so it
-        cannot be misread: "jätettiin näyttämättä" (left unshown), never "piilotettiin" (hidden) — nothing
-        is concealed, the verifier declined to publish text it could not confirm. It is agentless
-        ("ei voitu vahvistaa"), so it does not imply the model refused or failed. It carries no sentence
-        id and no count, because those are machinery the professional cannot act on; the per-sentence
-        detail (id, reason, verdict) stays on the technical page where it is auditable.
-        This states the occurrence ("this summary had text withheld, because the sources did not confirm
-        it"); the caption above states the method and the general rule. They are separate claims, so the
-        reader is not told the same thing twice — and the method caption still renders when nothing was
-        withheld. */}
-    {hasWithheldSentences(presentation) && <p className="t-caption">Osa tämän koosteen koneellisesti tuotetusta tekstistä jätettiin näyttämättä, koska sitä ei voitu vahvistaa lähteisiin.</p>}
-  </Block>}
-  </>;
+// ---- The AI summary (W2) ---------------------------------------------------------------------------------
+// The one question each purpose asks; the summary's sentences answer it. The purpose label is the fallback.
+const SUMMARY_QUESTIONS = {
+  medication_follow_up: 'Miten lääkitys toteutuu?',
+  mental_health_assessment: 'Millainen mielialan tilanne on?',
+  mood_assessment: 'Millainen mielialan tilanne on?',
+  functioning_service_needs: 'Millainen on palvelutarve?',
+  child_health_checkup: 'Miten lapsen kasvu ja kehitys etenevät?',
+};
+function summaryQuestion(presentation) {
+  return SUMMARY_QUESTIONS[presentation.purpose] ?? presentation.purposeLabel ?? 'Mitä lähteet kertovat?';
 }
+
+// Every fixed word of the block, so no English default renders. The kept and hidden status lines are truthful
+// to what the page does: the choice lives in this view only, there is no endpoint for summary feedback, and
+// nothing is saved anywhere or written to the record.
+const SUMMARY_LABELS = {
+  suggestion: 'Ehdotus',
+  method: 'Kooste on koneellisesti tuotettu (tekoäly) vain sallituista lähteistä · jokainen lause tarkistettu lähteisiinsä',
+  withheldText: 'Koostetta ei näytetä: yhtään lausetta ei voitu vahvistaa lähteisiin. Valitut lähdetiedot ja sääntöpohjainen arvio säilyvät; lue kirjaukset alta.',
+  loading: 'Koostetta ladataan…',
+  basedOn: 'Perustuu',
+  records: n => `${n} kirjaukseen`,
+  withheld: n => n === 0 ? 'näyttämättä jätettyjä lauseita: 0'
+    : n === 1 ? 'jätettiin näyttämättä: 1 lause (sitä ei voitu vahvistaa lähteisiin)'
+      : `jätettiin näyttämättä: ${n} lausetta (niitä ei voitu vahvistaa lähteisiin)`,
+  keep: 'Pidä tällä käynnillä',
+  notUseful: 'Ei hyödyllinen',
+  keepCaption: 'Valinta näkyy vain tässä näkymässä. Kirjaukseen ei kirjoiteta mitään.',
+  keptStatus: 'Pidetty tällä käynnillä tässä näkymässä. Valintaa ei tallenneta, eikä kirjaukseen kirjoitettu mitään.',
+  hiddenStatus: 'Kooste piilotettu tältä käynniltä.',
+  ask: 'Kiitos. Miksi kooste ei ollut hyödyllinen?',
+  askHint: '(valinnainen, yksi napautus)',
+  reasons: { wrong: 'Virheellinen', 'not-relevant': 'Ei olennainen roolissani', 'already-known': 'Jo tiedossa', 'too-long': 'Liian pitkä' },
+  undo: 'Kumoa',
+};
+// The library shows at most this many sentences; the product verifies up to seven, so the rest go in a fold.
+const SUMMARY_FIRST_LOOK = 4;
+
+// One sentence's sources: one inline reference per verified record. A sentence whose verified records do not
+// render says so in words rather than leaving the slot empty.
+function SummarySentenceSources({ sentence, presentation, dialog }) {
+  const ids = sentence.recordIds.filter(id => sourceById(presentation, id));
+  if (ids.length === 0) return <span className="t-caption">Lähdekirjaus ei näy tässä näkymässä.</span>;
+  return <span className="brief-kooste-sources">{ids.map(id =>
+    <SourceRecordReference key={id} id={id} presentation={presentation} dialog={dialog} />)}</span>;
+}
+
+// The AI summary as the library's suggestion block: the one question the purpose asks, numbered sentences each
+// with its own verified source, "Perustuu N kirjaukseen", and equal-weight keep / not useful. State is
+// fail-closed: no accepted sentence renders the withheld sentence, never an absent block.
+function PreparationOverview({ presentation }) {
+  const dialog = useSourceDialog();
+  // Local only: the block's feedback is uncontrolled, and the choice is kept here just to fold the full list
+  // with the sentences. Nothing is persisted; the status lines above say so.
+  const [feedback, setFeedback] = useState('none');
+  const sentences = presentation.summarySentences ?? [];
+  const withheldCount = presentation.grounding?.rejected_sentences?.length ?? 0;
+  const state = sentences.length === 0 ? 'withheld' : withheldCount > 0 ? 'partly-withheld' : 'shown';
+  const distinctRecords = new Set(sentences.flatMap(sentence => sentence.recordIds.filter(id => sourceById(presentation, id)))).size;
+  const blockSentences = sentences.map(sentence => ({
+    text: sentence.text,
+    recordId: sentence.recordIds[0] ?? sentence.id,
+    source: <SummarySentenceSources sentence={sentence} presentation={presentation} dialog={dialog} />,
+  }));
+  return <div className="brief-narrative">
+    <AiSummaryBlock state={state} question={summaryQuestion(presentation)} headingLevel={2}
+      sentences={blockSentences} withheldCount={withheldCount} sourcesHref="#section-records"
+      labels={{ ...SUMMARY_LABELS, records: () => SUMMARY_LABELS.records(distinctRecords) }}
+      defaultFeedback="none"
+      onKeep={() => setFeedback('kept')} onNotUseful={() => setFeedback('not-useful')}
+      onReason={() => setFeedback('hidden')} onUndo={() => setFeedback('none')} />
+    {sentences.length > SUMMARY_FIRST_LOOK && feedback !== 'hidden' && <details className="brief-kooste-full">
+      <summary className="t-control">Koko kooste ({sentences.length} lausetta)</summary>
+      <ol className="brief-kooste-full-list">{sentences.map(sentence =>
+        <li key={sentence.id}>
+          <p className="t-body">{sentence.text}</p>
+          <SummarySentenceSources sentence={sentence} presentation={presentation} dialog={dialog} />
+        </li>)}</ol>
+    </details>}
+    <SourceRecordDialog presentation={presentation} dialog={dialog} />
+  </div>;
+}
+// ---- end: the AI summary ---------------------------------------------------------------------------------
 
 const DEFINITION_FIELDS = [
   ['sukupuoli', 'Sukupuoli'], ['syntymävuosi', 'Syntymävuosi'], ['äidinkieli', 'Äidinkieli'],
@@ -312,84 +485,76 @@ const DEFINITION_FIELDS = [
 
 function ProfessionalRecord({ presentation, mode,
   lensSiblings, onOpenLens, proposalReviews, onProposalReview, onRetryProposalReview,
-  prefillReviews, onPrefillReview, onRetryPrefillReview, hideHeading, onOpenTechnical }) {
+  prefillReviews, onPrefillReview, onRetryPrefillReview, onRetryPrefill, prefillRetrying, hideHeading, onOpenTechnical }) {
   const sources = presentation.sources ?? [];
   const anchorOwner = anchorOwners(sources);
   const { narration } = presentation;
   const basics = sources.find(source => source.type === 'perustieto' && source.topic === 'demografia');
+  // The identity block the library's IdentityStrip watches: the strip stays hidden while the block is on screen
+  // and appears once it has scrolled away, so the name is never covered and never missing. In a static render
+  // (the tests, and the first paint) the strip carries `hidden` until the observer reports.
+  const identityBlock = useRef(null);
   // The side column takes the medications card; the reading column takes the rest, in `briefingOrder`'s order.
   // Both lists are filtered from `briefingOrder`, so no card renders twice and none is invented for a purpose whose
   // order leaves it out.
   const order = briefingOrder(presentation.purpose);
   const sideIds = order.filter(id => id === SIDE_RECORD_ID);
   const readingIds = order.filter(id => id !== SIDE_RECORD_ID);
-  // The reading column is stacked and always visible: the definition grid, then the record cards. The audit
-  // cards (coverage and impact) moved to the technical page (`TechnicalView`; work order D, 2026-10-12, then B2), because
-  // they describe how the summary was produced rather than the person, so the reading path ends at the
-  // encounter material. This narrows the "all sections visible" decision; it does not reverse it. They were the library's `Tabs` (issue 03) with a
-  // class switching which one was `display: none`; the owner reversed that here, because a tab strip is a
-  // picker of content and the brief's promise is "valmiina ilman turhaa klikkailua". What the Tabs version
-  // claimed — "every section is present without any interaction" — was true of the DOM and false of the
-  // screen: the alerts panel, the medications, the proposals and the rule-based assessment each needed one
-  // click, and the professional's most decision-relevant card was behind it.
+  const facts = identityFacts(presentation, basics);
+  // Two zones, each under a `.t-overline` line (styleguide: zone headings over the groups). "Nyt" is the first
+  // look — the identity block, the Now strip, Decision-1's lifted items and the source-backed summary; "Kirjaukset"
+  // is the record material — the basics, the esitiedot and the record section. Neither zone can be empty: the
+  // identity block always renders in the first, the record section (its attention panel) always in the second.
   //
-  // Two consequences worth stating, because the previous round's reasoning depended on them:
-  //  * The `#section-*` ids are on the section CARDS (`DefinitionGrid`, `SelectedRecords`,
-  //    `SelectionCoverage`, `ImpactEstimate`, on the technical page), not on these wrappers, so every deep link and the in-page
-  //    "Siirry kattavuusriveihin" anchor work exactly as before — the browser scrolls instead of the app
-  //    selecting a tab, and `.brief-app :target { scroll-margin-top }` already handles the offset.
-  //  * There is no `activeSection` state, no hash listener and no `hidden` attribute anywhere: nothing is
-  //    removed from the tree or from the screen, so there is no state that can disagree with the address.
+  // The record section is the library's `MainSide` (2fr / 1fr from 1280px, one column below it, side after main):
+  // the reading column carries the purpose's record cards in `briefingOrder`, the side column carries the attention
+  // panel, the medications card and the rule-based assessment. Consecutive Blocks touch at their hairline — the
+  // columns add no gap of their own. The placement is fixed here rather than derived from `briefingOrder`, which
+  // orders cards and does not place them. The assistant is the shell's side pane (`AssistantPane`, night plan
+  // N1), not a card here; the proposal alone leads the body at full width.
+  //
+  // The audit cards (coverage and impact) are on the technical page (`TechnicalView`; work order D, 2026-10-12,
+  // then B2): they describe how the summary was produced rather than the person, so the reading path ends at the
+  // encounter material. Every section is on screen without interaction — no tabs, no `hidden`, no state that
+  // can disagree with the address. The `#section-*` ids are on the section CARDS (`DefinitionGrid`,
+  // `SelectedRecords`, and on the technical page `SelectionCoverage`, `ImpactEstimate`), not on these wrappers,
+  // so every deep link works as before and `.brief-app :target { scroll-margin-top }` handles the offset.
   return <>
-    <EncounterContext presentation={presentation} />
-    {!hideHeading && <header className="brief-heading">
-      <p className="t-overline brief-eyebrow">Synteettinen palvelutilanne</p>
-      <h1 className="t-page-title">{presentation.identityAvailable ? presentation.personName : 'Henkilöllisyystieto ei saatavilla'}</h1>
-      <p>{[presentation.roleLabel, presentation.purposeLabel].filter(Boolean).join(' · ')}</p>
-    </header>}
-    <PatientPills sources={sources} presentation={presentation} />
-    <p className="t-caption brief-lens-scope">{LENS_SCOPE_NOTE}</p>
-    <LensSwitch siblings={lensSiblings} onOpenLens={onOpenLens} />
-    <PreparationOverview presentation={presentation} />
-    {/* Two columns inside the record section. The previous round put attention first in the reading column; this
-        restores the earlier column assignment on the owner's instruction, after the placement was measured (a 360px
-        side column holding one 155px card beside a 2164px row, 93% empty). The trade is deliberate: attention now
-        follows the reading column in document order. The side column carries the attention panel, the medications
-        card and the rule-based assessment; the reading column carries the purpose's remaining record cards in
-        `briefingOrder`. The columns collapse to one at 1280px, reading column first. The placement is fixed here
-        rather than derived from `briefingOrder`, which orders cards and does not place them.
-        The assistant is no longer a card in this grid: it is the shell's side pane (`AssistantPane`, night plan
-        N1), present on every destination. What used to be the rail is the proposal alone, and it leads the body at
-        full width rather than leaving a 360px column standing beside the sections. */}
+    <IdentityStrip name={identityName(presentation)} details={facts.map(([, value]) => value)}
+      watch={identityBlock} label="Henkilö ja palvelutilanne" className="brief-identity-strip" />
+    <div className="brief-zone brief-zone-now">
+      <p className="t-overline brief-zone-heading">Nyt</p>
+      <IdentityBlock presentation={presentation} facts={facts} hideHeading={hideHeading} blockRef={identityBlock} />
+      <PatientPills sources={sources} presentation={presentation} />
+      <p className="t-caption brief-lens-scope">{LENS_SCOPE_NOTE}</p>
+      <LensSwitch siblings={lensSiblings} onOpenLens={onOpenLens} />
+      <NowFacts presentation={presentation} />
+      <LiftedItems presentation={presentation} />
+      <PreparationOverview presentation={presentation} />
+    </div>
     <div className="brief-body">
     <ProfessionalTools presentation={presentation}
       proposalReviews={proposalReviews} onProposalReview={onProposalReview} onRetryProposalReview={onRetryProposalReview} />
+    <div className="brief-zone brief-zone-records">
+    <p className="t-overline brief-zone-heading">Kirjaukset</p>
     <div className="brief-sections">
       <section className="brief-section">
         <DefinitionGrid source={basics} />
       </section>
       <section className="brief-section">
-        <Esitiedot presentation={presentation} reviews={prefillReviews} onReview={onPrefillReview} onRetry={onRetryPrefillReview} />
+        <Esitiedot presentation={presentation} reviews={prefillReviews} onReview={onPrefillReview} onRetry={onRetryPrefillReview}
+          onRetryPrefill={onRetryPrefill} prefillRetrying={prefillRetrying} />
       </section>
       <section className="brief-section">
-        <div className="brief-record-columns">
-          <section className="brief-record-main">
-            <SourceEvidence ids={readingIds} presentation={presentation} sources={sources} narration={narration} anchorOwner={anchorOwner} />
-          </section>
-          <aside className="brief-record-side" aria-label="Ammattilaisen tilanne ja tarkistettavat asiat">
+        <MainSide sideLabel="Ammattilaisen tilanne ja tarkistettavat asiat" className="brief-record-columns"
+          main={<SourceEvidence ids={readingIds} presentation={presentation} sources={sources} narration={narration} anchorOwner={anchorOwner} />}
+          side={<>
             <AttentionItems presentation={presentation} mode={mode} id="section-alerts" onOpenTechnical={onOpenTechnical} />
             <SourceEvidence ids={sideIds} presentation={presentation} sources={sources} narration={narration} anchorOwner={anchorOwner} />
-            {/* The general row (`yleinen`) matched nothing about this person: its one step is "keep following",
-                which beside a briefing reads as a verdict with no basis, so the block is shown only for a
-                situation the tables actually keyed (owner, 2026-10-14). */}
-            {presentation.situation?.situation_type !== 'yleinen' &&
-            <Block title="Sääntöpohjainen arvio" headingLevel={2} id="section-decision" className="brief-data-section">
-              <p>Kirjauksista johdettu triage-signaali (ei palvelutilanne): {presentation.situation?.situation_type ?? 'Ei arvioitavissa'}</p>
-              {presentation.actions.length > 0 && <ul>{presentation.actions.map((action, index) => <li key={`${action}-${index}`}>{action}</li>)}</ul>}
-            </Block>}
-          </aside>
-        </div>
+            <RuleBasedAssessment presentation={presentation} />
+          </>} />
       </section>
+    </div>
     </div>
     </div>
     {/* The page ends at the material about the encounter. Everything about how the summary was produced (the
@@ -401,6 +566,137 @@ function ProfessionalRecord({ presentation, mode,
       <TechnicalLink onOpenTechnical={onOpenTechnical}>Tekniset tiedot</TechnicalLink>
     </p>
   </>;
+}
+
+// The name the page and the identity strip print: the source-backed identity when the lens carries it, otherwise
+// the neutral sentence — never a demo label (ADR-0004).
+function identityName(presentation) {
+  return presentation.identityAvailable ? presentation.personName : 'Henkilöllisyystieto ei saatavilla';
+}
+
+// The facts beside the name, as [label, text] pairs: the role, the service purpose, and from the basics record
+// — when the lens carries it — the birth year, the display identifier and the home municipality. Only fields the
+// record has; a missing basics record (the social-care lens, where it is withheld by policy) adds nothing and
+// says nothing, the absence is cause-neutral. The identifier is left out when it is already the name.
+function identityFacts(presentation, basics) {
+  const payload = basics?.payload ?? {};
+  const name = identityName(presentation);
+  return [
+    ['Ammattirooli', presentation.roleLabel],
+    ['Palvelukonteksti', presentation.purposeLabel],
+    ['Syntymävuosi', payload.syntymävuosi !== undefined && payload.syntymävuosi !== null && `s. ${payload.syntymävuosi}`],
+    ['Näyttötunniste', typeof payload.näyttötunniste === 'string' && payload.näyttötunniste.trim() && payload.näyttötunniste !== name
+      && `Tunniste ${payload.näyttötunniste}`],
+    ['Kotikunta', typeof payload.kotikunta === 'string' && payload.kotikunta.trim() && `Kotikunta ${payload.kotikunta}`],
+  ].filter(([, value]) => value);
+}
+
+// The identity block at the top of the briefing: the name (the page h1 in a static render; a level-2 heading
+// under the shell's Header, which owns the only h1 — `hideHeading`), then the role and the purpose, then the
+// basics facts. It is the element the IdentityStrip watches. The role and purpose line replaced the former
+// context strip here; `EncounterContext` stays for the loading panel, which has no identity yet.
+function IdentityBlock({ presentation, facts, hideHeading, blockRef }) {
+  const name = identityName(presentation);
+  const context = facts.filter(([label]) => label === 'Ammattirooli' || label === 'Palvelukonteksti').map(([, value]) => value);
+  const details = facts.filter(([label]) => label !== 'Ammattirooli' && label !== 'Palvelukonteksti').map(([, value]) => value);
+  return <section className="brief-heading brief-identity" aria-label="Henkilö ja palvelutilanne" ref={blockRef}>
+    {!hideHeading && <p className="t-overline brief-eyebrow">Synteettinen palvelutilanne</p>}
+    {hideHeading ? <h2 className="t-title-lg brief-identity-name">{name}</h2> : <h1 className="t-page-title">{name}</h1>}
+    {context.length > 0 && <p className="t-body brief-identity-context">{context.join(' · ')}</p>}
+    {details.length > 0 && <p className="t-caption brief-identity-facts">{details.join(' · ')}</p>}
+  </section>;
+}
+
+// The Now strip: four cells, the first look, every value from `presentation` and every cell always carrying a
+// real value — a count of zero is a value, an absent date is "Ei kirjauksia", an absent assessment is the
+// existing RISK_WORD for absence. A count is of distinct substances and names in view: the same drug or
+// diagnosis recorded on several contacts is one fact. `hiddenIn` is never set: this view has no hidden places
+// to name (a withheld record is simply not in `sources`), so a number is honest.
+function NowFacts({ presentation }) {
+  const sources = presentation.sources ?? [];
+  // A diagnosis uses the same ended-status vocabulary (`ei_aktiivinen`) the medication split folds away.
+  const activeMedications = new Set(sources.filter(source => source.type === 'lääkitys' && !medicationIsHistorical(source)
+    && typeof source.payload.lääke === 'string' && source.payload.lääke.trim()).map(source => source.payload.lääke.trim()));
+  const activeDiagnoses = new Set(sources.filter(source => source.type === 'diagnoosi' && !medicationIsHistorical(source)
+    && typeof source.payload.nimi === 'string' && source.payload.nimi.trim()).map(source => source.payload.nimi.trim()));
+  const newest = sources.map(source => ({ date: source.date, time: new Date(source.date).valueOf() }))
+    .filter(entry => entry.date && !Number.isNaN(entry.time)).sort((a, b) => b.time - a.time)[0] ?? null;
+  const risk = presentation.risk ?? null;
+  // The reason is the detail line, except for a source conflict with conflict rows: that finding is the conflict
+  // rows' own, with both sources linked, so the cell names the level and leaves the sentence to them.
+  const reasonIsConflictRow = risk?.risk_level === 'ristiriita' && (presentation.conflicts ?? []).length > 0;
+  const reason = typeof risk?.reason === 'string' && risk.reason.trim() && !reasonIsConflictRow ? risk.reason : undefined;
+  return <NowStrip className="brief-now-strip">
+    <NowCell label="Aktiiviset lääkkeet" value={activeMedications.size} valueKind="number" />
+    <NowCell label="Aktiiviset diagnoosit" value={activeDiagnoses.size} valueKind="number" />
+    <NowCell label="Viimeisin kirjaus" value={newest ? formatDate(newest.date) : 'Ei kirjauksia'} />
+    <NowCell label="Riskiarvio" value={RISK_WORD[risk?.risk_level] ?? RISK_WORD.arvioimaton} detail={reason} />
+  </NowStrip>;
+}
+
+// Decision-1's lifted items for this visit, gathered in one block near the top (replaces the blue information rows
+// that used to sit under "Tarkistettavat"). Implemented in the lifted-items work order; the layout mounts it here.
+export function LiftedItems({ presentation }) {
+  // Client-side only: no endpoint persists a dismissal, so a reload shows the suggestions again.
+  const [dismissed, setDismissed] = useState(false);
+  const selection = presentation.selection;
+  const answered = decisionAnswered(selection);
+  const items = answered ? decisionHighlights(presentation) : [];
+  const noteCount = answered ? (selection.decision_notes ?? []).length : 0;
+  const targets = anchorTargets(presentation);
+  // One line, under the title, carrying once what the per-row chips used to repeat on every record: the urgency
+  // word is an ordering basis (ADR-0024), and this is how many records the model answered for.
+  const basis = `Järjestysperuste, ei hoidon kiireellisyys · Decision-1 arvioi ${noteCount === 1 ? '1 kirjauksen' : `${noteCount} kirjausta`}`;
+  return <Block title="Nostettu tälle käynnille" headingLevel={2} id="section-lifted">
+    {!answered
+      ? <p className="brief-lifted-note">Decision-1:n arvio ei ole saatavilla tässä näkymässä; kirjaukset näytetään sääntöpohjaisen valinnan mukaan.</p>
+      : <>
+        <p className="t-caption brief-lifted-basis">{basis}</p>
+        {items.length === 0 && <p className="brief-lifted-note">Decision-1 ei nostanut kirjauksia esiin.</p>}
+        {items.length > 0 && dismissed && <p className="brief-lifted-note">Ehdotukset hylätty tältä käynniltä ·{' '}
+          <Button size="sm" onClick={() => setDismissed(false)}>Näytä uudelleen</Button></p>}
+        {items.length > 0 && !dismissed && <ul className="brief-lifted-list">{items.map(item =>
+          // The anatomy is the library Caution item's (tag slot, fact over qualifier, source on the right), built as app
+          // markup on purpose: a model pick is a suggestion, and must never be drawn by the component that draws a
+          // safety fact. The tag is neutral, the qualifier is the verdict in the note's own terms, nothing is tinted.
+          <li key={`${item.kind}-${item.id}`} className="brief-lifted-item">
+            <span className="brief-lifted-slot"><Tag>Ehdotus</Tag></span>
+            <span className="brief-lifted-lines">
+              <span className="t-body-strong">{item.title} · {formatDate(item.date)}</span>
+              <span className="t-caption">{item.text}</span>
+            </span>
+            <span className="t-caption brief-lifted-source"><SourceLink id={item.id} targets={targets}>Lähde</SourceLink></span>
+          </li>)}</ul>}
+        {items.length > 0 && <div className="brief-lifted-footer">
+          {!dismissed && <Button size="sm" onClick={() => setDismissed(true)}>Hylkää ehdotukset</Button>}
+          <p className="t-caption">Kaikki kirjaukset alla</p>
+        </div>}
+      </>}
+  </Block>;
+}
+
+// The rule-based assessment block. The general row (`yleinen`) matched nothing about this person: its one step is
+// "keep following", which beside a briefing reads as a verdict with no basis, so the block is shown only for a
+// situation the tables actually keyed (owner, 2026-10-14).
+function RuleBasedAssessment({ presentation }) {
+  if (presentation.situation?.situation_type === 'yleinen') return null;
+  const basis = (presentation.sources ?? []).length;
+  // The same suggestion pattern as the lifted block and the neutral risk row: a neutral tag naming who proposes, the
+  // sentence, a caption with its basis. Never an alert row: a table output is a proposal, not a finding.
+  return <Block title="Sääntöpohjainen arvio" headingLevel={2} id="section-decision" className="brief-data-section">
+    <div className="brief-suggestion">
+      <Tag>Sääntöpohjainen arvio</Tag>
+      <div className="brief-suggestion-copy">
+        <p>Kirjauksista johdettu triage-signaali (ei palvelutilanne): {situationWord(presentation.situation?.situation_type)}</p>
+        <p className="t-caption">Perustuu {basis} kirjaukseen</p>
+      </div>
+    </div>
+    {/* The optional actions module's strings (ADR-0023) as tasks the professional may tick. The checkboxes are
+        uncontrolled and client-side only: nothing persists a tick, and the meta line says whose proposal each is. */}
+    {presentation.actions.length > 0 && <TaskList className="brief-suggestion-tasks" aria-label="Sääntöpohjaiset ehdotukset">
+      {presentation.actions.map((action, index) => <TaskItem key={`${action}-${index}`} meta="Sääntöpohjainen ehdotus">{action}</TaskItem>)}
+    </TaskList>}
+  </Block>;
 }
 
 // The record cards the briefing draws, by id. Each takes the same props and reads only what it needs, so the
@@ -569,12 +865,8 @@ function AttentionItems({ presentation, mode, id, onOpenTechnical }) {
       <SourceLink id={conflict.note_record_id} targets={anchorTargets(presentation)}>Kirjaus</SourceLink></>,
     act: 'Tarkista, kumpi lähde on ajantasainen.',
   });
-  // Decision-1's own findings, as blue information rows: what it added beyond the baseline, what it put first,
-  // what it called relevant and current. Each links to the record it is about; nothing here is a care claim.
-  for (const item of decisionHighlights(presentation)) attention.push({
-    tone: 'info', severity: 'Decision-1', key: `decision-${item.kind}-${item.id}`,
-    fact: <>{item.text}: <SourceLink id={item.id} targets={anchorTargets(presentation)}>{item.title}</SourceLink>.</>,
-  });
+  // Decision-1's own picks are NOT rows here: they are the "Nostettu tälle käynnille" block (`LiftedItems`). A model
+  // pick drawn with the info icon and fill read as a system alert, and "Tarkistettavat" holds real findings only.
   for (const entry of presentation.formCatalogue ?? []) if (entry.status === 'due') attention.push({
     tone: 'warning', severity: SEVERITY_WORD.warning, key: `due-${entry.form_type}`,
     fact: <>{entry.form_type} · Tila · due{entry.due_at ? ` · ${formatDate(entry.due_at)}` : ''}
@@ -592,19 +884,28 @@ function AttentionItems({ presentation, mode, id, onOpenTechnical }) {
   });
   // The patient-level risk row. It is in the attention group only when its level has a severity tone, and
   // in the status group otherwise (`matala`, `arvioimaton`, or `ristiriita` without conflicts).
+  // A risk with a severity tone is an alert row. A neutral level (`matala`, `arvioimaton`, `ristiriita` without
+  // conflicts) is a table's proposal about the person, so it takes the suggestion pattern — a neutral tag naming
+  // who proposes, then the sentence — and no bordered box that would read as an alert.
   const riskRow = presentation.risk && !riskIsConflictRow
-    ? <div className={`brief-risk brief-alert-row${riskTone ? ` brief-${riskTone}` : ''}`} data-severity={riskTone} key="risk">
-      {riskTone && <SeverityIcon tone={riskTone} />}
-      <div className="brief-alert-copy"><p><strong>{riskWord}.</strong> {presentation.risk.reason}
-        {/* The qualification is IN the sentence, not a caption under it. Two gates decided that, and both
-            were right: a `.t-caption` here bakes `color: var(--color-text-muted)`, which out-specifies the
-            status foreground and would strip the tint off the very row it is qualifying (the a11y gate's
-            status-subtree rule), and a separate paragraph reads as a second, independent claim rather than
-            as a remark on this one. Inline, it inherits the row's own colour and is read with the finding. */}
-        {isIllustrativeThreshold(presentation.risk) && ` — ${ILLUSTRATIVE_NOTE}`}</p>
-        {riskTone && presentation.actions[0] && <p className="brief-alert-act">{presentation.actions[0]}</p>}
+    ? riskTone
+      ? <div className={`brief-risk brief-alert-row${riskTone ? ` brief-${riskTone}` : ''}`} data-severity={riskTone} key="risk">
+        <SeverityIcon tone={riskTone} />
+        <div className="brief-alert-copy"><p><strong>{riskWord}.</strong> {presentation.risk.reason}
+          {/* The qualification is IN the sentence, not a caption under it. Two gates decided that, and both
+              were right: a `.t-caption` here bakes `color: var(--color-text-muted)`, which out-specifies the
+              status foreground and would strip the tint off the very row it is qualifying (the a11y gate's
+              status-subtree rule), and a separate paragraph reads as a second, independent claim rather than
+              as a remark on this one. Inline, it inherits the row's own colour and is read with the finding. */}
+          {isIllustrativeThreshold(presentation.risk) && ` — ${ILLUSTRATIVE_NOTE}`}</p>
+          {presentation.actions[0] && <p className="brief-alert-act">{presentation.actions[0]}</p>}
+        </div>
       </div>
-    </div>
+      : <div className="brief-suggestion" key="risk">
+        <Tag>Sääntöpohjainen arvio</Tag>
+        <div className="brief-suggestion-copy"><p><strong>{riskWord}.</strong> {presentation.risk.reason}
+          {isIllustrativeThreshold(presentation.risk) && ` — ${ILLUSTRATIVE_NOTE}`}</p></div>
+      </div>
     : null;
   const alertRow = alert => <div className={`${alert.tone ? `brief-severity brief-${alert.tone}` : 'brief-alert-neutral'} brief-alert-row`} key={alert.key}>
     {alert.tone && <SeverityIcon tone={alert.tone} />}
@@ -653,81 +954,100 @@ function hasSourceDetails(source, narration) {
     || source.selectionReasonTexts?.length || source.decisionOutcome || outOfGeneration);
 }
 
-// The medications table sits in the side column, beside the attention panel and the rule-based assessment. It is three columns rather than
-// four because the card keeps the dose and status readable at the narrower widths the column takes below
-// 1280px, and every per-row provenance line — `Valinnan peruste`, the missed-dose count, the record state —
-// sits on its own full-width line inside the row. Those lines wrap; they are never truncated and never
-// squeezed into a column.
+// The medications card sits in the side column, beside the attention panel and the rule-based assessment. It
+// draws one library `GroupedRecordRow` per substance — the corpus writes the same substance once per visit, so
+// a table of records showed metformin on nine rows — and the row's opened list is where the records are, newest
+// first, each with its own anchor. The provenance lines (`Valinnan peruste`, the missed-dose count, the record
+// state) sit under the record they belong to, full width; they wrap and are never truncated.
 function MedicationTable({ sources, narration, anchorOwner }) {
   const rows = sources.filter(source => source.type === 'lääkitys');
-  // N3b: current medications first; ended ones fold behind a disclosure. The fold is a rendering choice over
-  // the rows the table already has — every row is a selected, permitted source, and the counts are of those.
-  const { active, historical } = splitMedicationRows(rows);
+  // N3b: current substances first; substances whose every record has ended fold behind a disclosure. The fold
+  // is a rendering choice over the rows the card already has — every record is a selected, permitted source,
+  // and the counts are of those substances and records.
+  const { active, historical } = groupMedicationRows(rows);
   const [showHistorical, setShowHistorical] = useState(false);
   const historyId = 'section-medications-history';
   if (!rows.length) return null;
-  const medicationRow = row => <Fragment key={row.id}>
-    <TableRow showArrow={false} id={anchorOwner?.get(row.id) === 'medications' ? `source-${row.id}` : undefined}>
-      <th scope="row" className="t-body-strong">{row.payload.lääke}</th>
-      <TableCell>{row.payload.annos}</TableCell>
-      <TableCell>{row.payload.tila}</TableCell>
-    </TableRow>
-    {/* `colSpan` is not optional. Without it this cell claims a FOURTH column, so the browser lays the
-        table out with one more column than the header has and gives the surplus width to the metadata
-        rather than to the row header — which squeezed the drug name to 24px and set it one character per
-        line ("l e v o t y r o k s i i n i") on the live page. The other three metadata rows all span; this
-        one was missed, and the shape of the bug is why it survived: the table still rendered, and only the
-        widest cell (a long dosage) drove the squeeze, so a short sample looked fine. */}
-    {hasSourceDetails(row, narration) && <TableRow showArrow={false} className="brief-source-metadata"><TableCell colSpan={3}>
-      <RecordStateBadge state={row.state} /><EntryMetadata source={row} />
-      <SelectionEvidence source={row} narration={narration} />
-      {row.payload.puuttuneet_annokset_30d !== undefined
-        && <p className="brief-medication-doses"><strong>Puuttuneet annokset / 30 vrk:</strong> {row.payload.puuttuneet_annokset_30d}</p>}
-    </TableCell></TableRow>}
-  </Fragment>;
+  const historicalRecords = historical.flatMap(group => group.records);
+  const medicationGroup = group => <RecordGroup key={group.key} owner="medications" anchorOwner={anchorOwner}
+    name={group.name} code={medicationCode(group.newest)}
+    summary={group.active ? `Alkaen ${formatDate(group.since)}` : `Päättynyt ${formatDate(group.ended)}`}
+    detail={recordCountDetail(group.count, group.first, 'kirjaus', 'kirjausta')}
+    records={group.records}
+    renderRecord={(record, index) => <>
+      <a href={sourceHref(record.id)}>{formatDate(record.date)}</a>
+      {` · ${record.payload.annos ?? 'Annos puuttuu'} · ${medicationStatusText(record.payload.tila)}`}
+      {index === 0 && <><RecordStateBadge state={record.state} /><EntryMetadata source={record} />
+        <SelectionEvidence source={record} narration={narration} /></>}
+      {record.payload.puuttuneet_annokset_30d !== undefined
+        && <p className="brief-medication-doses"><strong>Puuttuneet annokset / 30 vrk:</strong> {record.payload.puuttuneet_annokset_30d}</p>}
+    </>} />;
   return <Block title="Lääkitykset" headingLevel={2} id="section-medications" className="brief-data-section"
-    actions={rows.length > 0 ? <span className="t-caption">{medicationCountText({ active, historical })}</span> : undefined}>
-    {!rows.length ? <EmptyPanel /> : <Table label="Lääkitysten taulukko">
-      <TableHeader>
-        <TableHeaderCell>Lääke</TableHeaderCell>
-        <TableHeaderCell>Annos</TableHeaderCell>
-        <TableHeaderCell>Tila</TableHeaderCell>
-      </TableHeader>
-      <TableBody>{active.map(medicationRow)}</TableBody>
-      {/* The ended medications keep their own body, which is what the toggle controls. Collapsed, the body
-          holds the toggle and a visually-hidden list of the folded records' `source-<id>` anchors, so a citation
-          in the summary that points at an ended medication still has a target in the DOM; expanded, the rows. */}
-      {historical.length > 0 && <TableBody id={historyId}>
-        <TableRow showArrow={false}><TableCell colSpan={3}>
-          {/* The library's `ShowAllButton` hard-codes its English label ("Show all N" / "Show fewer"), so the
-              disclosure is the library `Button` carrying the same `aria-expanded` / `aria-controls` contract
-              and the Finnish label the page needs. */}
-          <Button size="sm" aria-expanded={showHistorical} aria-controls={historyId}
-            onClick={() => setShowHistorical(open => !open)}>
-            {showHistorical ? 'Piilota aiemmat' : `Näytä aiemmat (${historical.length})`}
-          </Button>
-          {!showHistorical && <FoldedAnchors rows={historical} owner="medications" anchorOwner={anchorOwner} />}
-        </TableCell></TableRow>
-        {showHistorical && historical.map(medicationRow)}
-      </TableBody>}
-    </Table>}
+    actions={<span className="t-caption">{medicationCountText({ active, historical, records: rows.length })}</span>}>
+    <div className="brief-record-groups">{active.map(medicationGroup)}</div>
+    {/* The ended substances keep their own container, which is what the toggle controls. Collapsed, it holds the
+        toggle and a visually-hidden list of the folded records' `source-<id>` anchors, so a citation in the
+        summary that points at an ended medication still has a target in the DOM; expanded, the rows. */}
+    {historical.length > 0 && <div id={historyId} className="brief-record-fold">
+      {/* The library's `ShowAllButton` hard-codes its English label ("Show all N" / "Show fewer"), so the
+          disclosure is the library `Button` carrying the same `aria-expanded` / `aria-controls` contract
+          and the Finnish label the page needs. */}
+      <Button size="sm" aria-expanded={showHistorical} aria-controls={historyId}
+        onClick={() => setShowHistorical(open => !open)}>
+        {showHistorical ? 'Piilota aiemmat' : `Näytä aiemmat (${historical.length})`}
+      </Button>
+      {!showHistorical && <FoldedAnchors rows={historicalRecords} owner="medications" anchorOwner={anchorOwner} />}
+      {showHistorical && <div className="brief-record-groups">{historical.map(medicationGroup)}</div>}
+    </div>}
   </Block>;
 }
 
+// The code slot of a medication row: the ATC code when the payload carries one, else the current dose as the
+// newest record writes it. The corpus carries no ATC code today, so the dose is what renders.
+function medicationCode(record) {
+  const atc = record?.payload?.atc ?? record?.payload?.atc_koodi;
+  if (typeof atc === 'string' && atc.trim()) return atc.trim();
+  return record?.payload?.annos ?? 'Annos puuttuu';
+}
+
+// The detail line at the top of an opened group: "N kirjausta · ensimmäinen d.m.yyyy", or "1 kirjaus".
+function recordCountDetail(count, first, singular, plural) {
+  return count === 1 ? `1 ${singular}` : `${count} ${plural} · ensimmäinen ${formatDate(first?.date)}`;
+}
+
+// One group of records as the library `GroupedRecordRow`: the row is a button that opens the list of records,
+// newest first, each on its own `<li>` carrying the record's canonical `source-<id>` anchor. The library draws
+// the list `hidden` while closed, and a hidden element is no target for a citation link, so the group renders
+// the list only while open and a visually-hidden anchor list (`FoldedAnchors`) beside the row while closed:
+// every record is anchored exactly once either way. `longTerm` is never set: no source record carries such
+// a flag, and the library's tag would be an inference from the record count, which it forbids.
+function RecordGroup({ name, code, summary, detail, records, owner, anchorOwner, renderRecord }) {
+  const [open, setOpen] = useState(false);
+  return <div className="brief-record-group">
+    <GroupedRecordRow name={name} code={code} summary={summary} detail={detail} expanded={open}
+      onExpandedChange={setOpen} labels={{ longTerm: 'Pitkäaikainen' }}>
+      {open && <ul className="brief-group-records t-caption">{records.map((record, index) =>
+        <li key={record.id} id={anchorOwner?.get(record.id) === owner ? `source-${record.id}` : undefined}>
+          {renderRecord(record, index)}
+        </li>)}</ul>}
+    </GroupedRecordRow>
+    {!open && <FoldedAnchors rows={records} owner={owner} anchorOwner={anchorOwner} />}
+  </div>;
+}
+
 // The `source-<id>` anchors of records a fold does not draw as rows of their own. They stay in the DOM so a
-// citation link still lands on the table that owns the record; each item names the record's date, which is
+// citation link still lands on the card that owns the record; each item names the record's date, which is
 // what a screen reader announces when a link lands here. Ownership is the same rule as for a drawn row: the
-// table that `anchorOwners` assigned the record to emits its anchor, and no other.
+// card that `anchorOwners` assigned the record to emits its anchor, and no other.
 function FoldedAnchors({ rows, owner, anchorOwner }) {
   const owned = rows.filter(row => anchorOwner?.get(row.id) === owner);
   if (!owned.length) return null;
   return <ul className="visually-hidden">{owned.map(row => <li key={row.id} id={`source-${row.id}`}>{formatDate(row.date)}</li>)}</ul>;
 }
 
-// A metric tile leads with its reading and puts the label beneath it, the way the reference workspace
-// does: the number is what the clinician scans for, the label only names it. The label is emitted once —
-// under the first reading and above that reading's provenance lines — so a tile that also carries older
-// readings stays labelled without repeating the label after every source line.
+// A measurement leads with its reading and puts the label beneath it, the way the library `Metric` does: the
+// number is what the clinician scans for, the label only names it. The first group of each metric is the
+// reading the Metric shows; every group's sources are listed under the row with their dates and anchors.
 function measurementMetrics(sources) {
   const records = sources.filter(source => source.type === 'mittaus');
   return [['verenpaine', 'Verenpaine', ''], ['syke', 'Syke', ''], ['lämpö_c', 'Lämpö', '°C'], ['spo2', 'SpO2', '%'],
@@ -743,53 +1063,66 @@ function measurementMetrics(sources) {
 }
 
 function MeasurementTiles({ sources, narration, anchorOwner }) {
-  // `paino_kg`/`pituus_cm` encode their unit in the key; `verenpaine`/`syke` do not, so their tile renders
+  // `paino_kg`/`pituus_cm` encode their unit in the key; `verenpaine`/`syke` do not, so their Metric renders
   // the source's own value with no unit rather than a unit we supplied. The owner reversed issue 04's
   // "measurement values render in the record tables, not as tiles" here: blood pressure was renderable
   // nowhere at all, which is what forced the reversal rather than a change of taste.
+  // The readings are the library `MetricRow`/`Metric`, with no `status`: a trend arrow would be a clinical
+  // reading of the value, which no rule here makes. `MetricRow` fixes four columns and clears the right rule on
+  // its last child only, so with one to three readings the row takes the same flex override the worklist uses
+  // (`.brief-worklist-metrics`), under this card's own class.
   const metrics = measurementMetrics(sources);
   const linkedSources = new Set();
   if (!metrics.length) return null;
   return <Block title="Mittaukset" headingLevel={2} id="section-measurements" className="brief-data-section"
-    actions={metrics.length > 0 ? <span className="t-caption">{metrics.length} mittausta</span> : undefined}>
-    {!metrics.length ? <EmptyPanel /> : <div className="brief-measurements">{metrics.map(metric => <article key={metric.key}>
-      {metric.values.map((group, index) => <div className="brief-measurement-value" key={`${metric.key}-${index}`}>
-        <p><strong className="t-metric-sm">{group[0].payload[metric.key]}</strong>{metric.unit && <> <span>{metric.unit}</span></>}</p>
-        {index === 0 && <h3 className="t-overline">{metric.label}</h3>}
-        {group.map(source => {
-          const target = !linkedSources.has(source.id);
-          linkedSources.add(source.id);
-          return <div className="t-caption brief-measurement-source" key={source.id}>
-            <a id={target && anchorOwner?.get(source.id) === 'measurements' ? `source-${source.id}` : undefined} href={sourceHref(source.id)}>{formatDate(source.date)}{source.form?.form_type ? ` · ${source.form.form_type}` : ''}</a>
-            {target && <><EntryMetadata source={source} /><SelectionEvidence source={source} narration={narration} /></>}
-          </div>;
-        })}
-      </div>)}
-    </article>)}</div>}
+    actions={<span className="t-caption">{metrics.length} mittausta</span>}>
+    <MetricRow className="brief-measurement-metrics">
+      {metrics.map(metric => <Metric key={metric.key} value={metric.values[0][0].payload[metric.key]}
+        unit={metric.unit || undefined} label={metric.label} />)}
+    </MetricRow>
+    <ul className="brief-measurement-sources t-caption">{metrics.flatMap(metric => metric.values.map((group, index) => <li key={`${metric.key}-${index}`}>
+      <strong>{metric.label}</strong>{index > 0 && <> {group[0].payload[metric.key]}{metric.unit ? ` ${metric.unit}` : ''}</>}
+      {group.map(source => {
+        const target = !linkedSources.has(source.id);
+        linkedSources.add(source.id);
+        return <div className="brief-measurement-source" key={source.id}>
+          <a id={target && anchorOwner?.get(source.id) === 'measurements' ? `source-${source.id}` : undefined} href={sourceHref(source.id)}>{formatDate(source.date)}{source.form?.form_type ? ` · ${source.form.form_type}` : ''}</a>
+          {target && <><EntryMetadata source={source} /><SelectionEvidence source={source} narration={narration} /></>}
+        </div>;
+      })}
+    </li>))}</ul>
   </Block>;
 }
 
 function RecordStatusTable({ sources, narration, anchorOwner }) {
   const rows = sources.filter(source => source.type === 'diagnoosi' || source.type === 'päätös');
   if (!rows.length) return null;
-  // N3a: one row per (ICD-10 code, status), drawn from its newest record. The row's Decision-1 chip and
-  // provenance are the newest record's; the folded records keep their anchors in a visually-hidden list
-  // inside the row. Both numbers on the count line are of these rendered and folded rows.
+  // N3a: one `GroupedRecordRow` per (ICD-10 code, status), summarised from its newest record. The status word
+  // is on the closed row beside the newest date, because two rows can share a code and differ only in it; the
+  // records, newest first, are the opened list, and the newest one carries the group's Decision-1 chip and
+  // provenance. Both numbers on the count line are of these rows and the records they stand for.
   const groups = foldStatusRows(rows);
   return <Block title="Diagnoosit ja päätökset" headingLevel={2} id="section-diagnoses" className="brief-data-section"
-    actions={rows.length > 0 ? <span className="t-caption">{statusCountText(groups)}</span> : undefined}>
-    {!rows.length ? <EmptyPanel /> : <Table label="Kirjausten tilan taulukko">
-      <TableHeader><TableHeaderCell>Kirjaus</TableHeaderCell><TableHeaderCell>Tila</TableHeaderCell><TableHeaderCell>Kirjattu</TableHeaderCell></TableHeader>
-      <TableBody>{groups.map(({ key, newest: row, folded, count }) => <Fragment key={key}>
-        <TableRow showArrow={false} id={anchorOwner?.get(row.id) === 'status' ? `source-${row.id}` : undefined}><th scope="row" className="t-body-strong">{row.payload.nimi ?? row.payload.päätös}
-            {count > 1 && <> <Tag className="brief-record-state">×{count} kirjausta</Tag></>}
-            <FoldedAnchors rows={folded} owner="status" anchorOwner={anchorOwner} /></th>
-          <TableCell>{row.type === 'päätös' ? row.payload.voimassa : row.payload.tila}</TableCell>
-          <TableCell>{formatDate(row.date)}</TableCell></TableRow>
-        {hasSourceDetails(row, narration) && <TableRow showArrow={false} className="brief-source-metadata"><TableCell colSpan={3}><RecordStateBadge state={row.state} />
-          <EntryMetadata source={row} /><SelectionEvidence source={row} narration={narration} /></TableCell></TableRow>}
-      </Fragment>)}</TableBody>
-    </Table>}
+    actions={<span className="t-caption">{statusCountText(groups)}</span>}>
+    <div className="brief-record-groups">{groups.map(({ key, newest, folded, count }) => {
+      const records = [newest, ...folded];
+      const decision = newest.type === 'päätös';
+      // `validityText` is the decision-card helper (ISO date as d.m.yyyy, the fixed tokens capitalised); an absent
+      // value is said in words here rather than left as an empty slot.
+      const validity = typeof newest.payload.voimassa === 'string' && newest.payload.voimassa.trim() ? validityText(newest.payload.voimassa) : 'Voimassaolo puuttuu';
+      const status = decision ? `Voimassa: ${validity}` : recordStatusText(newest.payload.tila);
+      return <RecordGroup key={key} owner="status" anchorOwner={anchorOwner}
+        name={newest.payload.nimi ?? newest.payload.päätös ?? 'Nimetön kirjaus'}
+        code={newest.payload.icd10 ?? (decision ? 'Päätös' : 'Diagnoosi')}
+        summary={`${status} · Viimeisin ${formatDate(newest.date)}`}
+        detail={recordCountDetail(count, records.at(-1), 'kirjaus', 'kirjausta')}
+        records={records}
+        renderRecord={(record, index) => <>
+          <a href={sourceHref(record.id)}>{formatDate(record.date)}</a>
+          {index === 0 && <><RecordStateBadge state={record.state} /><EntryMetadata source={record} />
+            <SelectionEvidence source={record} narration={narration} /></>}
+        </>} />;
+    })}</div>
   </Block>;
 }
 
@@ -896,8 +1229,9 @@ function RelevantAssessments({ presentation, narration, anchorOwner }) {
   </Block>;
 }
 
-// The briefing's own context: the person, the professional's role and the service purpose, always on screen.
-// It is not the header's line, which the library lays out by its own breakpoints and can lose.
+// The context strip of the loading panel (`PictureLoading` in App.jsx): the professional's role and the service
+// purpose while the briefing is prepared. The loaded briefing states these in its identity block (`IdentityBlock`)
+// and the library's IdentityStrip, so this no longer renders there.
 export function EncounterContext({ presentation }) {
   // No person value at all means no Henkilö fact (the loading panel); a person value that the Picture does not
   // identify is said in words. The filter below drops any fact whose value is absent.
@@ -968,22 +1302,13 @@ function SelectionEvidence({ source, narration }) {
   const riskReasons = source.riskReasonTexts ?? [];
   const outcome = source.decisionOutcome;
   const outOfGeneration = narration?.generationStatus === 'generated' && !narration.inputRecordIds.includes(source.id);
-  if (!reasons.length && !riskReasons.length && !outcome && !outOfGeneration) return null;
-  // Decision-1's read on this record, in words, where the record is: `relevant` added or emphasised it for this
-  // purpose, `irrelevant` kept it visible but out of the narration. Abstention gets no chip — restraint is not
-  // a finding (ADR-0009), and the status colour rules put both neutral states under "no tint".
-  const why = outcome?.status === 'relevant' ? 'Olennainen tälle käynnille'
-    : outcome?.status === 'irrelevant' ? 'Taustatieto tälle käynnille' : null;
-  // Decision-1's time-sensitivity on the same record: `current` or `historical`, as the model read it. `unclear`
-  // and an unanswered question get no chip. It is an ordering fact about this record — the same caveat the day
-  // view's lead line carries — and never a statement about the care's urgency.
-  const timing = outcome?.time_sensitivity === 'current' ? 'Ajankohtainen'
-    : outcome?.time_sensitivity === 'historical' ? 'Aiempi (mallin mukaan)' : null;
+  if (!reasons.length && !riskReasons.length && !outcome && !outOfGeneration && !source.lifted) return null;
+  // The one tag a row may carry: "Ehdotus", only when this record is one of the picks the "Nostettu tälle
+  // käynnille" block lists. `source.lifted` is set by the adapter from the same helper the block renders, so the
+  // two cannot disagree. The verdict itself (relevant / irrelevant / unclear, time-sensitivity) is in words, once,
+  // in the block and in the closed reasoning below — never as a chip that looks like a fact tag.
   return <div className="t-caption brief-selection-evidence">
-    {(why || timing) && <p className="brief-why">
-      {why && <Tag className="brief-role-chip">{why}</Tag>}
-      {timing && <>{why ? ' ' : ''}<Tag className="brief-role-chip">{timing}</Tag></>}
-    </p>}
+    {source.lifted && <p className="brief-why"><Tag className="brief-role-chip">Ehdotus</Tag></p>}
     {(reasons.length > 0 || riskReasons.length > 0 || outcome) && <details className="t-caption">
       <summary className="t-control">Valinnan perusteet</summary>
       {reasons.length > 0 && <p><strong>Valinnan peruste:</strong> {reasons.join(' · ')}</p>}
@@ -997,21 +1322,38 @@ function SelectionEvidence({ source, narration }) {
   </div>;
 }
 
+// Laboratory results, one `GroupedRecordRow` per test: the corpus writes every test once per visit, so a
+// table of results ran to thirty rows with three empty columns (the corpus carries no unit, reference range
+// or interpretation). The row names the test in plain Finnish with the abbreviation in its code slot (N3c), the
+// summary is the newest value exactly as the source writes it, and the opened list is every result newest
+// first, with the unit, the reference range and the interpretation only where the source has them. Not the
+// library `ResultSeries`: it needs a fixed clinical scale per test, which no professional has checked here.
 function LabResultsTable({ sources, narration, anchorOwner }) {
   const rows = sources.filter(source => source.type === 'tutkimustulos');
   if (!rows.length) return null;
+  const groups = groupLabRows(rows);
+  const valueText = record => {
+    const value = record.payload.arvo ?? 'Arvo puuttuu';
+    const unit = typeof record.payload.yksikkö === 'string' && record.payload.yksikkö.trim();
+    return unit ? `${value} ${unit}` : `${value}`;
+  };
   return <Block title="Tutkimustulokset" headingLevel={2} id="section-labs" className="brief-data-section"
-    actions={rows.length > 0 ? <span className="t-caption">{rows.length} tutkimusta</span> : undefined}>
-    <Table label="Tutkimustulosten taulukko"><TableHeader>
-      <TableHeaderCell>Tutkimus</TableHeaderCell><TableHeaderCell align="right">Tulos</TableHeaderCell><TableHeaderCell>Yksikkö</TableHeaderCell><TableHeaderCell align="right">Viitearvo</TableHeaderCell><TableHeaderCell>Tulkinta</TableHeaderCell><TableHeaderCell>Kirjattu</TableHeaderCell>
-    </TableHeader><TableBody>
-      {rows.length ? rows.map(row => <Fragment key={row.id}>
-          <TableRow showArrow={false} id={anchorOwner?.get(row.id) === 'research' ? `source-${row.id}` : undefined}><th scope="row" className="t-body-strong">{labLabel(row.payload.tutkimus)}</th><TableCell numeric>{row.payload.arvo}</TableCell>
-            <TableCell>{row.payload.yksikkö}</TableCell><TableCell numeric>{row.payload.viitearvo}</TableCell><TableCell>{row.payload.tulkinta}</TableCell><TableCell>{formatDate(row.date)}</TableCell></TableRow>
-          {hasSourceDetails(row, narration) && <TableRow showArrow={false} className="brief-source-metadata"><TableCell colSpan={6}><RecordStateBadge state={row.state} />
-            <EntryMetadata source={row} /><SelectionEvidence source={row} narration={narration} /></TableCell></TableRow>}
-      </Fragment>) : <TableRow showArrow={false}><TableCell colSpan={6}><EmptyPanel /></TableCell></TableRow>}
-    </TableBody></Table>
+    actions={<span className="t-caption">{`${groups.length} tutkimusta · ${rows.length} ${rows.length === 1 ? 'tulos' : 'tulosta'}`}</span>}>
+    <div className="brief-record-groups">{groups.map(group => <RecordGroup key={group.key} owner="research" anchorOwner={anchorOwner}
+      name={labName(group.abbreviation)} code={group.abbreviation && LAB_LABELS[group.abbreviation] ? group.abbreviation : null}
+      summary={`Viimeisin ${valueText(group.newest)} · ${formatDate(group.newest.date)}`}
+      detail={recordCountDetail(group.count, group.first, 'tulos', 'tulosta')}
+      records={group.records}
+      renderRecord={(record, index) => {
+        const range = typeof record.payload.viitearvo === 'string' && record.payload.viitearvo.trim();
+        const reading = typeof record.payload.tulkinta === 'string' && record.payload.tulkinta.trim();
+        return <>
+          <a href={sourceHref(record.id)}>{formatDate(record.date)}</a>
+          {` · ${valueText(record)}${range ? ` · viitearvo ${range}` : ''}${reading ? ` · ${reading}` : ''}`}
+          {index === 0 && <><RecordStateBadge state={record.state} /><EntryMetadata source={record} />
+            <SelectionEvidence source={record} narration={narration} /></>}
+        </>;
+      }} />)}</div>
   </Block>;
 }
 
@@ -1039,6 +1381,33 @@ export function ImpactEstimate({ sources }) {
   </Block>;
 }
 
+// The list is cut at four rows (Thin record pattern) behind a Finnish library `Button` carrying the
+// `aria-expanded` / `aria-controls` contract the library's English `ShowAllButton` would; the rows past the
+// cut keep their `source-<id>` anchors in a visually-hidden list, so a citation still has a target.
+const SELECTED_RECORDS_CUT = 4;
+
+// An excerpt as lines: a markdown heading line as its own short strong line, without the marks, every other
+// line a paragraph. The words are the record's own (`excerptBlocks`).
+function ExcerptText({ text }) {
+  return excerptBlocks(text).map((block, index) => block.kind === 'heading'
+    ? <p key={index} className="brief-excerpt-heading"><strong>{block.text}</strong></p>
+    : <p key={index}>{block.text}</p>);
+}
+
+function Excerpt({ text }) {
+  if (!text) return null;
+  return text.length > EXCERPT_DISCLOSURE_CHARS
+    ? <details className="brief-source-more"><summary className="t-control">Näytä koko kirjaus</summary><ExcerptText text={text} /></details>
+    : <ExcerptText text={text} />;
+}
+
+// The vendor label and the form text under a record. `sourceLabel` drops the delivery stack's own key.
+function SourceCaption({ source }) {
+  const formText = source.form && [source.form.form_type, source.form.version, source.form.filled_by_role].filter(Boolean).join(' · ');
+  const text = [sourceLabel(source), formText].filter(Boolean).join(' · ');
+  return text ? <p className="t-caption brief-small">{text}</p> : null;
+}
+
 function SelectedRecords({ sources, narration }) {
   // Types with a section of their own, excluded from this general list. `asiointitapahtuma` was in this list
   // and had no section anywhere, so a visit was fetched, cited by the narration and rendered NOWHERE — the
@@ -1047,33 +1416,65 @@ function SelectedRecords({ sources, narration }) {
   // one record of every declared type and asserts each one's own value reaches the markup.
   const tableTypes = ['perustieto', 'lääkitys', 'mittaus', 'diagnoosi', 'päätös', 'arviointi', 'tutkimustulos'];
   const rows = sources.filter(source => !tableTypes.includes(source.type));
-  const groups = new Map();
-  for (const source of rows) {
-    const heading = source.heading?.national || null;
-    groups.set(heading, [...(groups.get(heading) ?? []), source]);
-  }
+  const [showAll, setShowAll] = useState(false);
+  const listId = 'section-records-list';
+  // Identical repeats (same title, same headings, same excerpt text) fold into one row; the rest are rows of
+  // their own. The cut counts rows in view, across the heading groups, in reading order.
+  const groups = foldSelectedRecords(rows);
+  const flat = groups.flatMap(group => group.entries);
+  const rowCount = flat.length;
+  const visibleKeys = new Set((showAll ? flat : flat.slice(0, SELECTED_RECORDS_CUT)).map(entry => entry.key));
+  const hidden = flat.filter(entry => !visibleKeys.has(entry.key)).flatMap(entry => entry.records);
+  const drawn = groups.map(group => ({ ...group, entries: group.entries.filter(entry => visibleKeys.has(entry.key)) }))
+    .filter(group => group.entries.length > 0);
+  const single = source => <article className={`brief-selected-record${source.state === 'draft' ? ' brief-record-draft' : ''}`}
+    id={`source-${source.id}`} key={source.id}>
+    <div className="brief-record-heading">
+      <div>{source.heading?.local && <p className="t-caption brief-local-heading">{source.heading.local}</p>}
+        <h3 className="t-body-strong">{source.title}</h3><RecordStateBadge state={source.state} /></div>
+      <time className="t-caption" dateTime={source.date}>{formatDate(source.date)}</time>
+    </div>
+    <EntryMetadata source={source} />
+    <Excerpt text={source.excerpt} />
+    <SourceCaption source={source} />
+    <SelectionEvidence source={source} narration={narration} />
+  </article>;
+  // One row for N identical records (library `GroupedRecordRow`): the shared text once, then every record
+  // newest first with its own anchor, date, state and provenance. `longTerm` is never set: no source record
+  // marks it, and a count is not a duration.
+  const fold = (entry, heading) => {
+    const [newest] = entry.records;
+    const oldest = entry.records[entry.records.length - 1];
+    return <GroupedRecordRow key={entry.key} className="brief-record-fold" name={newest.title}
+      code={newest.heading?.local || heading || recordTypeLabel(newest.type)}
+      summary={`Viimeisin ${formatDate(newest.date)}`}
+      detail={`${entry.records.length} kirjausta · ensimmäinen ${formatDate(oldest.date)}`}
+      labels={{ longTerm: 'Pitkäaikainen' }}>
+      <Excerpt text={newest.excerpt} />
+      <SourceCaption source={newest} />
+      <ul className="brief-record-fold-list">{entry.records.map(source => <li key={source.id} id={`source-${source.id}`}
+        className={source.state === 'draft' ? 'brief-record-draft' : undefined}>
+        <time className="t-caption" dateTime={source.date}>{formatDate(source.date)}</time><RecordStateBadge state={source.state} />
+        <EntryMetadata source={source} />
+        <SelectionEvidence source={source} narration={narration} />
+      </li>)}</ul>
+    </GroupedRecordRow>;
+  };
   return <Block title="Valitut kirjaukset" headingLevel={2} id="section-records" className="brief-data-section brief-selected-records"
     actions={rows.length > 0 ? <span className="t-caption">{rows.length} kirjausta</span> : undefined}>
-    {!rows.length ? <EmptyPanel /> : [...groups].map(([heading, entries]) => <div className="brief-heading-group" key={heading ?? 'unheaded'}>
-      {heading && <h3 className="t-title-sm brief-record-group-heading">{heading}</h3>}
-      {entries.map(source => {
-        const formText = source.form && [source.form.form_type, source.form.version, source.form.filled_by_role].filter(Boolean).join(' · ');
-        return <article className={`brief-selected-record${source.state === 'draft' ? ' brief-record-draft' : ''}`}
-          id={`source-${source.id}`} key={source.id}>
-          <div className="brief-record-heading">
-            <div>{source.heading?.local && <p className="t-caption brief-local-heading">{source.heading.local}</p>}
-              <h3 className="t-body-strong">{source.title}</h3><RecordStateBadge state={source.state} /></div>
-            <time className="t-caption" dateTime={source.date}>{formatDate(source.date)}</time>
-          </div>
-          <EntryMetadata source={source} />
-          {source.excerpt && (source.excerpt.length > EXCERPT_DISCLOSURE_CHARS
-            ? <details className="brief-source-more"><summary className="t-control">Näytä koko kirjaus</summary><p>{source.excerpt}</p></details>
-            : <p>{source.excerpt}</p>)}
-          {(source.source || formText) && <p className="t-caption brief-small">{[source.source, formText].filter(Boolean).join(' · ')}</p>}
-          <SelectionEvidence source={source} narration={narration} />
-        </article>;
-      })}
-    </div>)}
+    {!rows.length ? <EmptyPanel /> : <div id={listId}>
+      {drawn.map(({ heading, entries }) => <div className="brief-heading-group" key={heading ?? 'unheaded'}>
+        {heading && <h3 className="t-title-sm brief-record-group-heading">{heading}</h3>}
+        {entries.map(entry => entry.records.length > 1 ? fold(entry, heading) : single(entry.records[0]))}
+      </div>)}
+      {hidden.length > 0 && <ul className="visually-hidden">{hidden.map(source =>
+        <li key={source.id} id={`source-${source.id}`}>{formatDate(source.date)}</li>)}</ul>}
+    </div>}
+    {rowCount > SELECTED_RECORDS_CUT && <div className="brief-button-row">
+      <Button size="sm" aria-expanded={showAll} aria-controls={listId} onClick={() => setShowAll(open => !open)}>
+        {showAll ? 'Näytä vähemmän' : `Näytä kaikki (${rowCount})`}
+      </Button>
+    </div>}
   </Block>;
 }
 

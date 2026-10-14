@@ -13,6 +13,7 @@ from __future__ import annotations
 import copy
 import json
 from dataclasses import dataclass
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
@@ -94,6 +95,11 @@ class Scoped:
     role: str
     purpose: str | None = None
     encounter_id: str | None = None
+    # How many permitted records the date cut held back because their effective date is after the day the
+    # picture is built for (`cut(today=...)`). A count over the permitted set only -- nothing policy withheld
+    # enters it (ADR-0004) -- and never a record id: it says that the briefing is not showing records dated
+    # after today, not which ones.
+    future_dated_count: int = 0
 
     @property
     def records(self) -> list[Record]:
@@ -114,6 +120,7 @@ def cut(
     inherited_restricted_case_ids: frozenset[str] = frozenset(),
     kypsyysarvio: Kypsyysarvio | None = None,
     age_at_encounter: int | None = None,
+    today: date | None = None,
 ) -> Scoped:
     policy = table("visibility")
     cfg = policy["roles"].get(role)
@@ -165,18 +172,32 @@ def cut(
             )
         )
     ]
+    # The date cut, in the same place as the permission cut so that nothing downstream can read a record the
+    # briefing is not built for: a record whose effective date (the source visit time, else the entry time)
+    # is after `today` is a date still to come, not a fact of the day -- a diagnosis "kirjattu 7.11.2026",
+    # a home-care visit next year (seen in the live app 2026-10-14). The release dates some records after the
+    # day they are read; `source.temporal_status` names only six types `future`, and a medication or diagnosis
+    # takes its status from `tila`, so a type-by-type rule left them in. A record with no date is kept.
+    future_dated = 0
+    if today is not None:
+        dated = [r for r in visible if not source.is_after(r, today)]
+        future_dated = len(visible) - len(dated)
+        visible = dated
     return Scoped(
         persona=persona.model_copy(update={"records": visible}),
         role=role,
         purpose=purpose,
         encounter_id=encounter_id,
+        future_dated_count=future_dated,
     )
 
 
-def cut_for_encounter(persona: Persona, encounter) -> Scoped:
+def cut_for_encounter(persona: Persona, encounter, today: date | None = None) -> Scoped:
     """Apply encounter context through the only policy cut.
 
-    The effective exclusion set is evaluated in one place.
+    The effective exclusion set is evaluated in one place. `today` is the day the picture is built for (the
+    pipeline's `today`, never the wall clock read here): with it, records dated after that day are held back
+    as well, and `Scoped.future_dated_count` says how many.
     """
     return cut(
         persona, encounter.role, encounter.purpose, encounter.encounter_id,
@@ -184,6 +205,7 @@ def cut_for_encounter(persona: Persona, encounter) -> Scoped:
         inherited_restricted_case_ids=encounter.inherited_restricted_case_ids,
         kypsyysarvio=encounter.kypsyysarvio,
         age_at_encounter=encounter.age_at_encounter,
+        today=today,
     )
 
 

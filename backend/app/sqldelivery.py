@@ -45,6 +45,7 @@ from .delivery import (
     _read_profiles,
     _rules_matched_nothing,
     _safe_persona_id,
+    derived_record_state,
 )
 from .encounters import Appointment, appointment_from_row, Encounter, EncounterMetadata, metadata_from_row
 from .mapping import MappingSpec
@@ -808,7 +809,7 @@ class SqlDeliveryIndex(Mapping[str, Persona]):
             if hasattr(stored, "model_validate_json"):
                 return stored  # already a Record (a stand-in that pre-validated its rows)
             text = stored.decode("utf-8") if isinstance(stored, (bytes, bytearray)) else str(stored)
-            return Record.model_validate_json(text)
+            return derived_record_state(Record.model_validate_json(text))
         except Exception as exc:  # noqa: BLE001 - every failure here is "this stored row is not a Record"
             fields = ", ".join(str(error.get("loc", ("?",))[0]) for error in
                                getattr(exc, "errors", lambda: [])()) or "unknown field"

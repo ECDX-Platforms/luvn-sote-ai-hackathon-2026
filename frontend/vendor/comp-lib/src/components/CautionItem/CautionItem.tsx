@@ -31,13 +31,34 @@ export interface CautionItemProps extends Omit<HTMLAttributes<HTMLDivElement>, '
   source?: CautionItemSource;
   /** Figma: Show bottom rule. The 1px hairline under the item. Turn it off on the last item of a list. */
   showBottomRule?: boolean;
+  /** The tag word per kind, for another language. Each key defaults to the English (Figma) word. */
+  labels?: Partial<CautionItemLabels>;
 }
 
-/** Fixed tag per kind (Figma). "No information" and "None known" never look or read the same. */
-const STATUS: Partial<Record<CautionItemKind, [StatusTagStatus, string]>> = {
-  allergy: ['critical', 'Allergy'],
-  'side-effect': ['warning', 'Side effect'],
-  'no-information': ['info', 'Not recorded'],
+/** The fixed tag word per kind (Figma). "No information" and "None known" never look or read the same. */
+export interface CautionItemLabels {
+  /** Kind allergy: Status tag critical. */
+  allergy: string;
+  /** Kind side-effect: Status tag warning. */
+  sideEffect: string;
+  /** Kind none-known: neutral Tag. */
+  noneKnown: string;
+  /** Kind no-information: Status tag info. */
+  notRecorded: string;
+}
+
+const DEFAULT_LABELS: CautionItemLabels = {
+  allergy: 'Allergy',
+  sideEffect: 'Side effect',
+  noneKnown: 'None known',
+  notRecorded: 'Not recorded',
+};
+
+/** Fixed Status tag level and label key per kind; none-known is the neutral Tag. */
+const STATUS: Partial<Record<CautionItemKind, [StatusTagStatus, keyof CautionItemLabels]>> = {
+  allergy: ['critical', 'allergy'],
+  'side-effect': ['warning', 'sideEffect'],
+  'no-information': ['info', 'notRecorded'],
 };
 
 /**
@@ -45,9 +66,10 @@ const STATUS: Partial<Record<CautionItemKind, [StatusTagStatus, string]>> = {
  * NEW: composed from Status tag, Tag and Source reference. Figma: Data display / Caution item (176:830).
  */
 export const CautionItem = forwardRef<HTMLDivElement, CautionItemProps>(function CautionItem(
-  { kind, fact, qualifier, source, showBottomRule = true, className, ...rest },
+  { kind, fact, qualifier, source, showBottomRule = true, labels, className, ...rest },
   ref,
 ) {
+  const t = { ...DEFAULT_LABELS, ...labels };
   const status = STATUS[kind];
   return (
     <div
@@ -57,7 +79,7 @@ export const CautionItem = forwardRef<HTMLDivElement, CautionItemProps>(function
     >
       <div className={styles.content}>
         <div className={styles.slot}>
-          {status ? <StatusTag status={status[0]}>{status[1]}</StatusTag> : <Tag>None known</Tag>}
+          {status ? <StatusTag status={status[0]}>{t[status[1]]}</StatusTag> : <Tag>{t.noneKnown}</Tag>}
         </div>
         <div className={styles.lines}>
           <span className={[styles.line, 't-body-strong'].join(' ')}>{fact}</span>

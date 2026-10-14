@@ -21,19 +21,37 @@ interface BlockStateBaseProps extends Omit<BlockProps, 'children' | 'flush'> {
   action?: ReactNode;
   /** Loading only. Wait this long (ms) before the skeleton shows; until then the block shows only its title. Default 300 (styleguide). */
   loadingDelay?: number;
-  /** Loading only. Read out by screen readers instead of the skeleton bars. Default "Loading…". */
+  /** Loading only. Read out by screen readers instead of the skeleton bars. Default `labels.loading` ("Loading…"). */
   loadingLabel?: string;
   /** Error only. Alert level: warning (default) or critical. Only critical interrupts (`role="alert"`). */
   errorLevel?: BlockStateErrorLevel;
   /** Error only. Called by the "Try again" secondary button. Required. */
   onRetry?: () => void;
-  /** Error only. Label of the retry button. Default "Try again". */
+  /** Error only. Label of the retry button. Default `labels.retry` ("Try again"). */
   retryLabel?: string;
   /** Error only. The retry is running: the button keeps its label and shows a spinner (aria-busy), and the loaded data stays. */
   retrying?: boolean;
   /** Error only. Data that was already loaded. It stays under the alert and the retry button. */
   children?: ReactNode;
+  /** Every fixed word the block renders, for another language. Each key defaults to the English copy; `loadingLabel` and `retryLabel` still win when given. */
+  labels?: Partial<BlockStateLabels>;
 }
+
+/** The fixed copy of the block. */
+export interface BlockStateLabels {
+  /** Loading: default of `loadingLabel`, read out instead of the skeleton bars. */
+  loading: string;
+  /** Error: default of `retryLabel`. */
+  retry: string;
+  /** Error (warning): the keyword read out before the message in the live region, the same as the visible warning Alert's. */
+  warning: string;
+}
+
+const DEFAULT_LABELS: BlockStateLabels = {
+  loading: 'Loading…',
+  retry: 'Try again',
+  warning: 'Warning.',
+};
 
 /** Figma: Kind = Empty. */
 export interface BlockStateEmptyProps extends BlockStateBaseProps {
@@ -75,15 +93,17 @@ export const BlockState = forwardRef<HTMLElement, BlockStateProps>(function Bloc
     loadingLabel,
     errorLevel = 'warning',
     onRetry,
-    retryLabel = 'Try again',
+    retryLabel,
     retrying = false,
     children,
     onFocus,
     onBlur,
+    labels,
     ...rest
   },
   ref,
 ) {
+  const t: BlockStateLabels = { ...DEFAULT_LABELS, ...labels };
   const sectionRef = useRef<HTMLElement | null>(null);
   const handleRef = useCallback(
     (node: HTMLElement | null) => {
@@ -165,7 +185,7 @@ export const BlockState = forwardRef<HTMLElement, BlockStateProps>(function Bloc
           </div>
         ) : null}
 
-        {showSkeleton ? <Skeleton lines={3} label={loadingLabel} /> : null}
+        {showSkeleton ? <Skeleton lines={3} label={loadingLabel ?? t.loading} /> : null}
 
         {kind === 'error' ? (
           <div className={styles.error}>
@@ -173,7 +193,7 @@ export const BlockState = forwardRef<HTMLElement, BlockStateProps>(function Bloc
             {onRetry ? (
               <div className={styles.action}>
                 <Button icon={<RefreshCw size={16} strokeWidth={1.5} />} loading={retrying} onClick={onRetry}>
-                  {retryLabel}
+                  {retryLabel ?? t.retry}
                 </Button>
               </div>
             ) : null}
@@ -183,7 +203,7 @@ export const BlockState = forwardRef<HTMLElement, BlockStateProps>(function Bloc
       </Block>
       {/* Same keyword as the visible warning Alert. */}
       <div role="status" className="visually-hidden" data-blockstate-announcer="">
-        {announcement ? <>Warning. {announcement}</> : null}
+        {announcement ? <>{t.warning} {announcement}</> : null}
       </div>
     </>
   );

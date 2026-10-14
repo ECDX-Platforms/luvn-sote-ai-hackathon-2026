@@ -26,7 +26,26 @@ export interface SameFactSource {
   socialCareClassification?: boolean;
 }
 
-type BaseProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'>;
+/** The fixed copy of the component, for another language. Each key defaults to the English copy. */
+export interface SameFactTwoSourcesLabels {
+  /** Agrees: default of the `meta` caption, built from the two record labels ("Agrees in 2 sources · Item list · Meeting note"). */
+  agreesMeta: (newerLabel: string, olderLabel: string) => string;
+  /** Described differently: the caption under the subject. */
+  describedDifferently: string;
+  /** The caption under a source marked `socialCareClassification`. */
+  socialCareClassification: string;
+}
+
+const DEFAULT_LABELS: SameFactTwoSourcesLabels = {
+  agreesMeta: (newer, older) => `Agrees in 2 sources · ${newer} · ${older}`,
+  describedDifferently: 'Newest first · no winner · read both',
+  socialCareClassification: 'A social-care classification. Not a clinical diagnosis.',
+};
+
+interface BaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+  /** Every fixed word the component renders, for another language. Each key defaults to the English copy. */
+  labels?: Partial<SameFactTwoSourcesLabels>;
+}
 
 /** Figma: Kind = Agrees. One row per pair where every compared item matches; the row opens both texts. */
 export interface SameFactAgreesProps extends BaseProps {
@@ -90,32 +109,33 @@ export type SameFactTwoSourcesProps = SameFactAgreesProps | SameFactOnlyInOneSou
 const cx = (...names: Array<string | false | undefined>) => names.filter(Boolean).join(' ');
 
 /** One column of the two-sources area: Source reference, then the text word for word, then the classification caption. */
-function Column({ source, className }: { source: SameFactSource; className: string }) {
+function Column({ source, className, labels }: { source: SameFactSource; className: string; labels: SameFactTwoSourcesLabels }) {
   return (
     <li className={cx(styles.column, className)}>
       <SourceReference standalone onOpen={source.onOpen} label={source.label} date={source.date} origin={source.origin} draft={source.draft} />
       <div className={cx(styles.text, 't-body')}>{source.text}</div>
       {source.socialCareClassification ? (
-        <p className={cx(styles.note, 't-caption')}>A social-care classification. Not a clinical diagnosis.</p>
+        <p className={cx(styles.note, 't-caption')}>{labels.socialCareClassification}</p>
       ) : null}
     </li>
   );
 }
 
 /** Both sources side by side, newest left; stacked below 640px. role="list": Safari drops list semantics when list-style is none. */
-function TwoSources({ newer, older, className, id, hidden }: { newer: SameFactSource; older: SameFactSource; className?: string; id?: string; hidden?: boolean }) {
+function TwoSources({ newer, older, labels, className, id, hidden }: { newer: SameFactSource; older: SameFactSource; labels: SameFactTwoSourcesLabels; className?: string; id?: string; hidden?: boolean }) {
   return (
     <ul id={id} hidden={hidden} className={cx(styles.sources, className)} role="list">
-      <Column source={newer} className={styles.newer} />
-      <Column source={older} className={styles.older} />
+      <Column source={newer} className={styles.newer} labels={labels} />
+      <Column source={older} className={styles.older} labels={labels} />
     </ul>
   );
 }
 
 const Agrees = forwardRef<HTMLDivElement, SameFactAgreesProps>(function Agrees(
-  { kind: _kind, topic, count, meta, newer, older, expanded, defaultExpanded = false, onExpandedChange, className, ...rest },
+  { kind: _kind, topic, count, meta, newer, older, expanded, defaultExpanded = false, onExpandedChange, labels, className, ...rest },
   ref,
 ) {
+  const t = { ...DEFAULT_LABELS, ...labels };
   const sourcesId = useId();
   const [ownExpanded, setOwnExpanded] = useState(defaultExpanded);
   const isControlled = expanded !== undefined;
@@ -139,22 +159,23 @@ const Agrees = forwardRef<HTMLDivElement, SameFactAgreesProps>(function Agrees(
             <CircleAlert size={16} strokeWidth={1.5} />
           </span>
           <span className={cx(styles.wrap, 't-caption')}>
-            {meta ?? `Agrees in 2 sources · ${newer.label} · ${older.label}`}
+            {meta ?? t.agreesMeta(newer.label, older.label)}
           </span>
           <span className={styles.arrow} aria-hidden>
             <Arrow size={16} strokeWidth={1.5} />
           </span>
         </span>
       </button>
-      <TwoSources id={sourcesId} hidden={!open} newer={newer} older={older} className={styles.openSources} />
+      <TwoSources id={sourcesId} hidden={!open} newer={newer} older={older} labels={t} className={styles.openSources} />
     </div>
   );
 });
 
 const OnlyInOneSource = forwardRef<HTMLDivElement, SameFactOnlyInOneSourceProps>(function OnlyInOneSource(
-  { kind: _kind, value, valueMeta, otherSource, source, className, ...rest },
+  { kind: _kind, value, valueMeta, otherSource, source, labels, className, ...rest },
   ref,
 ) {
+  const t = { ...DEFAULT_LABELS, ...labels };
   return (
     <div {...rest} ref={ref} className={cx(styles.item, styles.onlyInOne, className)}>
       <p className={styles.valueHead}>
@@ -167,23 +188,24 @@ const OnlyInOneSource = forwardRef<HTMLDivElement, SameFactOnlyInOneSourceProps>
       <div className={cx(styles.wrap, 't-caption')}>{source.text}</div>
       <SourceReference standalone onOpen={source.onOpen} label={source.label} date={source.date} origin={source.origin} draft={source.draft} />
       {source.socialCareClassification ? (
-        <p className={cx(styles.wrap, 't-caption')}>A social-care classification. Not a clinical diagnosis.</p>
+        <p className={cx(styles.wrap, 't-caption')}>{t.socialCareClassification}</p>
       ) : null}
     </div>
   );
 });
 
 const DescribedDifferently = forwardRef<HTMLDivElement, SameFactDescribedDifferentlyProps>(function DescribedDifferently(
-  { kind: _kind, subject, newer, older, className, ...rest },
+  { kind: _kind, subject, newer, older, labels, className, ...rest },
   ref,
 ) {
+  const t = { ...DEFAULT_LABELS, ...labels };
   return (
     <div {...rest} ref={ref} className={cx(styles.item, styles.differently, className)}>
       <div className={styles.subjectHead}>
         <p className={cx(styles.wrap, 't-body-strong')}>{subject}</p>
-        <p className={cx(styles.wrap, 't-caption')}>Newest first · no winner · read both</p>
+        <p className={cx(styles.wrap, 't-caption')}>{t.describedDifferently}</p>
       </div>
-      <TwoSources newer={newer} older={older} />
+      <TwoSources newer={newer} older={older} labels={t} />
     </div>
   );
 });

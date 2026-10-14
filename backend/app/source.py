@@ -185,6 +185,22 @@ def note_text(record: Record) -> str:
     return f"{p.get('otsikko', '')} {p.get('teksti', '')}"
 
 
+def effective_date(record: Record) -> date | None:
+    """The day a record is about: the source visit time when present, else when the entry was recorded.
+
+    The same anchor `temporal_status` uses. None only for a record that carries neither, which the envelope
+    does not admit today; the cut keeps such a record rather than guessing a date for it.
+    """
+    event_time = record.käyntiaika or record.recorded_at
+    return event_time.date() if event_time is not None else None
+
+
+def is_after(record: Record, today: date) -> bool:
+    """True when the record's effective date is after `today`; a record with no date is never after it."""
+    effective = effective_date(record)
+    return effective is not None and effective > today
+
+
 def temporal_status(record: Record, today: date) -> str:
     """Use source visit time when present; fall back to the legacy entry-recorded time."""
     if record.record_type == MEDICATION:
